@@ -5,17 +5,18 @@
 
 #include "main.h"
 
-PrinterController* controller;
+ACSController controller;
+//PrinterController controller;
+//CameraController controller;
+
+//BaseController controller;
 
 void setup()
 {
-	//controller = new ACSController();
-	controller = new PrinterController();
-	//controller = new CameraController();
 }
 void loop()
 {
-	controller->update();
+	controller.update();
 }
 
 

@@ -6,5 +6,3 @@
 #include <Arduino.h>
 #include <controllers/base.h>
 #include <controllers/acs.h>
-#include <controllers/camera.h>
-#include <controllers/printer.h>
