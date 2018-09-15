@@ -10,14 +10,14 @@ CardReader::CardReader(int rx_pin, int tx_pin, int sw_pin):
 
 void CardReader::update()
 {
+    
     const bool switch_on = digitalRead(m_switch_pin);
     if (!switch_on)
     {
         m_card_present = false;
     }
     
-    const auto c = m_serial.read();
-    //REMOVE
+    const int32_t c = m_serial.read();
     Serial.println(c);
     if (c > 0)
     {
