@@ -1,27 +1,24 @@
 
-//#define SHIT
+//#define SANITYCHECK
 
-#ifndef SHIT
+#ifndef SANITYCHECK
 
 #include "main.h"
 
-ACSController controller;
-//PrinterController controller;
-//CameraController controller;
-
-//BaseController controller;
+Child test;
 
 void setup()
 {
 }
 void loop()
 {
-	controller.update();
+	test.update();
 }
 
 
 
 #else
+
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
