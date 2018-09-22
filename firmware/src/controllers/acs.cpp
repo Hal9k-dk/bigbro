@@ -7,7 +7,7 @@
 
 ACSController::ACSController(): 
   BaseController(),
-  reader(D5, 11, D6)
+  reader(D5, SW_SERIAL_UNUSED_PIN, D6)
 {}
 
 bool ACSController::relay_check()
