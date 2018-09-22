@@ -67,6 +67,9 @@ bool ACSController::card_allowed()
 	#if SERIAL_DBG
 	Serial.println("Checking card");
 	#endif
+
+	display.set_status("Checking card", 1);
+
 	String message, user_name;
 	int user_id = 0;
 	bool allowed = false;
