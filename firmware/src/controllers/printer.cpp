@@ -2,7 +2,7 @@
 
 PrinterController::PrinterController(): 
   ACSController(),
-  current(pin_current, pin_debug, current_threshhold)
+  current(A0, -1, 200)
 {
     current_sensor_present = current.sensor_present();
 	if(current_sensor_present)
@@ -125,6 +125,7 @@ void PrinterController::cooling()
         #if SERIAL_DBG
         Serial.println("State changed=> PRINTING");
 	    #endif
+        last_minutes_left = 0;
         print_state = IN_PROGRESS;
         display.set_status("PRINTING");
     }

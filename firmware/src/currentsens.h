@@ -5,7 +5,7 @@ class Current
     public:
 		// pin = adc pin, sample_period = delay between samples in uS;
         Current(uint8_t pin, int8_t debug_pin = -1, uint16_t threshold = 200); 
-        uint16_t read();
+        int16_t read();
         void handle();
         bool is_printing();
         void calibrate(); // Run this at 0A to collect the 0A offset.
@@ -28,7 +28,7 @@ class Current
         int16_t  m_AC_current		= 0;
         const uint16_t m_v_range	= 4650; // mV   | Max ADC voltage on the pin of the divider.
         const uint16_t m_mv_per_A   = 200;  // mV/A | 
-        uint16_t m_threshold        = 200;  // Printer is considered printing above this threshold
+        int16_t m_threshold         = 200;  // Printer is considered printing above this threshold
 
         uint32_t m_last_above_thresh;
         uint16_t m_max_below_time   = 100;  // ms

@@ -33,11 +33,17 @@ bool Current::sensor_present()
 
 bool Current::is_printing()
 {
-    if(read() < m_threshold && (millis() - m_last_above_thresh) > m_max_below_time)
+    int16_t current = read();
+
+    #if SERIAL_DBG > 2
+    Serial.print("reading: ");Serial.println(current);
+    #endif
+
+    if(current < m_threshold && (millis() - m_last_above_thresh) > m_max_below_time)
     {
         return false;
     }
-    else if(read() > m_threshold)
+    else if(current > m_threshold)
     {
         m_last_above_thresh = millis();
     }
@@ -67,7 +73,7 @@ void Current::calibrate()
     m_error = m_p2p();
 }
 
-uint16_t Current::read()
+int16_t Current::read()
 {
     return (m_p2p() - m_error) * m_v_range/1024 * m_mv_per_A/1000;
 }
@@ -81,9 +87,11 @@ void Current::sample()
     }
 
     if(millis() - m_last_sample > m_sample_period)
-    {
+    {   
+        uint16_t reading = analogRead(A0);
+
         m_last_sample = millis();
-        m_raw_samples[m_raw_sample_offset] = analogRead(A0);
+        m_raw_samples[m_raw_sample_offset] = reading;
         m_raw_sample_offset++;
     }
 }

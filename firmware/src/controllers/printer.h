@@ -22,7 +22,7 @@ private:
     uint16_t        last_current_reading, current_reading;
 
     uint16_t current_threshhold = 200;
-    uint8_t pin_current = A0, pin_debug = -1;
+    //uint8_t pin_current = A0, pin_debug = -1;
 
     enum PrintState { IDLE, IN_PROGRESS, COOLING };
     PrintState print_state = IDLE;
