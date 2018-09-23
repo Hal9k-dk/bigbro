@@ -91,6 +91,7 @@ bool ACSController::card_allowed()
 	{   
 		// Denied due to error
 		display.set_status(message);
+		led.set_colour(CRGB::Crimson);
 	}
 
 	yield();

@@ -42,7 +42,10 @@ bool PrinterController::idle()
 {
     if(new_card())
     {
-        has_allowed_card = card_allowed();
+        if(has_card())
+        {   
+            has_allowed_card = card_allowed();
+        }
     }
 
     if(!has_card())
