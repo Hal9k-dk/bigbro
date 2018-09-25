@@ -4,7 +4,7 @@
 #include <eeprom_wrapper.h>
 #include <controllers/base.h>
 
-const char* VERSION = "0.1.2";
+const char* VERSION = "0.2.0";
 
 BaseController::BaseController(const char* psw_md5, const bool relay_upstart):
   	ota(psw_md5)
