@@ -19,7 +19,7 @@ void Eeprom::list_ssids()
 {
     uint8_t count = get_nof_ssids();
 
-    if(count == 255)
+    if(count == 255 || count == 0)
     {
         Serial.println("No SSIDs configured");
         return;
@@ -107,10 +107,16 @@ void Eeprom::remove_wifi_creds(uint8_t index)
 
     EEPROM.write(SSID_BLOCK_OFFSET, EEPROM.read(SSID_BLOCK_OFFSET)-1); // Decrement stored SSID counter
     EEPROM.commit();
+    Serial.println("\nSSID removed");
 }
 
 void Eeprom::set_wifi_creds(const char* SSID, const char* PASS)
 {
+    if (strlen(SSID) < 1)
+    {
+        Serial.println("ERROR: No SSID provided");
+        return;
+    }
     if (strlen(SSID) > SSID_SIZE)
     {
         Serial.println("ERROR: SSID too long");
@@ -189,12 +195,10 @@ void Eeprom::set_password(const char* PASS, uint8_t index)
 {
     uint16_t final_offset = WIFI_PASS_OFFSET + (WIFI_PASS_SIZE * index);
     uint8_t i;
-    Serial.println();
     for(i=0; i<strlen(PASS); ++i)
     {
         EEPROM.write(final_offset + i, PASS[i]);
     }
-    Serial.println();
     EEPROM.write(final_offset + i, '\0');
 }
 
