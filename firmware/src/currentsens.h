@@ -6,6 +6,7 @@ class Current
 		// pin = adc pin, sample_period = delay between samples in uS;
         Current(uint8_t pin, int8_t debug_pin = -1, uint16_t threshold = 200); 
         int16_t read();
+        int16_t read_avg();
         void handle();
         bool is_printing();
         void calibrate(); // Run this at 0A to collect the 0A offset.
@@ -17,11 +18,11 @@ class Current
         uint8_t m_debug_pin;
 
         uint32_t m_last_sample		= 0;
-        uint8_t m_sample_period     = 10;
+        uint8_t m_sample_period     = 5;
 		bool    m_raw_buffer_filled	= 0;
-		int16_t m_raw_samples[100]; 
+		int16_t m_raw_samples[50]; 
     	uint8_t m_raw_sample_offset	= 0;
-    	uint8_t m_raw_sample_size 	= 100;
+    	uint8_t m_raw_sample_size 	= 50;
     
         int16_t m_error				= 0;
 
@@ -31,8 +32,13 @@ class Current
         int16_t m_threshold         = 200;  // Printer is considered printing above this threshold
 
         uint32_t m_last_above_thresh;
-        uint16_t m_max_below_time   = 100;  // ms
+        uint16_t m_max_below_time   = 10000;  // ms
+
+        uint16_t m_avg_sample_offset = 0;
+        uint16_t m_avg_samples[25];
+        uint16_t m_avg_sample_size = 25;
 
         uint16_t m_p2p();
+        void m_average();
 };
 

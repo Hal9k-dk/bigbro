@@ -50,6 +50,7 @@ bool PrinterController::idle()
 
     if(!has_card())
     {
+        has_allowed_card = false;
         display.set_status("No card", "IDLE");
         led.set_colour(CRGB::Green);
         led.set_duty_cycle(1);
@@ -120,7 +121,14 @@ void PrinterController::cooling()
 
     if(new_card())
     {
-        has_allowed_card = card_allowed();
+        if(has_card())
+        {
+            has_allowed_card = card_allowed();
+        }
+        else
+        {
+            has_allowed_card = false;
+        }
     }
 
     if(current.is_printing() && has_allowed_card)
@@ -138,5 +146,5 @@ void PrinterController::update()
 {
     ACSController::update();
     current.handle();
-    current_reading = current.read();
+    current_reading = current.read_avg();
 }
