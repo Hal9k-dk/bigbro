@@ -168,7 +168,7 @@ bool ACSController::query_permission(const String& card_id,
 		case 200:
 		{
 			auto resp = rc.get_response();
-			
+
 			// Remove garbage (why is it there?)
 			uint16_t i = 0;
 			while ((resp[i] != '{') && (i < resp.length()))

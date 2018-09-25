@@ -22,7 +22,7 @@ bool WiFiHandler::init(AbstractLed& led, Display& disp)
     bool connected = false;
 
     #if SERIAL_DBG
-	Serial.print("cnt: ");
+	Serial.print("SSID cnt: ");
 	Serial.println(ssid_count);
 	#endif
 
