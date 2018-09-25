@@ -1,8 +1,12 @@
-#include <RestClient.h>
 #include "acsrestclient.h"
 
-#define SERVER "panopticon.hal9k.dk"
-#define USE_SSL 1
+#if TEST_SERVER
+    #define SERVER "192.168.0.122"
+    #define USE_SSL 0
+#else
+    #define SERVER "panopticon.hal9k.dk"
+    #define USE_SSL 1
+#endif
 
 AcsRestClient::AcsRestClient(const char* p):
     path(p)

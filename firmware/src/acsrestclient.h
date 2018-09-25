@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ArduinoJson.h>
+#include <RestClient.h>
 
 class AcsRestClient
 {
