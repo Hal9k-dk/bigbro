@@ -58,7 +58,7 @@ void BaseController::decode_line(const char* line)
 	String ssid, pass;
 	int i = 0;
 
-	uint8_t index;
+	uint8_t index, ch;
 	uint32_t timeout_start;
 
 	switch (tolower(line[i]))
@@ -114,20 +114,23 @@ void BaseController::decode_line(const char* line)
 
 	case 'd':
 		while (line[++i] == ' ') {;}
-		Serial.println("Pick SSID to remove");
+
+		index = line[i++]-'0';
+
+		Serial.print("\nConfirm deleting SSID ");Serial.print(index);Serial.println(" [Y/y]");
 		Eeprom::list_ssids();
+		while (line[++i] == ' ') {;}
 
-		index = 255;
 		timeout_start = millis();
-
         while(!Serial.available() && millis() - timeout_start < user_input_timeout)
         {
             delay(0);
         }
 
+		ch = 0;
 		if(Serial.available())
 		{
-			index = Serial.read()-'0';
+			ch = Serial.read();
 		}
 		else
 		{
@@ -135,7 +138,21 @@ void BaseController::decode_line(const char* line)
 			break;
 		}
 
-		Eeprom::remove_wifi_creds(index);
+		if(ch == 'Y' || ch == 'y')
+		{
+			Eeprom::remove_wifi_creds(index);
+		}
+		else
+		{
+			Serial.println("Deletion cancled");
+		}
+
+		//Remove linbreaks and stuff
+		while(Serial.available())
+		{
+			Serial.read();
+		}
+		
 		break;	
 
 	case 't':
@@ -155,6 +172,8 @@ void BaseController::decode_line(const char* line)
 		Serial.println(line);
 		return;
 	}
+	while(Serial.available())
+	{delay(0);} // Clear buffer
 }
 
 void BaseController::handleSerial()
