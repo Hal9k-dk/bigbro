@@ -21,8 +21,12 @@ python:
 sudo: false
 cache:
     directories:
-        - "~/firmware/.platformio"
+        - "~/.platformio"
 
-install: cd firmware && pip install -U platformio && platformio update
+install:
+    - pip install -U platformio
+    - platformio update
 
-script: cd firmware && platformio run
+script:
+    - cd firmware
+    - platformio ci 
