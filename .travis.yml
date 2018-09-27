@@ -29,4 +29,4 @@ install:
 
 script:
     - cd firmware
-    - platformio ci 
+    - platformio run 
