@@ -1,5 +1,6 @@
 # BigBro
 
+[![Build Status](https://travis-ci.org/hal9k-dk/bigbro.svg?branch=platformio)](https://travis-ci.org/hal9k-dk/bigbro)
 BigBro is the system used by Hal9K to control access to its different advanced
 machines, with RFID based access control.
 
