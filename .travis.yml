@@ -23,15 +23,6 @@ cache:
     directories:
         - "~/firmware/.platformio"
 
-before_install:
-    - cd ~/firmware
+install: cd firmware && pip install -U platformio && platformio update
 
-install:
-    - pip install -U platformio
-    - platformio update
-
-script_install:
-    - cd ~/firmware
-
-script:
-    - platformio run
+script: cd firmware && platformio run
