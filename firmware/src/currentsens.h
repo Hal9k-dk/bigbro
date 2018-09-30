@@ -6,39 +6,35 @@ class Current
 		// pin = adc pin, sample_period = delay between samples in uS;
         Current(uint8_t pin, int8_t debug_pin = -1, uint16_t threshold = 200); 
         int16_t read();
-        int16_t read_avg();
         void handle();
         bool is_printing();
         void calibrate(); // Run this at 0A to collect the 0A offset.
         bool sensor_present(); // Checks if there's a sensor on the board.
 		void sample();
+        uint32_t last_above();
+        
 
     private:
         uint8_t m_pin;
         int16_t m_debug_pin;
 
         uint32_t m_last_sample		= 0;
-        uint8_t m_sample_period     = 5;
+        uint8_t m_sample_period     = 10;
 		bool    m_raw_buffer_filled	= 0;
-		int16_t m_raw_samples[50]; 
+		int16_t m_raw_samples[100]; 
     	uint8_t m_raw_sample_offset	= 0;
-    	uint8_t m_raw_sample_size 	= 50;
+    	uint8_t m_raw_sample_size 	= 100;
     
         int16_t m_error				= 0;
 
         int16_t  m_AC_current		= 0;
         const uint16_t m_v_range	= 4650; // mV   | Max ADC voltage on the pin of the divider.
         const uint16_t m_mv_per_A   = 200;  // mV/A | 
-        int16_t m_threshold         = 200;  // Printer is considered printing above this threshold
+        int16_t m_threshold         = 50;  // Printer is considered printing above this threshold
 
-        uint32_t m_last_above_thresh;
-        uint16_t m_max_below_time   = 10000;  // ms
-
-        uint16_t m_avg_sample_offset = 0;
-        uint16_t m_avg_samples[25];
-        uint16_t m_avg_sample_size = 25;
+        uint32_t m_last_above_thresh = 0;
+        uint32_t m_max_below_time   = 60000;  // ms
 
         uint16_t m_p2p();
-        void m_average();
 };
 

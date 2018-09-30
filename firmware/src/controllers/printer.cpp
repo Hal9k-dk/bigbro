@@ -2,7 +2,7 @@
 
 PrinterController::PrinterController(): 
   ACSController(),
-  current(A0, -1, 200)
+  current(A0, -1, 50)
 {
     current_sensor_present = current.sensor_present();
 	if(current_sensor_present)
@@ -61,13 +61,13 @@ bool PrinterController::idle()
         display.set_status("IDLE", 2);
     }
 
-    if(current.is_printing() && has_allowed_card)
+    if(current.is_printing() && has_allowed_card && (millis() - get_relay_on_time() > m_inrush_avoidance))
     {
         #if SERIAL_DBG
         Serial.println("State changed=> PRINTING");
 	    #endif
         print_state = IN_PROGRESS;
-        display.set_status("PRINTING");
+        display.set_status("PRINTING", 1);
     }
 
     if(has_allowed_card && !get_relay())
@@ -145,6 +145,9 @@ void PrinterController::cooling()
 void PrinterController::update()
 {
     ACSController::update();
-    current.handle();
-    current_reading = current.read_avg();
+    if(millis() - get_relay_on_time() > m_inrush_avoidance)
+    {
+        current.handle();
+    }
+    current_reading = current.read();
 }

@@ -31,21 +31,26 @@ bool Current::sensor_present()
     return false;
 }
 
+uint32_t Current::last_above()
+{
+    return m_last_above_thresh;
+}
+
 bool Current::is_printing()
 {
-    int16_t current = read_avg();
+    int16_t current = read();
 
     #if SERIAL_DBG > 2
     Serial.print("reading: ");Serial.println(current);
     #endif
 
-    if(current < m_threshold && (millis() - m_last_above_thresh) > m_max_below_time)
-    {
-        return false;
-    }
-    else if(current > m_threshold)
+    if(current > m_threshold)
     {
         m_last_above_thresh = millis();
+    }
+    else if(current < m_threshold && (millis() - m_last_above_thresh) > m_max_below_time)
+    {
+        return false;
     }
     
     return true;
@@ -78,25 +83,12 @@ int16_t Current::read()
     return (m_p2p() - m_error) * m_v_range/1024 * m_mv_per_A/1000;
 }
 
-int16_t Current::read_avg()
-{
-    int32_t avg=0;
-
-    for(uint8_t i=0; i<m_avg_sample_size; i++)
-    {
-        avg += m_avg_samples[i];
-    }
-    avg /= m_avg_sample_size;
-    return avg;
-}
-
 void Current::sample()
 {
 
     if(m_raw_sample_offset >= m_raw_sample_size)
     {
         m_raw_sample_offset = 0;
-        m_average();
     }
 
     if(millis() - m_last_sample > m_sample_period)
@@ -109,16 +101,6 @@ void Current::sample()
 }
 
 // Private functions
-
-void Current::m_average()
-{
-    if(m_avg_sample_offset >= m_avg_sample_size)
-    {
-        m_avg_sample_offset = 0;
-    }
-
-    m_avg_samples[m_avg_sample_offset++] = m_p2p();
-}
 
 uint16_t Current::m_p2p()
 {

@@ -19,10 +19,12 @@ private:
     uint32_t        last_calibrate, last_minutes_left;
     uint32_t        end_of_print_timer;
     const uint32_t  cooldown_time = 5*60*1000; // 5 minutes
-    uint16_t        last_current_reading, current_reading;
+    uint32_t        last_current_reading, current_reading;
 
-    uint16_t current_threshhold = 200;
-    //uint8_t pin_current = A0, pin_debug = -1;
+    /**
+    * Time to wait after relay has been turned on, to avoid reading the inrush
+    */
+    uint32_t        m_inrush_avoidance = 1000;
 
     enum PrintState { IDLE, IN_PROGRESS, COOLING };
     PrintState print_state = IDLE;
