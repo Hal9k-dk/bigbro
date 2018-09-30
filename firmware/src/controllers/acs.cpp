@@ -130,11 +130,13 @@ bool ACSController::card_allowed()
 			break;
 		case 404:
 			display.set_status("Unknown card:", card_id);
+			delay(1000);
 			break;
 		default:
 			String s = "Bad HTTP log reply:";
 			s += String(status);
 			display.set_status(s);
+			delay(1000);
 			break;
 	}
 	yield();
