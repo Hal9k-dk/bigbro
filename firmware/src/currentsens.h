@@ -15,7 +15,7 @@ class Current
 
     private:
         uint8_t m_pin;
-        uint8_t m_debug_pin;
+        int16_t m_debug_pin;
 
         uint32_t m_last_sample		= 0;
         uint8_t m_sample_period     = 5;
