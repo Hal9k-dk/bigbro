@@ -8,7 +8,6 @@ public:
     PrinterController();
 
     void update() override;
-    
     bool relay_check() override;
 
 private:
@@ -20,11 +19,6 @@ private:
     uint32_t        end_of_print_timer;
     const uint32_t  cooldown_time = 5*60*1000; // 5 minutes
     uint32_t        last_current_reading, current_reading;
-
-    /**
-    * Time to wait after relay has been turned on, to avoid reading the inrush
-    */
-    uint32_t        m_inrush_avoidance = 1000;
 
     enum PrintState { IDLE, IN_PROGRESS, COOLING };
     PrintState print_state = IDLE;

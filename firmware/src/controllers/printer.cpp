@@ -61,7 +61,7 @@ bool PrinterController::idle()
         display.set_status("IDLE", 2);
     }
 
-    if(current.is_printing() && has_allowed_card && (millis() - get_relay_on_time() > m_inrush_avoidance))
+    if(current.is_printing() && has_allowed_card)
     {
         #if SERIAL_DBG
         Serial.println("State changed=> PRINTING");
@@ -110,6 +110,7 @@ void PrinterController::cooling()
         Serial.println("State changed=> IDLE");
 	    #endif
         print_state = IDLE;
+        return;
     }
 
     uint8_t minutes_left = ceil( (double) (cooldown_time - (millis() - end_of_print_timer)) /1000.0/60.0);
@@ -145,9 +146,7 @@ void PrinterController::cooling()
 void PrinterController::update()
 {
     ACSController::update();
-    if(millis() - get_relay_on_time() > m_inrush_avoidance)
-    {
-        current.handle();
-    }
+
+    current.handle();
     current_reading = current.read();
 }
