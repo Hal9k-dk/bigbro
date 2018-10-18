@@ -30,7 +30,7 @@ class Current
         int16_t  m_AC_current		= 0;
         const uint16_t m_v_range	= 4650; // mV   | Max ADC voltage on the pin of the divider.
         const uint16_t m_mv_per_A   = 200;  // mV/A | 
-        int16_t m_threshold         = 50;  // Printer is considered printing above this threshold
+        int16_t m_threshold         = 25;  // Printer is considered printing above this threshold
 
         uint32_t m_last_above_thresh = 0;
         uint32_t m_max_below_time   = 60000;  // ms

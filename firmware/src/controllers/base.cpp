@@ -216,15 +216,17 @@ void BaseController::update()
 	this->ota.handle();
 	this->handleSerial();
 
-	if(relay_check() != m_relay_state)
-	{
-		m_relay_state = !m_relay_state;
-		set_relay(m_relay_state);
-		if(m_relay_state)
-		{
-			m_relay_on_time = millis();
-		}
-	}
+	set_relay(1);
+
+	//if(relay_check() != m_relay_state)
+	//{
+	//	m_relay_state = !m_relay_state;
+	//	set_relay(m_relay_state);
+	//	if(m_relay_state)
+	//	{
+	//		m_relay_on_time = millis();
+	//	}
+	//}
 }
 
 int BaseController::log_access(const char* msg, int user_id)
