@@ -33,7 +33,7 @@ class Current
         const uint16_t m_mv_per_A   = 200;  // mV/A | 
 
         // Printer is considered printing above this threshold
-        // int m_threshold             = 50; // TAZ
+        //int m_threshold             = 50; // TAZ
         int m_threshold             = 25; // UM
 
         uint32_t m_last_above_thresh = 0;
