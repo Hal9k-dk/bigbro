@@ -4,7 +4,7 @@
 #include <eeprom_wrapper.h>
 #include <controllers/base.h>
 
-const char* VERSION = "0.2.0";
+const char* VERSION = "0.2.1";
 
 BaseController::BaseController(const char* psw_md5, const bool relay_upstart):
   	ota(psw_md5)
@@ -205,10 +205,25 @@ void BaseController::handleSerial()
     }
 }
 
+void BaseController::ota_enable()
+{
+	m_ota_state = true;
+}
+
+void BaseController::ota_disable()
+{
+	m_ota_state = false;
+}
+
 void BaseController::update()
 {
 	yield();
-	this->ota.handle();
+
+	if(m_ota_state)
+	{
+		this->ota.handle();
+	}
+
 	this->handleSerial();
 
 	set_relay(relay_check());
