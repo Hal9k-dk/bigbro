@@ -9,7 +9,11 @@
 #define PIN_RELAY       D8
 #define MAX_LINE_LENGTH 100
 
-#define OTA_PSW "202cb962ac59075b964b07152d234b70"
+#define OTA_PSW "5f6cbcdc4e0b198694fb67b0ac3f3c1d"
+
+#ifndef OTA_PSW
+  #define OTA_PSW "202cb962ac59075b964b07152d234b70" // 123 default
+#endif
 
 /**
  * Base Class for controllers. Implements the common functionality all controllers use.
@@ -72,6 +76,16 @@ protected:
      */
     bool get_relay();
 
+    /**
+     * Enables OTA updates for the board
+     */
+    void ota_enable();
+
+    /**
+     * Disables OTA updates for the board
+     */
+    void ota_disable();
+
 private:
     /**
      * Read and executes a command from line.
@@ -98,4 +112,9 @@ private:
      * Relay state. false = open, true = closed
      */
     bool m_relay_state = 0;
+
+    /**
+     * OTA enabled state
+     */
+    bool m_ota_state = 1;
 };
