@@ -47,8 +47,7 @@ void ACSController::update()
 
 bool ACSController::has_card()
 {
-	display.set_network_status(String(card_id.length()).c_str());
-	return (card_id.length() > 0);
+	return card_id.length() > 0;
 }
 
 bool ACSController::new_card()
