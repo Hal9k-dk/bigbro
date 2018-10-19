@@ -53,11 +53,6 @@ bool BaseController::get_relay()
 	return digitalRead(PIN_RELAY);
 }
 
-uint32_t BaseController::get_relay_on_time()
-{
-	return m_relay_on_time;
-}
-
 void BaseController::decode_line(const char* line)
 {
 	String ssid, pass;
@@ -216,15 +211,7 @@ void BaseController::update()
 	this->ota.handle();
 	this->handleSerial();
 
-	if(relay_check() != m_relay_state)
-	{
-		m_relay_state = !m_relay_state;
-		set_relay(m_relay_state);
-		if(m_relay_state)
-		{
-			m_relay_on_time = millis();
-		}
-	}
+	set_relay(relay_check());
 }
 
 int BaseController::log_access(const char* msg, int user_id)

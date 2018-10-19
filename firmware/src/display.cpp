@@ -48,7 +48,7 @@ void Display::set_status(const String& line1, const String& line2)
     set_status(line1.c_str(), line2.c_str());
 }
 
-void Display::set_status(const char* line_txt, uint8_t line_nr)
+void Display::set_status(const char* line_txt, int line_nr) // This is uint16_t
 {
     switch(line_nr)
     {
@@ -64,7 +64,7 @@ void Display::set_status(const char* line_txt, uint8_t line_nr)
     update();
 }
 
-void Display::set_status(const String& line_txt, uint8_t line_nr)
+void Display::set_status(const String& line_txt, int line_nr)
 {
     set_status(line_txt.c_str(), line_nr);
 }

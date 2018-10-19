@@ -9,11 +9,11 @@ public:
 
     void set_machine_id(const char* id);
 
-    void set_status(const char* line1, const char* line2 = "");
-    void set_status(const String& line1, const String& line2 = "");
+    void set_status(const char* line1, const char* line2);
+    void set_status(const String& line1, const String& line2);
 
-    void set_status(const char* line_txt, uint8_t line_nr);
-    void set_status(const String& line_txt, uint8_t line_nr);
+    void set_status(const char* line_txt, int line_nr = 0);
+    void set_status(const String& line_txt, int line_nr = 0);
 
     void set_network_status(const char* status);
 

@@ -17,22 +17,21 @@ private:
     bool current_sensor_present = false;
 
     uint32_t        last_calibrate, last_minutes_left;
-    uint32_t        end_of_print_timer;
+    uint32_t        end_of_print_timer, m_inrush_verify_timer;
+
     const uint32_t  cooldown_time = 5*60*1000; // 5 minutes
+    const uint32_t  m_inrush_time = 5*1000;    // 5 seconds
+
     uint32_t        last_current_reading, current_reading;
 
-    /**
-    * Time to wait after relay has been turned on, to avoid reading the inrush
-    */
-    uint32_t        m_inrush_avoidance = 1000;
-
-    enum PrintState { IDLE, IN_PROGRESS, COOLING };
+    enum PrintState { IDLE, INRUSH_PREVENTION, IN_PROGRESS, COOLING };
     PrintState print_state = IDLE;
 
     unsigned long start_tick = millis();
     bool showing_version = true;
 
     bool idle();
+    void inrush_prevension();
     void in_progress();
     void cooling();
 };

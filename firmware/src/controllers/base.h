@@ -72,13 +72,6 @@ protected:
      */
     bool get_relay();
 
-    /**
-     * A getter for the relay on time
-     * @return The time the relay was turned on
-     */
-    uint32_t get_relay_on_time();
-
-
 private:
     /**
      * Read and executes a command from line.
@@ -105,9 +98,4 @@ private:
      * Relay state. false = open, true = closed
      */
     bool m_relay_state = 0;
-
-    /**
-    * Stores the time the relay was turned on at
-    */
-    uint32_t m_relay_on_time = 0;
 };

@@ -56,6 +56,11 @@ bool Current::is_printing()
     return true;
 }
 
+void Current::reset_last_above()
+{
+    m_last_above_thresh = 0;
+}
+
 void Current::handle()
 {
     if(m_debug_pin >= 0)

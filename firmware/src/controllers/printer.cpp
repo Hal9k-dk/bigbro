@@ -14,7 +14,7 @@ PrinterController::PrinterController():
 		display.set_status("Calibrating");
 		delay(2000); // Delay to allow things to settle
 		current.calibrate();
-		display.set_status("Ready");
+        display.set_status("Booted");
 	}
 }
 
@@ -24,6 +24,11 @@ bool PrinterController::relay_check()
     {
         case IDLE:
             return idle(); 
+        
+        case INRUSH_PREVENTION:
+            inrush_prevension();
+            return true;
+
         case IN_PROGRESS:
             in_progress();
             return true;
@@ -51,36 +56,56 @@ bool PrinterController::idle()
     if(!has_card())
     {
         has_allowed_card = false;
-        display.set_status("No card", "IDLE");
         led.set_colour(CRGB::Green);
         led.set_duty_cycle(1);
         led.set_period(10);
     }
-    else
-    {
-        display.set_status("IDLE", 2);
-    }
 
-    if(current.is_printing() && has_allowed_card && (millis() - get_relay_on_time() > m_inrush_avoidance))
+    display.set_status("IDLE", 1);
+
+    if(current.is_printing() && has_allowed_card)
     {
         #if SERIAL_DBG
-        Serial.println("State changed=> PRINTING");
+        Serial.println("State changed=> INRUSH_PREVENTION");
+	    #endif
+        print_state = INRUSH_PREVENTION;
+        m_inrush_verify_timer = millis();
+    }
+
+    if(has_allowed_card)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void PrinterController::inrush_prevension()
+{
+    while(millis() - m_inrush_verify_timer < m_inrush_time)
+    {
+        display.set_status(String(current.is_printing()) + " " + String((millis() - m_inrush_verify_timer)), 1);
+        delay(0);
+    }
+
+    if(current.is_printing())
+    {
+        #if SERIAL_DBG
+        Serial.println("State changed=> IN_PROGRESS");
 	    #endif
         print_state = IN_PROGRESS;
         display.set_status("PRINTING", 1);
     }
-
-    if(has_allowed_card && !get_relay())
+    else
     {
-        return true;
+        #if SERIAL_DBG
+        Serial.println("State changed=> IDLE");
+	    #endif
+        print_state = IDLE;
+        current.reset_last_above();
     }
-    else if(!has_allowed_card)
-    {
-        return false;
-    }
-
-    // Code will reach here if the relay is on, and has_allowed_card == true
-    return true;
 }
 
 void PrinterController::in_progress()
@@ -92,13 +117,13 @@ void PrinterController::in_progress()
 	    #endif
         end_of_print_timer = millis();
         print_state = COOLING;
-        display.set_status("COOLING");
+        display.set_status("COOLING", 1);
         return;
     }
     
     if(last_current_reading != current_reading)
     {
-        display.set_status( String( (int16_t)(floor(current_reading + 2.5)) ) + " mA", 2);
+        //display.set_status( String( (int16_t)(floor(current_reading + 2.5)) ) + " mA", 1);
     }
 }
 
@@ -116,7 +141,7 @@ void PrinterController::cooling()
     if(minutes_left != last_minutes_left)
     {
         last_minutes_left = minutes_left;
-        display.set_status(String(minutes_left) + " min left", 2);
+        display.set_status("COOLING " + String(minutes_left) + " min", 1);
     }
 
     if(new_card())
@@ -138,16 +163,13 @@ void PrinterController::cooling()
 	    #endif
         last_minutes_left = 0;
         print_state = IN_PROGRESS;
-        display.set_status("PRINTING");
+        display.set_status("PRINTING", 1);
     }
 }
 
 void PrinterController::update()
 {
     ACSController::update();
-    if(millis() - get_relay_on_time() > m_inrush_avoidance)
-    {
-        current.handle();
-    }
+    current.handle();
     current_reading = current.read();
 }
