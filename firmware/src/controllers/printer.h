@@ -19,7 +19,7 @@ private:
     uint32_t        last_calibrate, last_minutes_left;
     uint32_t        end_of_print_timer, m_inrush_verify_timer;
 
-    const uint32_t  cooldown_time = 5*60*1000; // 5 minutes
+    const uint32_t  cooldown_time = 9*60*1000; // 9 minutes
     const uint32_t  m_inrush_time = 5*1000;    // 5 seconds
 
     uint32_t        last_current_reading, current_reading;

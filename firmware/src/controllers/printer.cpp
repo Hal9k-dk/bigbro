@@ -86,7 +86,6 @@ void PrinterController::inrush_prevension()
 {
     while(millis() - m_inrush_verify_timer < m_inrush_time)
     {
-        display.set_status(String(current.is_printing()) + " " + String((millis() - m_inrush_verify_timer)), 1);
         delay(0);
     }
 
@@ -97,6 +96,7 @@ void PrinterController::inrush_prevension()
 	    #endif
         print_state = IN_PROGRESS;
         display.set_status("PRINTING", 1);
+        ota_disable();
     }
     else
     {
@@ -135,6 +135,7 @@ void PrinterController::cooling()
         Serial.println("State changed=> IDLE");
 	    #endif
         print_state = IDLE;
+        ota_enable();
     }
 
     uint8_t minutes_left = ceil( (double) (cooldown_time - (millis() - end_of_print_timer)) /1000.0/60.0);
