@@ -52,10 +52,10 @@ void Display::set_status(const char* line_txt, uint8_t line_nr)
 {
     switch(line_nr)
     {
-        case 1:
+        case 0:
             m_line1 = line_txt;
             break;
-        case 2:
+        case 1:
             m_line2 = line_txt;
             break;
         default:
