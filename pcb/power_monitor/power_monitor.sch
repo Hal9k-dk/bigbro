@@ -37,7 +37,7 @@ Wire Wire Line
 Wire Wire Line
 	3425 4350 3675 4350
 $Comp
-L MCU_Module:Wemos-D1-mini U1
+L power_monitor-rescue:Wemos-D1-mini-MCU_Module U1
 U 1 1 5AC90283
 P 6325 4100
 F 0 "U1" H 6325 5025 50  0000 C CNN
@@ -78,7 +78,7 @@ Wire Wire Line
 Wire Wire Line
 	6700 4400 6700 4475
 $Comp
-L Connector_Specialized:Screw_Terminal_01x02 J2
+L power_monitor-rescue:Screw_Terminal_01x02-Connector_Specialized J2
 U 1 1 5ACA6825
 P 3225 4250
 F 0 "J2" H 3150 4450 50  0000 C CNN
@@ -89,7 +89,7 @@ F 3 "~" H 3225 4250 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L Connector_Specialized:Screw_Terminal_01x02 J1
+L power_monitor-rescue:Screw_Terminal_01x02-Connector_Specialized J1
 U 1 1 5ACA682C
 P 3225 3900
 F 0 "J1" H 3150 3625 50  0000 C CNN
@@ -105,7 +105,7 @@ U 1 1 5ACA1835
 P 5600 3250
 F 0 "R2" H 5659 3296 50  0000 L CNN
 F 1 "6K8" H 5659 3205 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.84x1.00mm_HandSolder" H 5600 3250 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5600 3250 50  0001 C CNN
 F 3 "~" H 5600 3250 50  0001 C CNN
 	1    5600 3250
 	-1   0    0    -1  
@@ -118,7 +118,7 @@ U 1 1 5ACA1E9C
 P 5600 3550
 F 0 "R3" H 5659 3596 50  0000 L CNN
 F 1 "15K" H 5659 3505 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.84x1.00mm_HandSolder" H 5600 3550 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5600 3550 50  0001 C CNN
 F 3 "~" H 5600 3550 50  0001 C CNN
 	1    5600 3550
 	-1   0    0    -1  
@@ -154,18 +154,18 @@ Wire Wire Line
 Wire Wire Line
 	6925 3500 6925 3325
 $Comp
-L Connector_Specialized:Screw_Terminal_01x04 J4
+L power_monitor-rescue:Screw_Terminal_01x04-Connector_Specialized J4
 U 1 1 5ACA4C22
 P 7950 3925
 F 0 "J4" H 8075 3825 50  0000 C CNN
-F 1 "OLED" H 8125 3925 50  0000 C CNN
+F 1 "RFID" H 8125 3925 50  0000 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MC_1,5_4-G-3.81_1x04_P3.81mm_Horizontal" H 7950 3925 50  0001 C CNN
 F 3 "~" H 7950 3925 50  0001 C CNN
 	1    7950 3925
 	1    0    0    1   
 $EndComp
 $Comp
-L Connector_Specialized:Screw_Terminal_01x03 J5
+L power_monitor-rescue:Screw_Terminal_01x03-Connector_Specialized J5
 U 1 1 5ACA4CDB
 P 7950 4325
 F 0 "J5" H 8075 4225 50  0000 C CNN
@@ -176,11 +176,11 @@ F 3 "~" H 7950 4325 50  0001 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L Connector_Specialized:Screw_Terminal_01x04 J3
+L power_monitor-rescue:Screw_Terminal_01x04-Connector_Specialized J3
 U 1 1 5ACA4D49
 P 7950 3425
 F 0 "J3" H 8075 3325 50  0000 C CNN
-F 1 "RFID" H 8100 3425 50  0000 C CNN
+F 1 "OLED" H 8100 3425 50  0000 C CNN
 F 2 "Connector_Phoenix_MC:PhoenixContact_MC_1,5_4-G-3.81_1x04_P3.81mm_Horizontal" H 7950 3425 50  0001 C CNN
 F 3 "~" H 7950 3425 50  0001 C CNN
 	1    7950 3425
@@ -345,4 +345,28 @@ Wire Wire Line
 Connection ~ 5600 3400
 Wire Wire Line
 	5600 3400 5600 3450
+$Comp
+L Device:R_Small R4
+U 1 1 5BD988D9
+P 5400 4375
+F 0 "R4" H 5459 4421 50  0000 L CNN
+F 1 "15K" H 5459 4330 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5400 4375 50  0001 C CNN
+F 3 "~" H 5400 4375 50  0001 C CNN
+	1    5400 4375
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0111
+U 1 1 5BD98B30
+P 5400 4475
+F 0 "#PWR0111" H 5400 4225 50  0001 C CNN
+F 1 "GND" H 5405 4302 50  0000 C CNN
+F 2 "" H 5400 4475 50  0001 C CNN
+F 3 "" H 5400 4475 50  0001 C CNN
+	1    5400 4475
+	1    0    0    -1  
+$EndComp
+Text GLabel 5400 4275 1    50   Input ~ 0
+RFID_SW
 $EndSCHEMATC

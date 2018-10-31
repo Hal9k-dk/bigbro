@@ -75,7 +75,7 @@ U 1 1 5AC9C391
 P 6250 2325
 F 0 "R1" H 6309 2371 50  0000 L CNN
 F 1 "15k" H 6309 2280 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad0.84x1.00mm_HandSolder" H 6250 2325 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6250 2325 50  0001 C CNN
 F 3 "~" H 6250 2325 50  0001 C CNN
 	1    6250 2325
 	1    0    0    -1  
@@ -85,7 +85,7 @@ Wire Wire Line
 Wire Wire Line
 	6000 2200 6000 2150
 $Comp
-L Device:Q_NMOS_GDS Q1
+L Device:Q_NMOS_GSD Q1
 U 1 1 5AC9C39B
 P 6000 2400
 F 0 "Q1" V 5900 2475 50  0000 L CNN
@@ -105,7 +105,7 @@ Wire Wire Line
 	6250 2150 6375 2150
 Connection ~ 6250 2150
 $Comp
-L Sensor_Current:ACS723xMATR-10AB U2
+L power_monitor-rescue:ACS723xMATR-10AB-Sensor_Current U2
 U 1 1 5AC9C3A9
 P 6550 3850
 F 0 "U2" H 6800 4200 50  0000 C CNN
@@ -142,7 +142,7 @@ U 1 1 5AC9C3C1
 P 7775 4150
 F 0 "C1" H 7683 4104 50  0000 R CNN
 F 1 "0.1uF" H 7683 4195 50  0000 R CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric_Pad0.84x1.00mm_HandSolder" H 7775 4150 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 7775 4150 50  0001 C CNN
 F 3 "~" H 7775 4150 50  0001 C CNN
 	1    7775 4150
 	1    0    0    1   
@@ -182,7 +182,7 @@ AC_L
 Wire Wire Line
 	5725 3250 5650 3250
 $Comp
-L Relay:G2RL-2A K1
+L power_monitor-rescue:G2RL-2A-Relay K1
 U 1 1 5AC87461
 P 5350 3150
 F 0 "K1" H 5350 2383 50  0000 C CNN
@@ -193,7 +193,7 @@ F 3 "" V 5350 3150 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L Power_Management:HLK-PM01 PS1
+L power_monitor-rescue:HLK-PM01-Power_Management PS1
 U 1 1 5AC93002
 P 6425 5000
 F 0 "PS1" H 6425 5365 50  0000 C CNN

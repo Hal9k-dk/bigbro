@@ -1,2 +1,3 @@
 (sym_lib_table
+  (lib (name power_monitor-rescue)(type Legacy)(uri ${KIPRJMOD}/power_monitor-rescue.lib)(options "")(descr ""))
 )
