@@ -6,9 +6,7 @@ class PrinterController: public ACSController
 {
 public:
     PrinterController();
-
     void update() override;
-    
     bool relay_check() override;
 
 private:
@@ -34,4 +32,6 @@ private:
     void inrush_prevension();
     void in_progress();
     void cooling();
+
+    void state_change(PrintState s);
 };
