@@ -19,6 +19,10 @@ protected:
 
     String last_card_id;
     String card_id;
+    int current_user_id = 0;
+
+    virtual void on_card_authenticated(String user_name, bool allowed);
+    virtual void on_card_removed();
 
     bool has_allowed_card = false;
 
