@@ -165,6 +165,7 @@ bool ACSController::query_permission(const String& card_id,
 	root["card_id"] = card_id;
 
 	const int status = rc.post(root);
+
 	switch (status) 
 	{
 		case 200:

@@ -4,8 +4,8 @@
 #include <RestClient.h>
 
 #if TEST_SERVER
-    #define SERVER "192.168.0.122"
-    #define USE_SSL 0
+    #define SERVER "10.42.3.32"
+    #define USE_SSL 1
 #else
     #define SERVER "panopticon.hal9k.dk"
     #define USE_SSL 1

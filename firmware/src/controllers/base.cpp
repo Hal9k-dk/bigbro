@@ -15,7 +15,7 @@ BaseController::BaseController(const char* psw_md5, const bool relay_upstart):
 	{
 		display.set_status("ERROR!", "Remove card");
 		Serial.println("A reset error occured with a card present!");
-		led.set_colour(CRGB::Crimson);
+		led.set_colour(CRGB::Red);
 
 		while(digitalRead(D6))
 		{
