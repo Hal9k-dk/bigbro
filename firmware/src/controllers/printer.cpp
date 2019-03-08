@@ -2,7 +2,7 @@
 
 PrinterController::PrinterController(): 
   ACSController(),
-  current(A0, -1, 50)
+  current(PIN_CURRENT, -1, CURRENT_THRESH)
 {
     current_sensor_present = current.sensor_present();
 	if(current_sensor_present)

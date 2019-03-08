@@ -1,5 +1,11 @@
 #pragma once
 
+#define PIN_CURRENT A0
+
+#ifndef CURRENT_THRESH
+    #define CURRENT_THRESH 50 // Threshhold current consumption for "printing"
+#endif
+
 #include <controllers/acs.h>
 #include <currentsens.h>
 class PrinterController: public ACSController
