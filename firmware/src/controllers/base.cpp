@@ -11,6 +11,23 @@ BaseController::BaseController(const char* psw_md5, const bool relay_upstart):
 {
 	Serial.begin(115200);
 
+	while(digitalRead(D6))
+	{
+		display.set_status("ERROR!", "Remove card");
+		Serial.println("A reset error occured with a card present!");
+		led.set_colour(CRGB::Red);
+
+		while(digitalRead(D6))
+		{
+			led.set_duty_cycle(100);
+			led.update();
+			delay(1000);
+			led.set_duty_cycle(0);
+			led.update();
+			delay(1000);
+		}
+	}
+
 	#if SERIAL_DBG
 	Serial.print("Machine v ");
 	Serial.println(VERSION);

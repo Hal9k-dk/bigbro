@@ -1,3 +1,3 @@
 [submodule "firmware/lib/RestClient"]
 	path = firmware/lib/RestClient
-	url = https://github.com/DaKaZ/esp8266-restclient.git
+	url = https://github.com/Hal9k-dk/esp8266-restclient.git
