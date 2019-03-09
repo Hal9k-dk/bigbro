@@ -81,8 +81,8 @@ $Comp
 L power_monitor-rescue:Screw_Terminal_01x02-Connector_Specialized J2
 U 1 1 5ACA6825
 P 3225 4250
-F 0 "J2" H 3150 4450 50  0000 C CNN
-F 1 "230V AC Output" H 3150 4375 50  0000 C CNN
+F 0 "J2" H 3225 4350 50  0000 C CNN
+F 1 "230V AC Output" H 3150 4050 50  0000 C CNN
 F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBA_2,5_2-G_1x02_P5.00mm_Horizontal" H 3225 4250 50  0001 C CNN
 F 3 "~" H 3225 4250 50  0001 C CNN
 	1    3225 4250
@@ -91,13 +91,13 @@ $EndComp
 $Comp
 L power_monitor-rescue:Screw_Terminal_01x02-Connector_Specialized J1
 U 1 1 5ACA682C
-P 3225 3900
-F 0 "J1" H 3150 3625 50  0000 C CNN
-F 1 "230V AC Input" H 3150 3700 50  0000 C CNN
-F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBA_2,5_2-G_1x02_P5.00mm_Horizontal" H 3225 3900 50  0001 C CNN
-F 3 "~" H 3225 3900 50  0001 C CNN
-	1    3225 3900
-	-1   0    0    1   
+P 3225 3800
+F 0 "J1" H 3225 3900 50  0000 C CNN
+F 1 "230V AC Input" H 3150 3600 50  0000 C CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBA_2,5_2-G_1x02_P5.00mm_Horizontal" H 3225 3800 50  0001 C CNN
+F 3 "~" H 3225 3800 50  0001 C CNN
+	1    3225 3800
+	-1   0    0    -1  
 $EndComp
 $Comp
 L Device:R_Small R2
