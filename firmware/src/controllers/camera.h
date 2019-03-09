@@ -1,6 +1,8 @@
 #pragma once
 
 #include <controllers/base.h>
+#include "acsrestclient.h"
+#include "eeprom_wrapper.h"
 
 class CameraController: public BaseController
 {

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <acsrestclient.h>
+#include <eeprom_wrapper.h>
 #include <display.h>
 #include <led.h>
 #include <wifi.h>

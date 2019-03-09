@@ -1,7 +1,3 @@
-#include <Arduino.h>
-#include <ArduinoJson.h>
-#include <acsrestclient.h>
-#include <eeprom_wrapper.h>
 #include <controllers/base.h>
 
 const char* VERSION = "0.2.1";
