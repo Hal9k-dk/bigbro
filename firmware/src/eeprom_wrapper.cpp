@@ -219,7 +219,7 @@ String Eeprom::get_machine_id()
 
 void Eeprom::set_machine_id(const char* id)
 {
-    if (strlen(id) > MACHINE_ID_SIZE)
+    if (strlen(id) > MACHINE_ID_SIZE-1)
     {
         Serial.println("ERROR: Machine ID too long");
 
