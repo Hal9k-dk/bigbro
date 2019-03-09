@@ -43,6 +43,54 @@ bool PrinterController::relay_check()
     }
 }
 
+void PrinterController::state_change(PrintState s)
+{
+    print_state = s;
+    switch(s)
+    {
+        case IDLE:
+            ota_enable();
+            display.set_status(Eeprom::get_last_user(), 0);
+            #if SERIAL_DBG
+            Serial.println("State changed=> IDLE");
+	        #endif
+            break;
+
+        case INRUSH_PREVENTION:
+            m_inrush_verify_timer = millis();
+            
+            #if SERIAL_DBG
+            Serial.println("State changed=> INRUSH_PREVENTION");
+	        #endif
+            break;
+
+        case IN_PROGRESS:
+            display.set_status("PRINTING", 1);
+            ota_disable();
+            Eeprom::set_last_user(name_trunc.c_str());
+            // log_access(".Print started", current_user_id);
+
+            #if SERIAL_DBG
+            Serial.println("State changed=> IN_PROGRESS");
+	        #endif
+            break;
+          
+        case COOLING:
+            end_of_print_timer = millis();
+            display.set_status("COOLING", 1);
+
+            #if SERIAL_DBG
+            Serial.println("State changed=> COOLING");
+	        #endif
+            break;
+
+        default:
+            #if SERIAL_DBG
+            Serial.println("wat");
+            #endif
+    }
+}
+
 bool PrinterController::idle()
 {
     if(new_card())
@@ -65,11 +113,7 @@ bool PrinterController::idle()
 
     if(current.is_printing() && has_allowed_card)
     {
-        #if SERIAL_DBG
-        Serial.println("State changed=> INRUSH_PREVENTION");
-	    #endif
-        print_state = INRUSH_PREVENTION;
-        m_inrush_verify_timer = millis();
+        state_change(INRUSH_PREVENTION);
     }
 
     if(has_allowed_card)
@@ -91,19 +135,11 @@ void PrinterController::inrush_prevension()
 
     if(current.is_printing())
     {
-        #if SERIAL_DBG
-        Serial.println("State changed=> IN_PROGRESS");
-	    #endif
-        print_state = IN_PROGRESS;
-        display.set_status("PRINTING", 1);
-        ota_disable();
+        state_change(IN_PROGRESS);
     }
     else
     {
-        #if SERIAL_DBG
-        Serial.println("State changed=> IDLE");
-	    #endif
-        print_state = IDLE;
+        state_change(IDLE);
         current.reset_last_above();
     }
 }
@@ -112,12 +148,7 @@ void PrinterController::in_progress()
 {
     if(!current.is_printing())
     {
-        #if SERIAL_DBG
-        Serial.println("State changed=> COOLING");
-	    #endif
-        end_of_print_timer = millis();
-        print_state = COOLING;
-        display.set_status("COOLING", 1);
+        state_change(COOLING);
         return;
     }
     
@@ -131,11 +162,7 @@ void PrinterController::cooling()
 {
     if(millis() - end_of_print_timer > cooldown_time)
     {
-        #if SERIAL_DBG
-        Serial.println("State changed=> IDLE");
-	    #endif
-        print_state = IDLE;
-        ota_enable();
+        state_change(IDLE);
     }
 
     uint8_t minutes_left = ceil( (double) (cooldown_time - (millis() - end_of_print_timer)) /1000.0/60.0);
@@ -159,12 +186,8 @@ void PrinterController::cooling()
 
     if(current.is_printing() && has_allowed_card)
     {
-        #if SERIAL_DBG
-        Serial.println("State changed=> PRINTING");
-	    #endif
         last_minutes_left = 0;
-        print_state = IN_PROGRESS;
-        display.set_status("PRINTING", 1);
+        state_change(IN_PROGRESS);
     }
 }
 

@@ -8,6 +8,7 @@
 
 #include <controllers/acs.h>
 #include <currentsens.h>
+
 class PrinterController: public ACSController
 {
 public:
@@ -40,4 +41,5 @@ private:
     void inrush_prevension();
     void in_progress();
     void cooling();
+    void state_change(PrintState s);
 };
