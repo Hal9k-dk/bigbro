@@ -1,6 +1,3 @@
-#include <ArduinoJson.h>
-#include "eeprom_wrapper.h"
-#include "acsrestclient.h"
 #include "controllers/acs.h"
 
 #define SERIAL_DBG 1
@@ -98,7 +95,7 @@ bool ACSController::card_allowed()
 	led.set_duty_cycle(50);
 	led.update();
 
-	String name_trunc = user_name;
+	name_trunc = user_name;
 	if (name_trunc.length() > 17)
 	{
 		name_trunc = name_trunc.substring(0, 14) + String("...");

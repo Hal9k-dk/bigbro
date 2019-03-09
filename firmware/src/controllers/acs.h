@@ -19,6 +19,7 @@ protected:
 
     String last_card_id;
     String card_id;
+    String name_trunc;
 
     bool has_allowed_card = false;
 
