@@ -17,8 +17,11 @@ const uint16_t WIFI_PASS_OFFSET = SSID_BLOCK_OFFSET + SSID_BLOCK_SIZE;
 const uint16_t WIFI_PASS_SIZE = 64; // Max psw size according to wpa2
 const uint16_t WIFI_PASS_BLOCK_SIZE = WIFI_PASS_SIZE * MAX_SSIDS;
 
-const uint16_t EEPROM_SIZE = WIFI_PASS_OFFSET + WIFI_PASS_BLOCK_SIZE;
+// Last user to use this machine
+const uint16_t LAST_USER_OFFSET = WIFI_PASS_OFFSET + WIFI_PASS_BLOCK_SIZE;
+const uint8_t LAST_USER_SIZE = 18; // We'll store the truncated name 
 
+const uint16_t EEPROM_SIZE = LAST_USER_OFFSET + LAST_USER_SIZE;
 const uint16_t user_input_timeout = 10000;
 
 
@@ -42,6 +45,9 @@ public:
 
     static String get_api_token();
     static void set_api_token(const char*);
+
+    static String get_last_user();
+    static void set_last_user(const char*);
 
 private:
     static void set_ssid(const char*, uint8_t index);

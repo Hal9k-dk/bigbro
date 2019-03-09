@@ -274,3 +274,37 @@ void Eeprom::set_api_token(const char* token)
     EEPROM.write(API_TOKEN_OFFSET+i, 0);
     EEPROM.commit();
 }
+
+String Eeprom::get_last_user()
+{
+    String s;
+    for (uint16_t i = 0; i < LAST_USER_SIZE; i++)
+    {
+        const auto c = static_cast<char>(EEPROM.read(LAST_USER_OFFSET+i));
+        if (!c)
+        {
+            break;
+        }
+        s.concat(c);
+    }
+    return s;
+}
+
+void Eeprom::set_last_user(const char* trunced_name)
+{
+    int name_length = strlen(trunced_name);
+    if(name_length > LAST_USER_SIZE-1)
+    {
+        #if SERIAL_DBG
+            Serial.println("ERROR: name too long");
+        #endif
+        return;
+    }
+
+    for(int i=0; i<name_length; i++)
+    {
+        EEPROM.write(LAST_USER_OFFSET+i, trunced_name[i]);
+    }
+    
+    EEPROM.commit();
+}
