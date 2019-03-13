@@ -14,9 +14,19 @@ BaseController* controller;
  */
 void setup()
 {
+#if CONTROLLER == 0
+	controller = new ACSController();
+#elif CONTROLLER == 1
+	controller = new PrinterController();
+#elif CONTROLLER == 2
+	controller = new CameraController();
+	
+#else // Default controller
 	controller = new ACSController();
 	//controller = new PrinterController();
 	//controller = new CameraController();
+#endif
+	
 }
 
 /**

@@ -23,6 +23,11 @@ cache:
     directories:
         - "~/.platformio"
 
+env:
+    - PLATFORMIO_BUILD_FLAGS="-D CONTROLLER=0"
+    - PLATFORMIO_BUILD_FLAGS="-D CONTROLLER=1"
+    - PLATFORMIO_BUILD_FLAGS="-D CONTROLLER=2"
+
 install:
     - pip install -U platformio
     - platformio update
