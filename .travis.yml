@@ -28,6 +28,23 @@ env:
     - PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=1'
     - PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=2'
 
+branches:
+    only:
+    - platformio
+
+before_install:
+  - |
+    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+      COMMIT_RANGE="$TRAVIS_BRANCH"
+    else
+      COMMIT_RANGE="$TRAVIS_COMMIT_RANGE"
+    fi
+    git diff --name-only $COMMIT_RANGE | grep -vE '(\.md$)|(Doxyfile)' | grep -qE "(firmware)|(^.travis.yml$)" || {
+      echo "Only files not used in the build process were updated, aborting."
+      exit
+    }
+
+
 install:
     - pip install -U platformio
     - platformio update
