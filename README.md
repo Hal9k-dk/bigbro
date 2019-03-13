@@ -14,13 +14,11 @@ This example code assumes you're using platformio core. The CLI tool.
 
 ```bash
 git clone https://github.com/Duckle29/bigbro.git
-cd bigbro
-git submodule update --init --recursive
-cd firmware
-platformio run -t upload -e d1_mini_serial
+cd bigbro/firmware
+platformio run -t upload
 ```
 
-When deployed, you can also update them via OTA. Set the correct IP in platformio.ini, and use:
+When deployed, you can also update them via OTA. Set the correct IP and password in platformio.ini, and use:
 
 ```bash
 platformio run -t upload -e d1_mini_ota
