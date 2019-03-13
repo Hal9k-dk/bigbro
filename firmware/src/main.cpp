@@ -10,7 +10,7 @@
 BaseController* controller;
 
 /**
- * Initialization codfe 
+ * Initialization code 
  */
 void setup()
 {
