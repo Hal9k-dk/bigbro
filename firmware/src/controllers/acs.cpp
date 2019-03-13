@@ -1,7 +1,5 @@
 #include "controllers/acs.h"
 
-#define SERIAL_DBG 1
-
 ACSController::ACSController(): 
   BaseController(),
   reader(D5, SW_SERIAL_UNUSED_PIN, D6)

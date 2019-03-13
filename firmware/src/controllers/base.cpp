@@ -2,8 +2,10 @@
 
 const char* VERSION = "0.2.1";
 
-BaseController::BaseController(const char* psw_md5, const bool relay_upstart):
-  	ota(psw_md5)
+BaseController::BaseController(const char* psw_md5, const bool relay_upstart)
+#if OTA_ENABLED
+  	:ota(psw_md5)
+#endif
 {
 	Serial.begin(115200);
 
@@ -45,8 +47,10 @@ BaseController::BaseController(const char* psw_md5, const bool relay_upstart):
 	// Connect to WiFi network
 	if(wifi_handler.init(led, display))
 	{
+		#if OTA_ENABLED
 		// Set up ota uploading
 		ota.begin();
+		#endif
 	}
 	else
 	{
@@ -218,24 +222,32 @@ void BaseController::handleSerial()
     }
 }
 
+
 void BaseController::ota_enable()
 {
+#if OTA_ENABLED
 	m_ota_state = true;
+#endif
 }
 
 void BaseController::ota_disable()
 {
+#if OTA_ENABLED
 	m_ota_state = false;
+#endif
 }
+
 
 void BaseController::update()
 {
 	yield();
 
+	#if OTA_ENABLED
 	if(m_ota_state)
 	{
 		this->ota.handle();
 	}
+	#endif
 
 	this->handleSerial();
 

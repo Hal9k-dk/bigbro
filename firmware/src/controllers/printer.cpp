@@ -88,6 +88,8 @@ void PrinterController::state_change(PrintState s)
             #if SERIAL_DBG
             Serial.println("wat");
             #endif
+            ;
+
     }
 }
 

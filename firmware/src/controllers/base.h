@@ -7,18 +7,20 @@
 #include <display.h>
 #include <led.h>
 #include <wifi.h>
-#include <ota.h>
 
-#define PIN_LED         D7
-#define PIN_RELAY       D8
-#define MAX_LINE_LENGTH 100
+#if OTA_ENABLED
+    #include <ota.h>
+#endif
 
 #define OTA_PSW "5f6cbcdc4e0b198694fb67b0ac3f3c1d"
 
 #ifndef OTA_PSW
-  #define OTA_PSW "202cb962ac59075b964b07152d234b70" // 123 default
+    #define OTA_PSW "202cb962ac59075b964b07152d234b70" // 123 default
 #endif
 
+#define PIN_LED         D7
+#define PIN_RELAY       D8
+#define MAX_LINE_LENGTH 100
 /**
  * Base Class for controllers. Implements the common functionality all controllers use.
  */
@@ -53,6 +55,7 @@ protected:
     /// Multi-colr case led 
     Led<PIN_LED> led;
     WiFiHandler wifi_handler;
+
     /**
      * Over-The-Air update handler.
      * 
@@ -60,7 +63,9 @@ protected:
      * Beaware that the OTA mechanism works by creating a server on you computer and then instructing the ESP8266 to download the new firmware from that server.\n
      * Note: password hashes can be computed using the following commands: echo -n 123 | md5sum
      */
+#if OTA_ENABLED
     OTA ota;
+#endif
 
     /**
      * @param msg The text that will be saved on the backend (panopticon)
