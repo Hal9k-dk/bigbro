@@ -14,7 +14,7 @@ BaseController* controller;
  */
 void setup()
 {
-#if CONTROLLER == 0 
+#if CONTROLLER == 0 && defined(CONTROLLER)
 #pragma message "Compiling ACSController"
 	controller = new ACSController();
 #elif CONTROLLER == 1
@@ -25,6 +25,7 @@ void setup()
 	controller = new CameraController();
 
 #else // Default controller
+#pragma message "Compiling default controller"
 	controller = new ACSController();
 	//controller = new PrinterController();
 	//controller = new CameraController();
