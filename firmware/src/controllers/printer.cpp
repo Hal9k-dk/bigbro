@@ -50,15 +50,17 @@ void PrinterController::state_change(PrintState s)
     {
         case IDLE:
             ota_enable();
+            display.set_status("IDLE", 1);
             display.set_status(Eeprom::get_last_user(), 0);
             #if SERIAL_DBG
             Serial.println("State changed=> IDLE");
 	        #endif
             break;
 
-        case INRUSH_PREVENTION:
+        case INRUSH_PREVENTION: 
             m_inrush_verify_timer = millis();
-            
+            current.clear_buffer();
+            current.reset_last_above();
             #if SERIAL_DBG
             Serial.println("State changed=> INRUSH_PREVENTION");
 	        #endif
@@ -95,6 +97,10 @@ void PrinterController::state_change(PrintState s)
 
 bool PrinterController::idle()
 {
+    if(!(millis()%1000))
+    {
+        display.set_status("IDLE", 1);
+    }
     if(new_card())
     {
         if(has_card())
@@ -110,8 +116,6 @@ bool PrinterController::idle()
         led.set_duty_cycle(1);
         led.set_period(10);
     }
-
-    display.set_status("IDLE", 1);
 
     if(current.is_printing() && has_allowed_card)
     {
@@ -129,13 +133,16 @@ bool PrinterController::idle()
 }
 
 void PrinterController::inrush_prevension()
-{
-    while(millis() - m_inrush_verify_timer < m_inrush_time)
+{   
+    if(millis() - m_inrush_verify_timer < m_inrush_time)
     {
-        delay(0);
+        //if(last_current_reading != current_reading)
+        //{
+        //    last_current_reading = current_reading;
+        //    display.set_status( String( (int16_t)(floor(current_reading + 2.5)) ) + " mAI", 1);
+        //}
     }
-
-    if(current.is_printing())
+    else if(current.read() > CURRENT_THRESH)
     {
         state_change(IN_PROGRESS);
     }
@@ -154,10 +161,11 @@ void PrinterController::in_progress()
         return;
     }
     
-    if(last_current_reading != current_reading)
-    {
-        //display.set_status( String( (int16_t)(floor(current_reading + 2.5)) ) + " mA", 1);
-    }
+    //if(last_current_reading != current_reading)
+    //{
+    //    last_current_reading = current_reading;
+    //    display.set_status( String( (int16_t)(floor(current_reading + 2.5)) ) + " mAP", 1);
+    //}
 }
 
 void PrinterController::cooling()
@@ -193,9 +201,23 @@ void PrinterController::cooling()
     }
 }
 
+uint32_t last_print = 0;
 void PrinterController::update()
 {
+    #if SERIAL_DBG > 5
+		Serial.println("Printer update");
+    #endif
     ACSController::update();
     current.handle();
     current_reading = current.read();
+
+    #if SERIAL_DBG > 1
+    if((last_current_reading != current_reading && (millis() - last_print > 500)) || millis() - last_print > 5000)
+    {
+      last_print = millis();
+      last_current_reading = current_reading;
+      Serial.println(( String( (int16_t)(floor(current_reading + 2.5)) ) + " mA " + String(current.is_printing())));
+    }
+    #endif
+    
 }
