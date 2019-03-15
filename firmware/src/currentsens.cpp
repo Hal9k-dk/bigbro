@@ -58,7 +58,21 @@ bool Current::is_printing()
 
 void Current::reset_last_above()
 {
-    m_last_above_thresh = 0;
+    m_last_above_thresh = millis() - (m_max_below_time +1);
+    #if SERIAL_DBG
+    Serial.println("Reset last above");
+    #endif
+}
+
+void Current::clear_buffer()
+{
+    for(int i=0; i<m_raw_sample_size; i++)
+    {
+        m_raw_samples[i] = m_threshold;
+    }
+    #if SERIAL_DBG
+    Serial.println("Clear Buffer");
+    #endif
 }
 
 void Current::handle()
@@ -90,7 +104,6 @@ int16_t Current::read()
 
 void Current::sample()
 {
-
     if(m_raw_sample_offset >= m_raw_sample_size)
     {
         m_raw_sample_offset = 0;
@@ -99,6 +112,7 @@ void Current::sample()
     if(millis() - m_last_sample > m_sample_period)
     {   
         uint16_t reading = analogRead(A0);
+        //Serial.print(" " + String(reading)+ " ");
 
         m_last_sample = millis();
         m_raw_samples[m_raw_sample_offset++] = reading;
@@ -121,7 +135,7 @@ uint16_t Current::m_p2p()
         {
             max = m_raw_samples[i];
         }
-        yield();
+        delay(0);
     }
     return max - min;
 }
