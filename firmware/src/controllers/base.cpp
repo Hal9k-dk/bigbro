@@ -1,6 +1,6 @@
 #include <controllers/base.h>
 
-const char* VERSION = "0.2.1";
+const char* VERSION = "0.2.2";
 
 BaseController::BaseController(const char* psw_md5, const bool relay_upstart)
 #if OTA_ENABLED
@@ -240,7 +240,11 @@ void BaseController::ota_disable()
 
 void BaseController::update()
 {
-	yield();
+	#if SERIAL_DBG > 5
+		Serial.println("Base update");
+    #endif
+
+	delay(0);
 
 	#if OTA_ENABLED
 	if(m_ota_state)

@@ -34,6 +34,9 @@ bool ACSController::relay_check()
 
 void ACSController::update()
 {
+	#if SERIAL_DBG > 5
+		Serial.println("ACS update");
+    #endif
 	BaseController::update();
 	led.update();
 	reader.update();
