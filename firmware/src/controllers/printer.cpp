@@ -69,6 +69,7 @@ void PrinterController::state_change(PrintState s)
         case IN_PROGRESS:
             display.set_status("PRINTING", 1);
             ota_disable();
+
             Eeprom::set_last_user(name_trunc.c_str());
             // log_access(".Print started", current_user_id);
 
@@ -97,8 +98,12 @@ void PrinterController::state_change(PrintState s)
 
 bool PrinterController::idle()
 {
-    if(!(millis()%1000))
+    if(!(millis()%5000))
     {
+        if(!has_card())
+        {
+            display.set_status(Eeprom::get_last_user(), 0);
+        }
         display.set_status("IDLE", 1);
     }
     if(new_card())
