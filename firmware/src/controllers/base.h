@@ -12,7 +12,7 @@
     #include <ota.h>
 #endif
 
-#define OTA_PSW "5f6cbcdc4e0b198694fb67b0ac3f3c1d"
+//#define OTA_PSW "5f6cbcdc4e0b198694fb67b0ac3f3c1d"
 
 #ifndef OTA_PSW
     #define OTA_PSW "202cb962ac59075b964b07152d234b70" // 123 default
