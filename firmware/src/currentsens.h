@@ -9,6 +9,7 @@ class Current
         void handle();
         bool is_printing();
         void reset_last_above();
+        void clear_buffer();
         void calibrate(); // Run this at 0A to collect the 0A offset.
         bool sensor_present(); // Checks if there's a sensor on the board.
 		void sample();
@@ -20,7 +21,7 @@ class Current
         int16_t m_debug_pin;
 
         uint32_t m_last_sample		= 0;
-        uint8_t m_sample_period     = 10;
+        uint8_t m_sample_period     = 10; // ms
 		bool    m_raw_buffer_filled	= 0;
 		int16_t m_raw_samples[100]; 
     	uint8_t m_raw_sample_offset	= 0;
@@ -33,10 +34,9 @@ class Current
         const uint16_t m_mv_per_A   = 200;  // mV/A | 
 
         // Printer is considered printing above this threshold
-        //int m_threshold             = 50; // TAZ
-        int m_threshold             = 25; // UM
+        int m_threshold;
 
-        uint32_t m_last_above_thresh = 0;
+        uint32_t m_last_above_thresh = -60000;
         uint32_t m_max_below_time   = 60000;  // ms
 
         uint16_t m_p2p();
