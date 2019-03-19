@@ -28,9 +28,8 @@
  */
 BaseController* controller;
 
-/**
- * Initialization code 
- */
+
+///Initialization code 
 void setup()
 {
 #if CONTROLLER == 0 && defined(CONTROLLER)
