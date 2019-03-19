@@ -1,54 +1,52 @@
-# Continuous Integration (CI) is the practice, in software
-# engineering, of merging all developer working copies with a shared mainline
-# several times a day < https://docs.platformio.org/page/ci/index.html >
-#
-# Documentation:
-#
-# * Travis CI Embedded Builds with PlatformIO
-#   < https://docs.travis-ci.com/user/integration/platformio/ >
-#
-# * PlatformIO integration with Travis CI
-#   < https://docs.platformio.org/page/ci/travis.html >
-#
-# * User Guide for `platformio ci` command
-#   < https://docs.platformio.org/page/userguide/cmd_ci.html >
-#
-
 language: python
 python:
-    - "2.7"
-
+- '2.7'
 sudo: false
 cache:
-    directories:
-        - "~/.platformio"
-
+  directories:
+  - "~/.platformio"
 env:
-    - PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=0'
-    - PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=1'
-    - PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=2'
-
+  global:
+  - GH_REPO_NAME: bigbro
+  - DOXYFILE: "$TRAVIS_BUILD_DIR/firmware/Doxyfile"
+  - GH_REPO_REF: github.com/hal9k-dk/bigbro.git
+  - secure: s9Buj3ih37kJ6jsaBoo+Pi32WKUJ0XwuP0kqMAN3uIH93FhdeI+C1KMSaRHkJjyl5aPlCCon//uQvgOG5hms+fyeC5t/hXk8VtH5HLk0eNzZ0PE73/UPMdIZBU64LSdTbqu5V6rfDwo1bpevHMw1F6hJ4hcJMgUul2nK250LirY4VAP4S4NURJ5c1dTxJGgZs+IjPGy5PnKD4JsGwul+m95vdCcdIm3bC2i9DfE86aKYKwlk+f7hdv0yZLIuKhZ4zEypoInkMueiT8s6OQIPqd0aOzrvI0x/EhQY7T0ib3H7rurgRZzT8p666l7ssgdW/Ebx9MgBvmKDRk/wluUMptFfkUepnIbR8N/2l+0YE95AuDaODZj6SLgzNAT1J3Gw5dCdzSRA1pbexlgc2CKB/uIGGPdruf3AaWrYoQ47WP8vQHOYOw2nS6Yj37v2vU0ajjJuTtvYSO9HYbaJ0D+5BvQwUVaR2LvgclDO2HElaKxEz4JM/6mKE/xe5DA5sAd8mNGxsBgWTDdIpTrVajVNLMoDsHylPOXTWn5DXPa1yYcDOYITIo7hUeklxhVCeiSoyDDj5Z0F3hQYlCQ6Rd9Xw5fSn5HyEL2uAP7emiV7j3E9sP2J1xvoVA1YQuYYuEM1c9PqhtJbX2RV6KQRDnncf3Iee27SZTtBBWHJz586JWc=
+addons:
+  apt:
+    packages:
+    - doxygen
+    - doxygen-doc
+    - doxygen-latex
+    - doxygen-gui
+    - graphviz
+matrix:
+  include:
+  - env: PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=0'
+  - env: PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=1'
+  - env: PLATFORMIO_BUILD_FLAGS='-D CONTROLLER=2'
 branches:
-    only:
-    - platformio
-
+  only:
+  - platformio
 before_install:
-  - |
-    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      COMMIT_RANGE="$TRAVIS_BRANCH"
-    else
-      COMMIT_RANGE="$TRAVIS_COMMIT_RANGE"
-    fi
-    git diff --name-only $COMMIT_RANGE | grep -vE '(\.md$)|(Doxyfile)' | grep -qE "(firmware)|(^.travis.yml$)" || {
-      echo "Only files not used in the build process were updated, aborting."
-      exit
-    }
-
-
+- |
+  if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    COMMIT_RANGE="$TRAVIS_BRANCH"
+  else
+    COMMIT_RANGE="$TRAVIS_COMMIT_RANGE"
+  fi
+  git diff --name-only $COMMIT_RANGE | grep -vE '(\.md$)' | grep -qE "(firmware)|(^.travis.yml$)" || {
+    echo "Only files not used in the build process were updated, aborting."
+    exit
+  }
 install:
-    - pip install -U platformio
-    - platformio update
-
+- pip install -U platformio
+- platformio update
 script:
-    - cd firmware
-    - platformio run
+- cd firmware
+- platformio run
+
+# Generate and deploy documentation
+after_success:
+  - cd $TRAVIS_BUILD_DIR
+  - chmod +x build_documentation_and_deploy.sh
+  - ./build_documentation_and_deploy.sh

@@ -41,18 +41,17 @@ private:
      */
     uint32_t        last_calibrate, last_minutes_left;
 
-    /**
-     * Used to keep track of when a print ended, and when the current first exceeded threshhold. [milliseconds]
-     */
+    
+    ///Used to keep track of when a print ended, and when the current first exceeded threshhold. [milliseconds]
     uint32_t        end_of_print_timer, m_inrush_verify_timer;
 
-    /// Time the printer should be allowed to cool after a finished print. [milliseconds]
+    ///Time the printer should be allowed to cool after a finished print. [milliseconds]
     const uint32_t  cooldown_time = 9*60*1000;
 
-    /// Time to wait before verifying the printer is actually printing, and that we didn't trigger on inrush current. [milliseconds]
+    ///Time to wait before verifying the printer is actually printing, and that we didn't trigger on inrush current. [milliseconds]
     const uint32_t  m_inrush_time = 5*1000;
 
-    /// Variables used to store current reading, and the last reading we used. [milliseconds]
+    ///Variables used to store current reading, and the last reading we used. [milliseconds]
     uint32_t        last_current_reading, current_reading;
 
     /**
@@ -69,16 +68,16 @@ private:
     PrintState print_state = IDLE;
 
     /** 
-     * Run if print_state == IDLE
-     * Checks for cards and if the printer is considered printing
-     * Changes state to INRUSH_PREVENTION if the printer is considered printing
+     * Run if print_state == IDLE.
+     * Checks for cards and if the printer is considered printing.
+     * Changes state to INRUSH_PREVENTION if the printer is considered printing.
      * @return true if an allowed card is inserted
      */
     bool idle();
 
     /**
      * Waits m_inrush_time and checks if the current consumption is still over the threshhold.
-     * If it is, it changes state to IN_PROGRESS
+     * If it is, it changes state to IN_PROGRESS.
      * If it isn't, it resets the current handler and changes state to IDLE
      */
     void inrush_prevension();
@@ -97,6 +96,6 @@ private:
     void cooling();
 
     
-    /// Handles state changes. Code to be run only on state changes is placed here.
+    ///Handles state changes. Code to be run only on state changes is placed here.
     void state_change(PrintState s);
 };
