@@ -52,5 +52,7 @@ jobs:
         skip-cleanup: true
         local_dir: doc/html
         github-token: $GH_REPO_TOKEN
+        on:
+          branch: platformio
 
 
