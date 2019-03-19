@@ -52,7 +52,7 @@ public:
 protected:
     /// Display used for showing status information
     Display display;
-    /// Multi-colr case led 
+    /// Multi-color case led 
     Led<PIN_LED> led;
     WiFiHandler wifi_handler;
 
