@@ -36,14 +36,17 @@ private:
 
     bool current_sensor_present = false;
 
-    /**
-     * Used to keep track of last time we calibrated, and last time we displayed minutes left.
-     */
-    uint32_t        last_calibrate, last_minutes_left;
+    ///Used to keep track of last time we calibrated.
+    uint32_t        last_calibrate;
 
-    
-    ///Used to keep track of when a print ended, and when the current first exceeded threshhold. [milliseconds]
-    uint32_t        end_of_print_timer, m_inrush_verify_timer;
+    ///Last "minutes left" we displayed on the display during cooling.
+    uint8_t        last_minutes_left;
+
+    ///Used to keep track of when a print ended [milliseconds]
+    uint32_t        end_of_print_timer;
+
+    ///Used to keep track of when the printer was first considered printing. [milliseconds]
+    uint32_t        m_inrush_verify_timer;
 
     ///Time the printer should be allowed to cool after a finished print. [milliseconds]
     const uint32_t  cooldown_time = 9*60*1000;
