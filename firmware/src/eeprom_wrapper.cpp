@@ -136,6 +136,7 @@ void Eeprom::set_wifi_creds(const char* SSID, const char* PASS)
     }
 
     // Count is 1 indexed, index is 0 indexed. Hence no need to add 1
+    // Set the index to be the next empty spot
     int8_t index = count;
 
     if(count >= MAX_SSIDS)
