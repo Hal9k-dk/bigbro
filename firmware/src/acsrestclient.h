@@ -11,15 +11,23 @@
     #define USE_SSL 1
 #endif
 
+///Helper class wrapping restclient and json functionality, to communicate with the ACS REST API
 class AcsRestClient
 {
 public:
+
+	/**
+	 * @param[in] path the path after API endpoint
+	 */
 	AcsRestClient(const char* path);
 
-	void set_param(const char* name, const String& value);
-
+	/**
+	 * Send a post request to the API
+	 * @param[in] obj the json object to post to the API
+	 */
 	int post(const JsonObject& obj);
 
+	///Returns the body of the response from the API
 	String get_response() const;
 
 private:

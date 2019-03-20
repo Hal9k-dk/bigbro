@@ -28,6 +28,7 @@ public:
      * @return true if the card inserted has permission, and the printer is idle.
      * @return true if the printer is currently printing.
      * @return true if the printer is cooling down.
+     * @return false otherwise
      */
     bool relay_check() override;
 
@@ -36,14 +37,17 @@ private:
 
     bool current_sensor_present = false;
 
-    /**
-     * Used to keep track of last time we calibrated, and last time we displayed minutes left.
-     */
-    uint32_t        last_calibrate, last_minutes_left;
+    ///Used to keep track of last time we calibrated.
+    uint32_t        last_calibrate;
 
-    
-    ///Used to keep track of when a print ended, and when the current first exceeded threshhold. [milliseconds]
-    uint32_t        end_of_print_timer, m_inrush_verify_timer;
+    ///Last "minutes left" we displayed on the display during cooling. [Minutes]
+    uint8_t         last_minutes_left;
+
+    ///Used to keep track of when a print ended [milliseconds]
+    uint32_t        end_of_print_timer;
+
+    ///Used to keep track of when the printer was first considered printing. [milliseconds]
+    uint32_t        m_inrush_verify_timer;
 
     ///Time the printer should be allowed to cool after a finished print. [milliseconds]
     const uint32_t  cooldown_time = 9*60*1000;
@@ -51,8 +55,11 @@ private:
     ///Time to wait before verifying the printer is actually printing, and that we didn't trigger on inrush current. [milliseconds]
     const uint32_t  m_inrush_time = 5*1000;
 
-    ///Variables used to store current reading, and the last reading we used. [milliseconds]
-    uint32_t        last_current_reading, current_reading;
+    ///Stores last used current reading [mA]
+    int last_current_reading;
+    
+    ///Used to store the latest current reading [mA]
+    int current_reading;
 
     /**
      * States of the printer.

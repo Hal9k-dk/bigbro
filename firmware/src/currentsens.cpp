@@ -31,11 +31,6 @@ bool Current::sensor_present()
     return false;
 }
 
-uint32_t Current::last_above()
-{
-    return m_last_above_thresh;
-}
-
 bool Current::is_printing()
 {
     int16_t current = read();
@@ -68,7 +63,7 @@ void Current::clear_buffer()
 {
     for(int i=0; i<m_raw_sample_size; i++)
     {
-        m_raw_samples[i] = m_threshold;
+        m_raw_samples[i] = 0;
     }
     #if SERIAL_DBG
     Serial.println("Clear Buffer");
@@ -97,9 +92,9 @@ void Current::calibrate()
     m_error = m_p2p();
 }
 
-int16_t Current::read()
+int Current::read()
 {
-    return (m_p2p() - m_error) * m_v_range/1024 * m_mv_per_A/1000;
+    return (m_p2p() - m_error) * raw_to_mA_factor;
 }
 
 void Current::sample()
