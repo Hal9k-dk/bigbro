@@ -8,6 +8,10 @@
 #include <led.h>
 #include <wifi.h>
 
+extern "C" {
+#include <user_interface.h>
+}
+
 #if OTA_ENABLED
     #include <ota.h>
 #endif
@@ -72,6 +76,11 @@ protected:
      * @param user_id The ID of the user that caused the messaged to be logged
      */
     int log_access(const char* msg, int user_id);
+
+    /**
+     * @param msg The error message that will be saved on the backend (panopticon)
+     */
+    int log_error(const char* msg);
 
     /**
      * Used for toggling the state of the relay

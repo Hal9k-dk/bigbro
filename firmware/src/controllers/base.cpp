@@ -58,6 +58,9 @@ BaseController::BaseController(const char* psw_md5, const bool relay_upstart)
 	}
 
 	delay(1000);
+	String reset_reason = ESP.getResetReason();
+
+	log_error(reset_reason.c_str());
 }
 
 void BaseController::set_relay(bool state) 
@@ -267,6 +270,18 @@ int BaseController::log_access(const char* msg, int user_id)
 	root["api_token"] = Eeprom::get_api_token();
 	auto& log = root.createNestedObject("log");
 	log["user_id"] = user_id;
+	log["message"] = msg;
+	return logger.post(root);
+}
+
+int BaseController::log_error(const char* msg)
+{
+	AcsRestClient logger("logs");
+	StaticJsonBuffer<200> jsonBuffer;
+	yield();
+	auto& root = jsonBuffer.createObject();
+	root["api_token"] = Eeprom::get_api_token();
+	auto& log = root.createNestedObject("log");
 	log["message"] = msg;
 	return logger.post(root);
 }

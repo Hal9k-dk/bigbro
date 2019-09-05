@@ -33,47 +33,72 @@ public:
         {
             return;
         }
-        m_last_tick = now;
-        if (m_cycle >= 100)
-        {
-            m_cycle = 0;
-        }
-        if (m_cycle <= m_duty_cycle)
-        {
-            m_led = m_c1;
-        }
         else
         {
-            m_led = m_c2;
+            m_changed = true;
         }
-        ++m_cycle;
-        FastLED.show();
+
+        if(m_changed)
+        {
+            m_changed = false;
+            m_last_tick = now;
+            if (m_cycle >= 100)
+            {
+                m_cycle = 0;
+            }
+            if (m_cycle <= m_duty_cycle)
+            {
+                m_led = m_c1;
+            }
+            else
+            {
+                m_led = m_c2;
+            }
+            ++m_cycle;
+            FastLED.show();
+        }
     }
 
     Led& set_period(int ms)
     {
-        m_period = ms;
+        if(m_period != ms)
+        {
+            m_period = ms;
+            m_changed = true;
+        }
         return *this;
     }
 
     // 1-100
     Led& set_duty_cycle(int dc)
     {
-        m_duty_cycle = dc;
+        if(m_duty_cycle != dc)
+        {
+            m_duty_cycle = dc;
+            m_changed = true;
+        }
         return *this;
     }
 
     Led& set_colour(const CRGB& colour)
     {
-        m_c1 = colour;
-        m_c2 = CRGB::Black;
+        if(m_c1 != colour)
+        {
+            m_c1 = colour;
+            m_c2 = CRGB::Black;
+            m_changed = true;
+        }
         return *this;
     }
 
     Led& set_colours(const CRGB& colour1, const CRGB& colour2)
     {
-        m_c1 = colour1;
-        m_c2 = colour2;
+        if(m_c1 != colour1 || m_c2 != colour2)
+        {
+            m_c1 = colour1;
+            m_c2 = colour2;
+            m_changed = true;
+        }
         return *this;
     }
 
@@ -86,4 +111,5 @@ private:
     int m_duty_cycle = 1;
     unsigned long m_last_tick = 0;
     int m_cycle = 0;
+    bool m_changed = true;
 };

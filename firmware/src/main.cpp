@@ -44,11 +44,11 @@ void setup()
 
 #else // Default controller
 #pragma message "Compiling default controller"
-	controller = new ACSController();
-	//controller = new PrinterController();
+	//controller = new ACSController();
+	controller = new PrinterController();
 	//controller = new CameraController();
 #endif
-	
+
 }
 
 /**

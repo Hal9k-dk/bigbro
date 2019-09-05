@@ -252,7 +252,6 @@ String Eeprom::get_api_token()
         }
         s.concat(c);
     }
-
     return s;
 }
 
