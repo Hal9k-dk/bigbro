@@ -39,12 +39,14 @@ bool Current::is_printing()
     Serial.print("reading: ");Serial.println(current);
     #endif
 
-    if(current > m_threshold)
+    if(current >= m_threshold)
     {
+        // Current at or above threshold, enter PRINTING state and remember when we did so
         m_last_above_thresh = millis();
     }
     else if(current < m_threshold && (millis() - m_last_above_thresh) > m_max_below_time)
     {
+        // Current below threshold AND m_max_below_time ms have passed since it was last above
         return false;
     }
     
@@ -61,7 +63,7 @@ void Current::reset_last_above()
 
 void Current::clear_buffer()
 {
-    for(int i=0; i<m_raw_sample_size; i++)
+    for(int i = 0; i < m_raw_sample_size; i++)
     {
         m_raw_samples[i] = 0;
     }

@@ -4,7 +4,7 @@ const char* VERSION = "0.2.2";
 
 BaseController::BaseController(const char* psw_md5, const bool relay_upstart)
 #if OTA_ENABLED
-  	:ota(psw_md5)
+  	: ota(psw_md5)
 #endif
 {
 	Serial.begin(115200);
@@ -12,7 +12,7 @@ BaseController::BaseController(const char* psw_md5, const bool relay_upstart)
 	while(digitalRead(D6))
 	{
 		display.set_status("ERROR!", "Remove card");
-		Serial.println("A reset error occured with a card present!");
+		Serial.println("A reset error occurred with a card present!");
 		led.set_colour(CRGB::Red);
 
 		while(digitalRead(D6))

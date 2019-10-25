@@ -17,28 +17,28 @@ int Eeprom::get_nof_ssids()
 
 void Eeprom::list_ssids()
 {
-    uint8_t count = get_nof_ssids();
+    int count = get_nof_ssids();
 
-    if(count == 255 || count == 0)
+    if (count == 0)
     {
         Serial.println("No SSIDs configured");
         return;
     }
 
-    for(uint8_t i=0; i < count; ++i)
+    for (int i = 0; i < count; ++i)
     {
         Serial.print(i); Serial.print(": "); Serial.println(get_ssid(i));
         delay(0);
     }
 }
 
-String Eeprom::get_ssid(uint8_t index)
+String Eeprom::get_ssid(int index)
 {
     String s;
 
     uint16_t unit_offset = 1 + (index * SSID_SIZE);
 
-    for(uint16_t i = 0; i < SSID_SIZE; i++)
+    for (uint16_t i = 0; i < SSID_SIZE; i++)
     {
         const auto c = static_cast<char>(EEPROM.read(SSID_BLOCK_OFFSET + i + unit_offset));
         if (!c)
@@ -50,13 +50,13 @@ String Eeprom::get_ssid(uint8_t index)
     return s;
 }
 
-String Eeprom::get_password(uint8_t index)
+String Eeprom::get_password(int index)
 {
     String s;
 
     uint16_t final_offset = WIFI_PASS_OFFSET + (WIFI_PASS_SIZE * index);
 
-    for(uint16_t i = 0; i < WIFI_PASS_SIZE; i++)
+    for (uint16_t i = 0; i < WIFI_PASS_SIZE; i++)
     {
         const auto c = static_cast<char>(EEPROM.read(final_offset + i));
         if (!c)
@@ -68,25 +68,25 @@ String Eeprom::get_password(uint8_t index)
     return s;
 }
 
-void Eeprom::remove_wifi_creds(uint8_t index)
+void Eeprom::remove_wifi_creds(int index)
 {
-    if(index > MAX_SSIDS)
+    if (index > MAX_SSIDS)
     {
         Serial.println("Number too high. Exiting");
     }
 
     // Clear out requested SSID and PASS
-    for(uint8_t i=0; i<SSID_SIZE; i++)
+    for (uint8_t i = 0; i < SSID_SIZE; i++)
     {
         EEPROM.write( (1 + SSID_BLOCK_OFFSET + SSID_SIZE * index) + i, '\0');
     }
-    for(uint8_t i=0; i<WIFI_PASS_SIZE; i++)
+    for (uint8_t i = 0; i < WIFI_PASS_SIZE; i++)
     {
         EEPROM.write( (WIFI_PASS_OFFSET + WIFI_PASS_SIZE * index) + i, '\0');
     }
 
-    //Moving higher entires down
-    for(uint8_t i = index+1; i<MAX_SSIDS; i++)
+    // Move higher entries down
+    for (uint8_t i = index+1; i < MAX_SSIDS; i++)
     {
         String SSID = get_ssid(i);
         String PASS = get_password(i);
@@ -95,15 +95,14 @@ void Eeprom::remove_wifi_creds(uint8_t index)
     }
 
     // Clear out the now duplicate SSID and PASS
-    for(uint8_t i=0; i<SSID_SIZE; i++)
+    for (uint8_t i = 0; i < SSID_SIZE; i++)
     {
         EEPROM.write( (1 + SSID_BLOCK_OFFSET + SSID_SIZE * (MAX_SSIDS-1)) + i, '\0');
     }
-    for(uint8_t i=0; i<WIFI_PASS_SIZE; i++)
+    for (uint8_t i = 0; i < WIFI_PASS_SIZE; i++)
     {
         EEPROM.write( (WIFI_PASS_OFFSET + WIFI_PASS_SIZE * (MAX_SSIDS-1)) + i, '\0');
     }
-    
 
     EEPROM.write(SSID_BLOCK_OFFSET, EEPROM.read(SSID_BLOCK_OFFSET)-1); // Decrement stored SSID counter
     EEPROM.commit();
@@ -129,17 +128,13 @@ void Eeprom::set_wifi_creds(const char* SSID, const char* PASS)
         return;
     }
 
-    uint8_t count = get_nof_ssids();
-    if(count == 255)
-    {
-        count = 0;
-    }
+    int count = get_nof_ssids();
 
     // Count is 1 indexed, index is 0 indexed. Hence no need to add 1
     // Set the index to be the next empty spot
-    int8_t index = count;
+    int index = count;
 
-    if(count >= MAX_SSIDS)
+    if (count >= MAX_SSIDS)
     {
         Serial.println("SSID storage full, pick one to override:");
         index = 255;
@@ -181,22 +176,22 @@ void Eeprom::set_wifi_creds(const char* SSID, const char* PASS)
     EEPROM.commit();
 }
 
-void Eeprom::set_ssid(const char* SSID, uint8_t index)
+void Eeprom::set_ssid(const char* SSID, int index)
 {
     uint16_t final_offset = 1 + SSID_BLOCK_OFFSET + (SSID_SIZE * index);
-    uint8_t i;
-    for(i=0; i<strlen(SSID); ++i)
+    size_t i = 0;
+    for ( ; i < strlen(SSID); ++i)
     {
         EEPROM.write(final_offset + i, SSID[i]);
     }
     EEPROM.write(final_offset + i, '\0');
 }
 
-void Eeprom::set_password(const char* PASS, uint8_t index)
+void Eeprom::set_password(const char* PASS, int index)
 {
     uint16_t final_offset = WIFI_PASS_OFFSET + (WIFI_PASS_SIZE * index);
-    uint8_t i;
-    for(i=0; i<strlen(PASS); ++i)
+    size_t i = 0;
+    for ( ; i < strlen(PASS); ++i)
     {
         EEPROM.write(final_offset + i, PASS[i]);
     }
@@ -227,7 +222,7 @@ void Eeprom::set_machine_id(const char* id)
         return;
     }
 
-    uint8_t i = 0;
+    size_t i = 0;
     while (i < strlen(id))
     {
         EEPROM.write(MACHINE_ID_OFFSET+i, id[i]);
@@ -243,7 +238,7 @@ String Eeprom::get_api_token()
 {
     String s;
 
-    for(uint16_t i = 0; i < API_TOKEN_SIZE; i++)
+    for (uint16_t i = 0; i < API_TOKEN_SIZE; i++)
     {
         const auto c = static_cast<char>(EEPROM.read(API_TOKEN_OFFSET+i));
         if (!c)
@@ -265,7 +260,7 @@ void Eeprom::set_api_token(const char* token)
         return;
     }
 
-    uint8_t i = 0;
+    size_t i = 0;
     while (i < strlen(token))
     {
         EEPROM.write(API_TOKEN_OFFSET+i, token[i]);
@@ -302,7 +297,7 @@ void Eeprom::set_last_user(const char* trunced_name)
         return;
     }
 
-    for(int i=0; i<name_length; i++)
+    for (int i = 0; i < name_length; i++)
     {
         EEPROM.write(LAST_USER_OFFSET+i, trunced_name[i]);
     }

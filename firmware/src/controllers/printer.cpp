@@ -1,8 +1,8 @@
 #include <controllers/printer.h>
 
-PrinterController::PrinterController(): 
-  ACSController(),
-  current(PIN_CURRENT, -1, CURRENT_THRESH)
+PrinterController::PrinterController()
+    : ACSController(),
+      current(PIN_CURRENT, -1, CURRENT_THRESH)
 {
     current_sensor_present = current.sensor_present();
 	if(current_sensor_present)
@@ -91,8 +91,7 @@ void PrinterController::state_change(PrintState s)
             #if SERIAL_DBG
             Serial.println("wat");
             #endif
-            ;
-
+            break;
     }
 }
 

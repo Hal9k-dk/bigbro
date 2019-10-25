@@ -10,20 +10,20 @@ const uint16_t MACHINE_ID_SIZE = 32;
 const uint16_t API_TOKEN_OFFSET = MACHINE_ID_SIZE;
 const uint16_t API_TOKEN_SIZE = 80;
 
-const uint8_t MAX_SSIDS = 4;
+const int MAX_SSIDS = 4;
 
 // SSID max length according to standars is 32 bytes, 
 // though a lot of access points require the last byte to be \0
 const uint16_t SSID_SIZE = 32; 
 const uint16_t SSID_BLOCK_OFFSET = API_TOKEN_OFFSET + API_TOKEN_SIZE; // [1B] count [32B] SSID0 .... [32B] SSIDn
-///The first byte of the block stores number of SSIDs stored. Then each 32B are SSIDs
+/// The first byte of the block stores number of SSIDs stored. Then each 32B are SSIDs
 const uint16_t SSID_BLOCK_SIZE = 1 + SSID_SIZE * MAX_SSIDS;
 
 const uint16_t WIFI_PASS_OFFSET = SSID_BLOCK_OFFSET + SSID_BLOCK_SIZE;
 const uint16_t WIFI_PASS_SIZE = 64; // Max psw size according to wpa2
 const uint16_t WIFI_PASS_BLOCK_SIZE = WIFI_PASS_SIZE * MAX_SSIDS;
 
-///Last user to use this machine
+/// Last user to use this machine
 const uint16_t LAST_USER_OFFSET = WIFI_PASS_OFFSET + WIFI_PASS_BLOCK_SIZE;
 const uint8_t LAST_USER_SIZE = 18; // We'll store the truncated name 
 //@}
@@ -37,7 +37,7 @@ class Eeprom
 {
 public:
 
-    ///Calls EEPROM.begin() with EEPROM_SIZE
+    /// Calls EEPROM.begin() with EEPROM_SIZE
     static void Eeprom_wrap_begin();
     
     /// @return The number of SSIDs stored
@@ -57,21 +57,21 @@ public:
      * Sets all bytes in the SSID and pass to 0
      * @param SSID/PASS pair to clear
      */
-    static void remove_wifi_creds(uint8_t index);
+    static void remove_wifi_creds(int index);
 
     /**
      * Get an SSID
      * @param index The index of the desired SSID/PASS pair
      * @return The SSID
      */
-    static String get_ssid(uint8_t index);
+    static String get_ssid(int index);
 
     /**
      * Get PASS
      * @param index the index of the desired SSID/PASS pair
      * @return The password. Empty String if no password
      */
-    static String get_password(uint8_t index);
+    static String get_password(int index);
 
     /**
      * @return The ID/name of the machine
@@ -91,6 +91,6 @@ public:
     static void set_last_user(const char*);
 
 private:
-    static void set_ssid(const char*, uint8_t index);
-    static void set_password(const char*, uint8_t index);
+    static void set_ssid(const char*, int index);
+    static void set_password(const char*, int index);
 };
