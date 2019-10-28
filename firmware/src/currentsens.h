@@ -82,7 +82,7 @@ private:
     /// The mV per A
     const uint16_t m_mv_per_A   = 200;
     /// The conversion factor from raw to mA [mA/ADCstep]
-    const float raw_to_mA_factor = 1.0;//!!m_v_range/1024.0 * m_mv_per_A/1000.0;
+    const float raw_to_mA_factor = m_v_range/1024.0 * m_mv_per_A/1000.0;
 
     /// Printer is considered printing above this threshold
     int m_threshold = 0;
