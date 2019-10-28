@@ -206,6 +206,7 @@ void PrinterController::cooling()
 }
 
 uint32_t last_print = 0;
+
 void PrinterController::update()
 {
     #if SERIAL_DBG > 5
@@ -216,12 +217,69 @@ void PrinterController::update()
     current_reading = current.read();
 
     #if SERIAL_DBG > 1
-    if((last_current_reading != current_reading && (millis() - last_print > 500)) || millis() - last_print > 5000)
+    if (((last_current_reading != current_reading) && (millis() - last_print > 500)) ||
+        (millis() - last_print > 5000))
     {
       last_print = millis();
       last_current_reading = current_reading;
-      Serial.println(( String( (int16_t)(floor(current_reading + 2.5)) ) + " mA " + String(current.is_printing())));
+      Serial.println(String(current_reading) + String(" mA ") + String(current.is_printing()));
     }
     #endif
-    
+}
+
+bool PrinterController::handle_command(const char* line)
+{
+    switch (*line)
+    {
+    case 'a':
+        {
+            int row = 0;
+            for (int i = 0; i < Current::NUM_SAMPLES; ++i)
+            {
+                Serial.print(current.get_raw_sample(i));
+                if (++row >= 4)
+                {
+                    row = 0;
+                    Serial.println();
+                }
+                else
+                    Serial.print("\t");
+            }
+        }
+        break;
+
+    case 'c':
+        {
+            int a[Current::NUM_SAMPLES];
+            for (int i = 0; i < Current::NUM_SAMPLES; ++i)
+            {
+                a[i] = current.get_raw_value();
+                delay(1);
+            }
+            int row = 0;
+            int min = 1000, max = 0;
+            for (int i = 0; i < Current::NUM_SAMPLES; ++i)
+            {
+                auto val = a[i];
+                Serial.print(val);
+                if (val < min)
+                    min = val;
+                if (val > max)
+                    max = val;
+                if (++row >= 4)
+                {
+                    row = 0;
+                    Serial.println();
+                }
+                else
+                    Serial.print("\t");
+            }
+            Serial.print("Min "); Serial.print(min); Serial.print(" Max "); Serial.println(max);
+        }
+        break;
+        
+    default:
+        return false;
+    }
+    return true;
 }

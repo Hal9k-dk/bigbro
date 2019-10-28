@@ -49,6 +49,14 @@ public:
      */
     virtual void test_command() = 0;
 
+    /// Override in subclass to handle extended command.
+    /// \return true if command was handled.
+    virtual bool handle_command(const char*)
+    {
+        // Not pure
+        return false;
+    }
+    
 protected:
     /// Display used for showing status information
     Display display;
@@ -120,10 +128,12 @@ private:
     /**
      * Relay state. false = open, true = closed
      */
-    bool m_relay_state = 0;
+    bool m_relay_state = false;
 
     /**
      * OTA enabled state
      */
-    bool m_ota_state = 1;
+    bool m_ota_state = true;
+
+    bool relay_override = false;
 };

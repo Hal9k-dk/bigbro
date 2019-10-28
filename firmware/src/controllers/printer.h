@@ -33,6 +33,8 @@ public:
     bool relay_check() override;
 
 private:
+    bool handle_command(const char* line) override;
+
     Current current;
 
     bool current_sensor_present = false;

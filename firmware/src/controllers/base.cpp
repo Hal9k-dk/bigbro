@@ -89,6 +89,7 @@ void BaseController::decode_line(const char* line)
 		Serial.println("  l  List SSIDs");
 		Serial.println("  t  Send test request");
 		Serial.println("  r  Restart the ESP");
+		Serial.println("  o  Toggle relay on/off");
 		break;
 		
 	case 'k':
@@ -109,7 +110,6 @@ void BaseController::decode_line(const char* line)
 		return;
 
 	case 'w':
-
 		ssid = "";
 		pass = "";
 		// Add wifi AP
@@ -183,14 +183,23 @@ void BaseController::decode_line(const char* line)
 	case 'r':
 		ESP.reset();
 		break;
-		
+
+    case 'o':
+        relay_override = true;
+        set_relay(!digitalRead(PIN_RELAY));
+        break;
+
 	default:
-		Serial.print("Unknown command: ");
-		Serial.println(line);
-		return;
+        if (!handle_command(line))
+        {
+            Serial.print("Unknown command: ");
+            Serial.println(line);
+        }
+        break;
 	}
-	while(Serial.available())
-	{delay(0);} // Clear buffer
+    // Clear buffer
+	while (Serial.available())
+        delay(0);
 }
 
 void BaseController::handleSerial()
@@ -255,7 +264,8 @@ void BaseController::update()
 
 	this->handleSerial();
 
-	set_relay(relay_check());
+    if (!relay_override)
+        set_relay(relay_check());
 }
 
 int BaseController::log_access(const char* msg, int user_id)
