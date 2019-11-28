@@ -9,7 +9,7 @@ BaseController::BaseController(const char* psw_md5, const bool relay_upstart)
 {
 	Serial.begin(115200);
 
-	while (digitalRead(D6))
+	if (digitalRead(D6))
 	{
 		display.set_status("ERROR!", "Remove card");
 		Serial.println("A reset error occurred with a card present!");
