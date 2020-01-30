@@ -23,15 +23,16 @@ void CardReader::update()
         if (m_decoder.add_byte(c))
         {
             m_id = m_decoder.get_id();
-            #if SERIAL_DBG > 1
+#if SERIAL_DBG > 1
             Serial.print("ID: ");
             Serial.println(m_id);
-            #endif
+#endif
             if (switch_on)
             {
-                #if SERIAL_DBG > 1
-                Serial.println("Saved");
-                #endif
+#if SERIAL_DBG > 1
+                if (!m_card_present)
+                    Serial.println("Saved");
+#endif
                 m_card_present = true;
             }
             #if SERIAL_DBG
