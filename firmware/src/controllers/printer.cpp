@@ -230,3 +230,61 @@ void PrinterController::update()
 #endif
     }
 }
+
+bool PrinterController::handle_command(const char* line)
+{
+    switch (*line)
+    {
+    case 'a':
+        {
+            int row = 0;
+            for (int i = 0; i < Current::NUM_SAMPLES; ++i)
+            {
+                Serial.print(current.get_raw_sample(i));
+                if (++row >= 4)
+                {
+                    row = 0;
+                    Serial.println();
+                }
+                else
+                    Serial.print("\t");
+            }
+        }
+        break;
+
+    case 'c':
+        {
+            int a[Current::NUM_SAMPLES];
+            for (int i = 0; i < Current::NUM_SAMPLES; ++i)
+            {
+                a[i] = current.get_raw_value();
+                delay(1);
+            }
+            int row = 0;
+            int min = 1000, max = 0;
+            for (int i = 0; i < Current::NUM_SAMPLES; ++i)
+            {
+                auto val = a[i];
+                Serial.print(val);
+                if (val < min)
+                    min = val;
+                if (val > max)
+                    max = val;
+                if (++row >= 4)
+                {
+                    row = 0;
+                    Serial.println();
+                }
+                else
+                    Serial.print("\t");
+            }
+            Serial.print("Min "); Serial.print(min); Serial.print(" Max "); Serial.println(max);
+        }
+        break;
+        
+    default:
+        return false;
+    }
+    return true;
+>>>>>>> e7ff5a1bb4bcfa2f1602880e55e0029bdd2cab7e
+}

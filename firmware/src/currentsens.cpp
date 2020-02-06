@@ -24,7 +24,7 @@ bool Current::sensor_present()
         delay(5); // Delay serves as a yield as well
     }
     average_reading /= 50;
-    if (average_reading > 500 && average_reading < 600)
+    if (average_reading > 400 && average_reading < 700)
     {
         return true;
     }
@@ -116,11 +116,26 @@ void Current::sample()
     }
 }
 
+int Current::get_raw_sample(int index) const
+{
+    if (index < 0 || index >= NUM_SAMPLES)
+    {
+        Serial.print("Bad index: "); Serial.println(index);
+        return -1;
+    }
+    return m_raw_samples[index];
+}
+
+int Current::get_raw_value() const
+{
+    return analogRead(A0);
+}
+
 // Private functions
 
-uint16_t Current::m_p2p()
+int Current::m_p2p()
 {
-    uint16_t max = 0, min = -1;
+    int max = 0, min = 10000;
 
     for (uint16_t i = 0; i < m_raw_sample_size; i++)
     {

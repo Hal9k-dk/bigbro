@@ -4,6 +4,8 @@
 class Current
 {
 public:
+    static const int NUM_SAMPLES = 100;
+    
     /**
      * @param[in] pin The ADC pin used to read the current sensor.
      * @param[in] debug_pin Pin is pulsed on each sample. Disabled if < 0.
@@ -50,6 +52,10 @@ public:
      */
     void sample();        
 
+    int get_raw_sample(int index) const;
+
+    int get_raw_value() const;
+    
 private:
     
     /// Analog pin connected to current sensor
@@ -63,7 +69,7 @@ private:
     /// [ms]
     uint8_t m_sample_period     = 10;
     /// Array of raw ADC samples
-    int16_t m_raw_samples[100];
+    int16_t m_raw_samples[NUM_SAMPLES];
     /// Index of the next sample address 
     uint8_t m_raw_sample_offset	= 0;
     /// Size of the sample buffer in elements
@@ -90,5 +96,5 @@ private:
     /**
      * @return largest peak-to-peak raw reading
      */
-    uint16_t m_p2p();
+    int m_p2p();
 };
