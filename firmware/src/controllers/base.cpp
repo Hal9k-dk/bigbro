@@ -105,73 +105,75 @@ bool BaseController::get_relay()
 
 void BaseController::decode_line(const char* line)
 {
-	String ssid, pass;
-	int i = 0;
+    String ssid, pass;
+    int i = 0;
 
-	uint8_t index, ch;
-	uint32_t timeout_start;
+    uint8_t index, ch;
+    uint32_t timeout_start;
 
-	switch (tolower(line[i]))
-	{
-	case 'h':
-		Serial.println("Commands:");
-		Serial.println("  k  Set API token");
-		Serial.println("  m  Set machine ID");
-		Serial.println("  d  Delete an SSID/PASS set");
-		Serial.println("  w  Set wifi: w SSID PASS");
-		Serial.println("  l  List SSIDs");
-		Serial.println("  t  Send test request");
-		Serial.println("  r  Restart the ESP");
-		Serial.println("  o  Toggle relay on/off");
-		break;
-		
-	case 'k':
-		// Set API token
-		while (line[++i] == ' ') {;}
+    switch (tolower(line[i]))
+    {
+    case 'h':
+        Serial.println("Commands:");
+        Serial.println("  k  Set API token");
+        Serial.println("  m  Set machine ID");
+        Serial.println("  d  Delete an SSID/PASS set");
+        Serial.println("  w  Set wifi: w SSID PASS");
+        Serial.println("  l  List SSIDs");
+        Serial.println("  t  Send test request");
+        Serial.println("  r  Restart the ESP");
+        Serial.println("  o  Toggle relay on/off");
+        break;
+        
+    case 'k':
+        // Set API token
+        while (line[++i] == ' ') {;}
 
-		Eeprom::set_api_token(line+i);
-		Serial.println("API token set");
-		return;
+        Eeprom::set_api_token(line+i);
+        Serial.println("API token set");
+        return;
 
-	case 'm':
-		// Set machine ID
-		while (line[++i] == ' ') {;}
+    case 'm':
+        // Set machine ID
+        while (line[++i] == ' ') {;}
 
-		Eeprom::set_machine_id(line+i);
-		Serial.println("Machine ID set");
-		display.set_machine_id(Eeprom::get_machine_id().c_str());
-		return;
+        Eeprom::set_machine_id(line+i);
+        Serial.println("Machine ID set");
+        display.set_machine_id(Eeprom::get_machine_id().c_str());
+        return;
 
-	case 'w':
-		ssid = "";
-		pass = "";
-		// Add wifi AP
-		while (line[++i] == ' ') {;} // Remove spaces before ssid
+    case 'w':
+        ssid = "";
+        pass = "";
+        // Add wifi AP
+        while (line[++i] == ' ') {;} // Remove spaces before ssid
 
-		while(line[i] != ' ' && line[i] != '\0') // As long as it's not a space
-		{
-			ssid += line[i++]; // Get the SSID
-		}
-		while(line[++i] == ' ') {;} // Remove spaces before password
+        while(line[i] != ' ' && line[i] != '\0') // As long as it's not a space
+        {
+            ssid += line[i++]; // Get the SSID
+        }
+        while(line[++i] == ' ') {;} // Remove spaces before password
 
-		while(line[i] != ' ' && line[i] != '\0')
-		{
-			pass += line[i++];
-		}
+        while(line[i] != ' ' && line[i] != '\0')
+        {
+            pass += line[i++];
+        }
 
-		Eeprom::set_wifi_creds(ssid.c_str(), pass.c_str());
-		return;	
+        Eeprom::set_wifi_creds(ssid.c_str(), pass.c_str());
+        return; 
 
-	case 'd':
-		while (line[++i] == ' ') {;}
+    case 'd':
+        while (line[++i] == ' ')
+            ;
 
-		index = line[i++]-'0';
+        index = line[i++]-'0';
 
-		Serial.print("\nConfirm deleting SSID ");Serial.print(index);Serial.println(" [Y/y]");
-		Eeprom::list_ssids();
-		while (line[++i] == ' ') {;}
+        Serial.print("\nConfirm deleting SSID ");Serial.print(index);Serial.println(" [Y/y]");
+        Eeprom::list_ssids();
+        while (line[++i] == ' ')
+            ;
 
-		timeout_start = millis();
+        timeout_start = millis();
 
         while(!Serial.available() && millis() - timeout_start < user_input_timeout)
         {
@@ -179,7 +181,7 @@ void BaseController::decode_line(const char* line)
         }
 
         ch = 0;
-        if(Serial.available())
+        if (Serial.available())
         {
             ch = Serial.read();
         }
@@ -223,64 +225,8 @@ void BaseController::decode_line(const char* line)
         Serial.println(line);
         return;
     }
-    while(Serial.available())
-    {delay(0);} // Clear buffer
-=======
-		ch = 0;
-		if(Serial.available())
-		{
-			ch = Serial.read();
-		}
-		else
-		{
-			Serial.println("Userinput timeout");
-			break;
-		}
-
-		if(ch == 'Y' || ch == 'y')
-		{
-			Eeprom::remove_wifi_creds(index);
-		}
-		else
-		{
-			Serial.println("Deletion cancled");
-		}
-
-		//Remove linbreaks and stuff
-		while(Serial.available())
-		{
-			Serial.read();
-		}
-		
-		break;	
-
-	case 't':
-		test_command();
-		break;
-	
-	case 'l':
-		Eeprom::list_ssids();
-		break;
-
-	case 'r':
-		ESP.reset();
-		break;
-
-    case 'o':
-        relay_override = true;
-        set_relay(!digitalRead(PIN_RELAY));
-        break;
-
-	default:
-        if (!handle_command(line))
-        {
-            Serial.print("Unknown command: ");
-            Serial.println(line);
-        }
-        break;
-	}
     // Clear buffer
-	while (Serial.available())
+    while (Serial.available())
         delay(0);
 }
 

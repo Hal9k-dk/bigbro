@@ -5,18 +5,18 @@ PrinterController::PrinterController()
       current(PIN_CURRENT, -1, CURRENT_THRESH)
 {
     current_sensor_present = current.sensor_present();
-	if(current_sensor_present)
-	{
+    if(current_sensor_present)
+    {
         #if SERIAL_DBG
-		Serial.println("Current sensor present");
+        Serial.println("Current sensor present");
         #endif
-		// Calibrate current offset
-		display.set_user("Calibrating");
-		delay(2000); // Delay to allow things to settle
-		current.calibrate();
-		display.set_user("");
+        // Calibrate current offset
+        display.set_user("Calibrating");
+        delay(2000); // Delay to allow things to settle
+        current.calibrate();
+        display.set_user("");
         display.set_state("Rdy");
-	}
+    }
 }
 
 bool PrinterController::relay_check()
@@ -55,7 +55,7 @@ void PrinterController::state_change(PrintState s)
             display.set_user(Eeprom::get_last_user());
             #if SERIAL_DBG
             Serial.println("State changed=> IDLE");
-	        #endif
+            #endif
             break;
 
         case INRUSH_PREVENTION: 
@@ -64,7 +64,7 @@ void PrinterController::state_change(PrintState s)
             current.reset_last_above();
             #if SERIAL_DBG
             Serial.println("State changed=> INRUSH_PREVENTION");
-	        #endif
+            #endif
             break;
 
         case IN_PROGRESS:
@@ -76,7 +76,7 @@ void PrinterController::state_change(PrintState s)
 
             #if SERIAL_DBG
             Serial.println("State changed=> IN_PROGRESS");
-	        #endif
+            #endif
             break;
           
         case COOLING:
@@ -85,7 +85,7 @@ void PrinterController::state_change(PrintState s)
 
             #if SERIAL_DBG
             Serial.println("State changed=> COOLING");
-	        #endif
+            #endif
             break;
 
         default:
@@ -286,5 +286,4 @@ bool PrinterController::handle_command(const char* line)
         return false;
     }
     return true;
->>>>>>> e7ff5a1bb4bcfa2f1602880e55e0029bdd2cab7e
 }
