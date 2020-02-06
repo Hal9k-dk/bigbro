@@ -17,7 +17,7 @@ public:
      */
     void set_line(const char* text, unsigned int line_nr, bool update_display=true);
 
-    ///Overload using String objects for text
+    /// \overload
     void set_line(const String& text, unsigned int line_nr, bool update_display=true);
 
     /**
@@ -26,40 +26,45 @@ public:
      */
     void set_machine_id(const char* id);
 
-    /**
-     * Compatability function: Sets line 2 and 3 with the strings in line1 and line2
-     */
+    // Set line 3 and 4 with the strings in line1 and line2
     void set_status(const char* line1, const char* line2);
 
-    ///Overload of set_status
+    /// \overload
     void set_status(const String& line1, const String& line2);
 
     /**
      * Compatability overload: Sets line 2 or 3 for line_nr == 0 or 1
      * @param line_txt the text to write
-     * @param line_txt the line to write to (0=2, 1=3)
+     * @param line_nr the line to write to (0=2, 1=3)
      */
     void set_status(const char* line_txt, int line_nr = 0);
 
-    ///Overload of set_status with line_nr
+    /// \overload
     void set_status(const String& line_txt, int line_nr = 0);
 
-    /**
-     * Compatability function
-     * @param status text to write on line 1
-     */
     void set_network_status(const char* status);
 
+    void set_user(const String& txt);
+    
+    void set_state(const String& txt);
+    
+    void set_debug_info(const String& txt);
+    
 private:
-    U8G2_SSD1306_128X64_NONAME_F_HW_I2C* m_display;
+    U8G2_SSD1306_128X64_NONAME_F_HW_I2C* m_display = nullptr;
 
-    ///Height of each line
-    int m_line_height = 15;
-    const static int m_line_cnt = 4;
+    /// Height of each line
+    static const int m_line_height = 13;
 
-    ///Array of strings to display. One string per line.
-    String m_lines[m_line_cnt];
+    String m_machine_id;
+    String m_network_status;
+    String m_state;
+    String m_debug_info;
+    
+    String m_user;
+    String m_status1;
+    String m_status2;
 
-    ///Clears and redraws the screen with the contents of m_lines
+    /// Clears and redraws the screen with the contents of m_lines
     void update();
 };

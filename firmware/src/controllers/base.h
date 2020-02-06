@@ -41,6 +41,7 @@ public:
 
     /**
      * Called on each update to determine the state of the relay.
+     * \return true if relay should be ON.
      */
     virtual bool relay_check() = 0; // Define as pure virtual function
 

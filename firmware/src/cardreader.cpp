@@ -16,7 +16,7 @@ void CardReader::update()
     {
         m_card_present = false;
     }
-    
+
     const auto c = m_serial.read();
     if (c > 0)
     {
@@ -24,8 +24,13 @@ void CardReader::update()
         {
             m_id = m_decoder.get_id();
 #if SERIAL_DBG > 1
-            Serial.print("ID: ");
-            Serial.println(m_id);
+            static String last_id;
+            if (m_id != last_id)
+            {
+                last_id = m_id;
+                Serial.print("New ID: ");
+                Serial.println(m_id);
+            }
 #endif
             if (switch_on)
             {
@@ -35,12 +40,12 @@ void CardReader::update()
 #endif
                 m_card_present = true;
             }
-            #if SERIAL_DBG
+#if SERIAL_DBG
             else
             {
                 Serial.println("Ignored - switch off");
             }
-            #endif
+#endif
         }
     }
 }

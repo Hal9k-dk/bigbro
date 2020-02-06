@@ -8,7 +8,7 @@ Current::Current(uint8_t pin, int8_t debug_pin, uint16_t threshold)
 
     pinMode(m_pin, INPUT);
     
-    if(debug_pin >= 0)
+    if (debug_pin >= 0)
     {
         m_debug_pin = debug_pin;
         pinMode(m_debug_pin, OUTPUT);
@@ -18,13 +18,13 @@ Current::Current(uint8_t pin, int8_t debug_pin, uint16_t threshold)
 bool Current::sensor_present()
 {
     uint16_t average_reading = 0;
-    for(uint8_t i = 0; i < 50; i++)
+    for (uint8_t i = 0; i < 50; i++)
     {
         average_reading += analogRead(m_pin);
         delay(5); // Delay serves as a yield as well
     }
     average_reading /= 50;
-    if(average_reading > 500 && average_reading < 600)
+    if (average_reading > 500 && average_reading < 600)
     {
         return true;
     }
@@ -35,11 +35,11 @@ bool Current::is_printing()
 {
     int16_t current = read();
 
-    #if SERIAL_DBG > 2
+#if SERIAL_DBG > 2
     Serial.print("reading: ");Serial.println(current);
-    #endif
+#endif
 
-    if(current >= m_threshold)
+    if (current >= m_threshold)
     {
         // Current at or above threshold, enter PRINTING state and remember when we did so
         m_last_above_thresh = millis();
@@ -74,7 +74,7 @@ void Current::clear_buffer()
 
 void Current::handle()
 {
-    if(m_debug_pin >= 0)
+    if (m_debug_pin >= 0)
     {
         // Send a pulse to show how often analog is sampled.
         digitalWrite(m_debug_pin, HIGH);
@@ -86,7 +86,7 @@ void Current::handle()
 void Current::calibrate()
 {
     uint32_t calibrate_start = millis();
-    while(millis() - calibrate_start < 5000)
+    while (millis() - calibrate_start < 5000)
     {
         delay(0);
         handle();
@@ -101,12 +101,12 @@ int Current::read()
 
 void Current::sample()
 {
-    if(m_raw_sample_offset >= m_raw_sample_size)
+    if (m_raw_sample_offset >= m_raw_sample_size)
     {
         m_raw_sample_offset = 0;
     }
 
-    if(millis() - m_last_sample > m_sample_period)
+    if (millis() - m_last_sample > m_sample_period)
     {   
         uint16_t reading = analogRead(A0);
         //Serial.print(" " + String(reading)+ " ");
@@ -122,13 +122,13 @@ uint16_t Current::m_p2p()
 {
     uint16_t max = 0, min = -1;
 
-    for(uint16_t i = 0; i < m_raw_sample_size; i++)
+    for (uint16_t i = 0; i < m_raw_sample_size; i++)
     {
-        if(m_raw_samples[i] < min)
+        if (m_raw_samples[i] < min)
         {
             min = m_raw_samples[i];
         }
-        else if(m_raw_samples[i] > max)
+        else if (m_raw_samples[i] > max)
         {
             max = m_raw_samples[i];
         }

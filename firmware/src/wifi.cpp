@@ -13,6 +13,8 @@ bool WiFiHandler::init(AbstractLed& led, Display& disp)
     led.set_duty_cycle(10);
     led.set_period(1);
 
+    disp.set_network_status("---");
+    
     String dns_name = "machine-";
     dns_name += Eeprom::get_machine_id();
     WiFi.hostname(dns_name);
@@ -21,16 +23,16 @@ bool WiFiHandler::init(AbstractLed& led, Display& disp)
     uint8_t ssid_count = Eeprom::get_nof_ssids();
     bool connected = false;
 
-    #if SERIAL_DBG
+#if SERIAL_DBG
 	Serial.print("SSID cnt: ");
 	Serial.println(ssid_count);
-	#endif
+#endif
 
-    if(ssid_count == 0 || ssid_count == 255)
+    if (ssid_count == 0 || ssid_count == 255)
     {
-        #if SERIAL_DBG
+#if SERIAL_DBG
         Serial.println("No SSIDs set up");
-        #endif
+#endif
         return false;  
     }
 
@@ -50,7 +52,7 @@ bool WiFiHandler::init(AbstractLed& led, Display& disp)
             String ssid = Eeprom::get_ssid(i);
             String s = "Trying ";
             s += ssid;
-            disp.set_network_status(s.c_str());
+            disp.set_status(s.c_str());
 #if SERIAL_DBG
             Serial.print(" ");Serial.println(s);
 #endif
@@ -68,6 +70,7 @@ bool WiFiHandler::init(AbstractLed& led, Display& disp)
                 if (WiFi.status() == WL_CONNECTED)
                 {
                     connected = true;
+                    disp.set_status("");
                     break;
                 }
             }
@@ -75,7 +78,7 @@ bool WiFiHandler::init(AbstractLed& led, Display& disp)
             if (connected)
             {
                 const auto token = Eeprom::get_api_token();
-                disp.set_network_status(token.length() ? "Online" : "(online)");
+                disp.set_network_status(token.length() ? "Rdy" : "Onl");
 
 #if SERIAL_DBG
                 Serial.println("");

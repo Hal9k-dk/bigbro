@@ -26,7 +26,7 @@
  * The active controller instance.
  * BaseController doesn't currently support swapping this at runtime.
  */
-BaseController* controller;
+BaseController* controller = nullptr;
 
 
 ///Initialization code 
@@ -54,4 +54,5 @@ void setup()
 void loop()
 {
 	controller->update();
+    delay(1);
 }

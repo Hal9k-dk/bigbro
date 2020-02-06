@@ -34,10 +34,11 @@ bool ACSController::relay_check()
 
 void ACSController::update()
 {
-	#if SERIAL_DBG > 5
-		Serial.println("ACS update");
-    #endif
+#if SERIAL_DBG > 5
+    Serial.println("ACS update");
+#endif
 	BaseController::update();
+
 	led.update();
 	reader.update();
 	card_id = reader.get_card_id();
@@ -66,13 +67,13 @@ bool ACSController::card_allowed()
 	Serial.println("Checking card");
 	#endif
 
-	display.set_status("Checking card");
+	display.set_user("Checking card");
 
 	String message, user_name;
 	int user_id = 0;
 	bool allowed = false;
 
-	if(query_permission(card_id, allowed, user_name, user_id, message))
+	if (query_permission(card_id, allowed, user_name, user_id, message))
 	{
 		// Allowed
 		if (allowed)
@@ -101,21 +102,22 @@ bool ACSController::card_allowed()
 	{
 		name_trunc = name_trunc.substring(0, 14) + String("...");
 	}
-	display.set_status(name_trunc, allowed ? "OK" : "Denied");
+	display.set_user(name_trunc);
+	display.set_status(allowed ? "OK" : "Denied");
 
 	int status;
 	if (allowed)
 	{
-		#if SERIAL_DBG
+#if SERIAL_DBG
 		Serial.print("Card allowed: "); Serial.println(user_name);
-		#endif
+#endif
 		status = log_access("Successful machine access", user_id);
 	}
 	else
 	{
-		#if SERIAL_DBG
+#if SERIAL_DBG
 		Serial.print("Card denied: "); Serial.println(message);
-		#endif
+#endif
 		status = log_access("Machine access denied", user_id);
 	}
 	
@@ -124,33 +126,33 @@ bool ACSController::card_allowed()
 	// Status of log attempts
 	switch(status)
 	{
-		case 200:
-			break;
-		case 404:
-			display.set_status("Unknown card:", card_id);
-			delay(1000);
-			break;
-		default:
-			String s = "Bad HTTP log reply:";
-			s += String(status);
-			display.set_status(s);
-			delay(1000);
-			break;
+    case 200:
+        break;
+    case 404:
+        display.set_status("Unknown card:", card_id);
+        delay(1000);
+        break;
+    default:
+        String s = "Bad HTTP log reply:";
+        s += String(status);
+        display.set_status(s);
+        delay(1000);
+        break;
 	}
 	yield();
 
-	#if SERIAL_DBG
+#if SERIAL_DBG
 	Serial.print("Status: "); Serial.println(status);
-	#endif
+#endif
 
 	return allowed; 
 }
 
 bool ACSController::query_permission(const String& card_id,
-					  bool& allowed,
-					  String& user_name,
-					  int& user_id,
-					  String& message)
+                                     bool& allowed,
+                                     String& user_name,
+                                     int& user_id,
+                                     String& message)
 {
 	user_name = "";
 	allowed = false;

@@ -47,7 +47,36 @@ BaseController::BaseController(const char* psw_md5, const bool relay_upstart)
     String s = "Version ";
     s += VERSION;
     display.set_status(s);
-         
+
+    auto rtc_info = system_get_rst_info();
+    switch (rtc_info->reason)
+    {
+    case REASON_DEFAULT_RST:
+        display.set_status("DEFAULT", 1);
+        break;
+    case REASON_WDT_RST:
+        display.set_status("WATCHDOG", 1);
+        break;
+    case REASON_EXCEPTION_RST:
+        display.set_status("EXCEPTION", 1);
+        break;
+    case REASON_SOFT_WDT_RST:
+        display.set_status("SOFT WATCHDOG", 1);
+        break;
+    case REASON_SOFT_RESTART:
+        display.set_status("SOFT RESTART", 1);
+        break;
+    case REASON_DEEP_SLEEP_AWAKE:
+        display.set_status("DEEP AWAKE", 1);
+        break;
+    case REASON_EXT_SYS_RST:
+        display.set_status("SYS RESET", 1);
+        break;
+    default:
+        display.set_status(String("UNKNOWN: ")+String(rtc_info->reason), 1);
+        break;
+    }
+    
     // Connect to WiFi network
     if (wifi_handler.init(led, display))
     {

@@ -83,11 +83,11 @@ bool CameraController::relay_check()
             if (status) {
                 // Camera ON
                 led.set_colour(CRGB::Red);
-                display.set_status("ON");
+                display.set_state("ON");
             } else {
                 // Camera OFF
                 led.set_colour(CRGB::Green);
-                display.set_status("OFF");
+                display.set_state("OFF");
             }
             led.set_duty_cycle(100);
             led.update();

@@ -11,10 +11,11 @@ PrinterController::PrinterController()
 		Serial.println("Current sensor present");
         #endif
 		// Calibrate current offset
-		display.set_status("Calibrating");
+		display.set_user("Calibrating");
 		delay(2000); // Delay to allow things to settle
 		current.calibrate();
-        display.set_status("Booted");
+		display.set_user("");
+        display.set_state("Rdy");
 	}
 }
 
@@ -50,8 +51,8 @@ void PrinterController::state_change(PrintState s)
     {
         case IDLE:
             ota_enable();
-            display.set_status("IDLE", 1);
-            display.set_status(Eeprom::get_last_user(), 0);
+            display.set_state("IDLE");
+            display.set_user(Eeprom::get_last_user());
             #if SERIAL_DBG
             Serial.println("State changed=> IDLE");
 	        #endif
@@ -67,7 +68,7 @@ void PrinterController::state_change(PrintState s)
             break;
 
         case IN_PROGRESS:
-            display.set_status("PRINTING", 1);
+            display.set_state("PRINTING");
             ota_disable();
 
             Eeprom::set_last_user(name_trunc.c_str());
@@ -80,7 +81,7 @@ void PrinterController::state_change(PrintState s)
           
         case COOLING:
             end_of_print_timer = millis();
-            display.set_status("COOLING", 1);
+            display.set_state("COOL");
 
             #if SERIAL_DBG
             Serial.println("State changed=> COOLING");
@@ -101,9 +102,9 @@ bool PrinterController::idle()
     {
         if(!has_card())
         {
-            display.set_status(Eeprom::get_last_user(), 0);
+            display.set_user(Eeprom::get_last_user());
         }
-        display.set_status("IDLE", 1);
+        display.set_state("IDLE");
     }
     if(new_card())
     {
@@ -183,7 +184,7 @@ void PrinterController::cooling()
     if(minutes_left != last_minutes_left)
     {
         last_minutes_left = minutes_left;
-        display.set_status("COOLING " + String(minutes_left) + " min", 1);
+        display.set_state("COOL " + String(minutes_left) + " min");
     }
 
     if(new_card())
@@ -206,22 +207,26 @@ void PrinterController::cooling()
 }
 
 uint32_t last_print = 0;
+
 void PrinterController::update()
 {
-    #if SERIAL_DBG > 5
-		Serial.println("Printer update");
-    #endif
+#if SERIAL_DBG > 5
+    Serial.println("Printer update");
+#endif
     ACSController::update();
+
     current.handle();
     current_reading = current.read();
 
-    #if SERIAL_DBG > 1
-    if((last_current_reading != current_reading && (millis() - last_print > 500)) || millis() - last_print > 5000)
+    if (((last_current_reading != current_reading) && (millis() - last_print > 500)) ||
+        (millis() - last_print > 5000))
     {
-      last_print = millis();
-      last_current_reading = current_reading;
-      Serial.println(( String( (int16_t)(floor(current_reading + 2.5)) ) + " mA " + String(current.is_printing())));
+        last_print = millis();
+        last_current_reading = current_reading;
+        auto msg = String(current_reading) + String(" mA ") + String(current.is_printing());
+        display.set_debug_info(msg);
+#if SERIAL_DBG > 1
+        Serial.println(msg);
+#endif
     }
-    #endif
-    
 }
