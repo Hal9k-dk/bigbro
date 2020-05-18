@@ -13,7 +13,7 @@ to compile and uploade this, you need PlatformIO, any version of it should work.
 This example code assumes you're using platformio core. The CLI tool.
 
 ```bash
-git clone https://github.com/Duckle29/bigbro.git
+git clone https://github.com/Hal9k-dk/bigbro.git
 cd bigbro/firmware
 platformio run -t upload
 ```
