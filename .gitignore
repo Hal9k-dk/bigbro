@@ -8,3 +8,4 @@ firmware/.gitignore
 firmware/doc/
 *bak*
 *_saved_*.sch
+*backups*
