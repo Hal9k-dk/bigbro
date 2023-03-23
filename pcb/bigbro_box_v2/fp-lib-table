@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name "hal9k-graphics")(type "KiCad")(uri "${KIPRJMOD}/lib/graphics.pretty")(options "")(descr ""))
+)
