@@ -12,4 +12,8 @@
   (lib (name "Connector_JST")(type "KiCad")(uri "${KIPRJMOD}/pretty/Connector_JST.pretty")(options "")(descr ""))
   (lib (name "Capacitor_Tantalum_SMD")(type "KiCad")(uri "${KIPRJMOD}/pretty/Capacitor_Tantalum_SMD.pretty")(options "")(descr ""))
   (lib (name "Capacitor_SMD")(type "KiCad")(uri "${KIPRJMOD}/pretty/Capacitor_SMD.pretty")(options "")(descr ""))
+  (lib (name "modules")(type "KiCad")(uri "${KIPRJMOD}/modules")(options "")(descr ""))
+  (lib (name "Connector_Phoenix_MSTB")(type "KiCad")(uri "${KIPRJMOD}/pretty/Connector_Phoenix_MSTB.pretty")(options "")(descr ""))
+  (lib (name "Fuse")(type "KiCad")(uri "${KIPRJMOD}/pretty/Fuse.pretty")(options "")(descr ""))
+  (lib (name "Converter_ACDC")(type "KiCad")(uri "${KIPRJMOD}/pretty/Converter_ACDC.pretty")(options "")(descr ""))
 )
