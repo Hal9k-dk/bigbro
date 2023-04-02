@@ -1454,6 +1454,35 @@
         )
       )
     )
+    (symbol "Mechanical:MountingHole" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
+      (property "Reference" "H" (at 0 5.08 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Value" "MountingHole" (at 0 3.175 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Footprint" "" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "Datasheet" "~" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "ki_keywords" "mounting hole" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "ki_description" "Mounting Hole without connection" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "ki_fp_filters" "MountingHole*" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (symbol "MountingHole_0_1"
+        (circle (center 0 0) (radius 1.27)
+          (stroke (width 1.27) (type solid))
+          (fill (type none))
+        )
+      )
+    )
     (symbol "RF_Module:ESP32-WROOM-32" (in_bom yes) (on_board yes)
       (property "Reference" "U" (at -12.7 34.29 0)
         (effects (font (size 1.27 1.27)) (justify left))
@@ -3696,7 +3725,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 119.38 142.24 0) (unit 4)
+  (symbol (lib_id "4xxx:4011") (at 119.38 142.24 0) (unit 2)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 102309da-8410-4a9b-b03e-befa3c575807)
     (property "Reference" "U3" (at 119.38 148.59 0)
@@ -3728,7 +3757,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U3") (unit 4)
+          (reference "U3") (unit 2)
         )
       )
     )
@@ -4184,6 +4213,30 @@
     )
   )
 
+  (symbol (lib_id "Mechanical:MountingHole") (at 25.4 220.98 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 46febb50-b29d-41cd-8fe2-14e4b022a0b5)
+    (property "Reference" "H2" (at 27.94 220.345 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "MountingHole" (at 27.94 222.885 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "MountingHole:MountingHole_3.2mm_M3" (at 25.4 220.98 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 25.4 220.98 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (instances
+      (project "bigbro_box"
+        (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+          (reference "H2") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "Connector:TestPoint") (at 91.44 49.53 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 48333162-d1e0-4294-bdcd-7ab3af90a05d)
@@ -4229,6 +4282,30 @@
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
           (reference "#PWR0105") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Mechanical:MountingHole") (at 25.4 227.33 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 4bd642e0-ad5a-4552-8c77-3747e5b1b82f)
+    (property "Reference" "H3" (at 27.94 226.695 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "MountingHole" (at 27.94 229.235 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "MountingHole:MountingHole_3.2mm_M3" (at 25.4 227.33 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 25.4 227.33 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (instances
+      (project "bigbro_box"
+        (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+          (reference "H3") (unit 1)
         )
       )
     )
@@ -4490,7 +4567,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 147.32 173.99 0) (unit 4)
+  (symbol (lib_id "4xxx:4011") (at 147.32 173.99 0) (unit 2)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 69ad291d-0b36-4741-b787-3e835b9b98fc)
     (property "Reference" "U4" (at 147.3117 166.37 0)
@@ -4522,7 +4599,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 4)
+          (reference "U4") (unit 2)
         )
       )
     )
@@ -4632,7 +4709,7 @@
     (property "Value" "250mA" (at 330.2 36.83 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Fuse:Fuseholder_Littelfuse_445_030_series_5x20mm" (at 330.2 39.37 0)
+    (property "Footprint" "modules:Fuseholder5x20_horiz_SemiClosed_Casing10x25mm" (at 330.2 39.37 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 330.2 39.37 0)
@@ -4699,7 +4776,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 59.69 142.24 0) (unit 1)
+  (symbol (lib_id "4xxx:4011") (at 59.69 142.24 0) (unit 3)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 83dc0afa-6570-4c67-a0e7-e1ad90eeae65)
     (property "Reference" "U4" (at 44.45 140.97 0)
@@ -4731,7 +4808,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 1)
+          (reference "U4") (unit 3)
         )
       )
     )
@@ -4839,7 +4916,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 119.38 173.99 0) (unit 3)
+  (symbol (lib_id "4xxx:4011") (at 119.38 173.99 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 8e1e446d-1302-4311-be26-af330743b4d2)
     (property "Reference" "U4" (at 119.3717 166.37 0)
@@ -4871,7 +4948,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 3)
+          (reference "U4") (unit 1)
         )
       )
     )
@@ -5198,7 +5275,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 59.69 151.13 0) (unit 2)
+  (symbol (lib_id "4xxx:4011") (at 59.69 151.13 0) (unit 4)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid b2eb3e22-a247-4eed-b4a3-7ae7aa73b811)
     (property "Reference" "U4" (at 44.45 149.86 0)
@@ -5230,13 +5307,13 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 2)
+          (reference "U4") (unit 4)
         )
       )
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 87.63 144.78 0) (unit 1)
+  (symbol (lib_id "4xxx:4011") (at 87.63 144.78 0) (unit 3)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid b8daa90d-9ca9-4ecf-a615-71e7fe5c6ddb)
     (property "Reference" "U3" (at 87.63 149.86 0)
@@ -5268,7 +5345,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U3") (unit 1)
+          (reference "U3") (unit 3)
         )
       )
     )
@@ -5299,6 +5376,30 @@
     )
   )
 
+  (symbol (lib_id "Mechanical:MountingHole") (at 25.4 233.68 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid c1b30e4a-6da8-4e8d-9f1f-4f5211b2d100)
+    (property "Reference" "H4" (at 27.94 233.045 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "MountingHole" (at 27.94 235.585 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "MountingHole:MountingHole_3.2mm_M3" (at 25.4 233.68 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 25.4 233.68 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (instances
+      (project "bigbro_box"
+        (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+          (reference "H4") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "power:+3V3") (at 387.35 38.1 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid c3966bbc-20bb-401c-9e56-a3f6f4690ea6)
@@ -5324,7 +5425,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 87.63 124.46 0) (unit 2)
+  (symbol (lib_id "4xxx:4011") (at 87.63 124.46 0) (unit 4)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid c5cf5b3f-a0b5-4e7b-a881-ce8e65437681)
     (property "Reference" "U3" (at 87.63 116.84 0)
@@ -5356,7 +5457,31 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U3") (unit 2)
+          (reference "U3") (unit 4)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Mechanical:MountingHole") (at 25.4 214.63 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid c5fb2c03-82f4-4fa4-a91b-2f76afc09a5c)
+    (property "Reference" "H1" (at 27.94 213.995 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "MountingHole" (at 27.94 216.535 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "MountingHole:MountingHole_3.2mm_M3" (at 25.4 214.63 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 25.4 214.63 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (instances
+      (project "bigbro_box"
+        (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+          (reference "H1") (unit 1)
         )
       )
     )
@@ -5601,7 +5726,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 119.38 127 0) (unit 3)
+  (symbol (lib_id "4xxx:4011") (at 119.38 127 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid f12d3a7f-55f9-470d-b4ae-24328d539386)
     (property "Reference" "U3" (at 119.38 118.11 0)
@@ -5633,7 +5758,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U3") (unit 3)
+          (reference "U3") (unit 1)
         )
       )
     )
