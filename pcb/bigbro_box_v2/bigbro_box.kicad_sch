@@ -1870,11 +1870,11 @@
         )
       )
     )
-    (symbol "Switch:SW_SPDT" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)
-      (property "Reference" "SW" (at 0 4.318 0)
+    (symbol "Switch:SW_SPST" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)
+      (property "Reference" "SW" (at 0 3.175 0)
         (effects (font (size 1.27 1.27)))
       )
-      (property "Value" "SW_SPDT" (at 0 -5.08 0)
+      (property "Value" "SW_SPST" (at 0 -2.54 0)
         (effects (font (size 1.27 1.27)))
       )
       (property "Footprint" "" (at 0 0 0)
@@ -1883,48 +1883,38 @@
       (property "Datasheet" "~" (at 0 0 0)
         (effects (font (size 1.27 1.27)) hide)
       )
-      (property "ki_keywords" "switch single-pole double-throw spdt ON-ON" (at 0 0 0)
+      (property "ki_keywords" "switch lever" (at 0 0 0)
         (effects (font (size 1.27 1.27)) hide)
       )
-      (property "ki_description" "Switch, single pole double throw" (at 0 0 0)
+      (property "ki_description" "Single Pole Single Throw (SPST) switch" (at 0 0 0)
         (effects (font (size 1.27 1.27)) hide)
       )
-      (symbol "SW_SPDT_0_0"
+      (symbol "SW_SPST_0_0"
         (circle (center -2.032 0) (radius 0.508)
           (stroke (width 0) (type default))
           (fill (type none))
         )
-        (circle (center 2.032 -2.54) (radius 0.508)
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-      )
-      (symbol "SW_SPDT_0_1"
         (polyline
           (pts
             (xy -1.524 0.254)
-            (xy 1.651 2.286)
+            (xy 1.524 1.778)
           )
           (stroke (width 0) (type default))
           (fill (type none))
         )
-        (circle (center 2.032 2.54) (radius 0.508)
+        (circle (center 2.032 0) (radius 0.508)
           (stroke (width 0) (type default))
           (fill (type none))
         )
       )
-      (symbol "SW_SPDT_1_1"
-        (pin passive line (at 5.08 2.54 180) (length 2.54)
+      (symbol "SW_SPST_1_1"
+        (pin passive line (at -5.08 0 0) (length 2.54)
           (name "A" (effects (font (size 1.27 1.27))))
           (number "1" (effects (font (size 1.27 1.27))))
         )
-        (pin passive line (at -5.08 0 0) (length 2.54)
+        (pin passive line (at 5.08 0 180) (length 2.54)
           (name "B" (effects (font (size 1.27 1.27))))
           (number "2" (effects (font (size 1.27 1.27))))
-        )
-        (pin passive line (at 5.08 -2.54 180) (length 2.54)
-          (name "C" (effects (font (size 1.27 1.27))))
-          (number "3" (effects (font (size 1.27 1.27))))
         )
       )
     )
@@ -2302,6 +2292,7 @@
     )
   )
 
+
   (junction (at 50.8 139.7) (diameter 0) (color 0 0 0 0)
     (uuid 009a4fb4-fcc0-4623-ae5d-c1bae3219583)
   )
@@ -2385,7 +2376,6 @@
   (no_connect (at 58.42 69.85) (uuid 110bd915-b94a-4d5e-8a4e-7909d8c10f6c))
   (no_connect (at 58.42 72.39) (uuid 110bd915-b94a-4d5e-8a4e-7909d8c10f6d))
   (no_connect (at 88.9 67.31) (uuid 441d9a09-2c81-4e55-be3d-9383fa0862cb))
-  (no_connect (at 133.35 97.79) (uuid 737cde17-cf06-422d-be39-f101e3c71e06))
   (no_connect (at 127 173.99) (uuid 7a838ea4-a9d6-4e24-85c9-bb36e7ef4e7e))
   (no_connect (at 88.9 74.93) (uuid 7ed1c609-9ce0-4ca4-ad87-0651c36d6e8e))
   (no_connect (at 154.94 173.99) (uuid 8f8d0574-1513-469f-aaa1-33d892ca582f))
@@ -2840,7 +2830,7 @@
     (stroke (width 0) (type default))
     (uuid 819e4554-6e61-460e-b018-a196f3c00bd0)
   )
-  (wire (pts (xy 133.35 92.71) (xy 130.81 92.71))
+  (wire (pts (xy 133.35 95.25) (xy 130.81 95.25))
     (stroke (width 0) (type default))
     (uuid 82319a92-6f52-420d-8415-e225353b5ec7)
   )
@@ -3515,7 +3505,7 @@
     (effects (font (size 1.27 1.27)) (justify left))
     (uuid 1a83e3f8-aa27-451c-9197-f01bca7a1212)
   )
-  (hierarchical_label "card_switch" (shape output) (at 130.81 92.71 180) (fields_autoplaced)
+  (hierarchical_label "card_switch" (shape output) (at 130.81 95.25 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 339bdfb6-102b-4793-b968-44b83dfbaede)
   )
@@ -3849,7 +3839,7 @@
     (property "Value" "10k" (at 322.58 106.6799 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" (at 325.12 105.41 0)
+    (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 325.12 105.41 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 325.12 105.41 0)
@@ -3902,7 +3892,7 @@
     (property "Value" "BSS138" (at 345.44 103.505 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Package_TO_SOT_SMD:SOT-323_SC-70_Handsoldering" (at 344.17 99.06 0)
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-323_SC-70" (at 344.17 99.06 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 339.09 101.6 0)
@@ -3954,7 +3944,7 @@
     (property "Value" "10k" (at 71.12 168.9099 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" (at 76.2 167.64 0)
+    (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 76.2 167.64 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 76.2 167.64 0)
@@ -3966,33 +3956,6 @@
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
           (reference "R2") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Switch:SW_SPDT") (at 138.43 95.25 180) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no)
-    (uuid 2808f675-0235-4ef6-ab7d-efe7f043257e)
-    (property "Reference" "SW1" (at 138.43 87.63 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "SW_SPDT" (at 138.43 90.17 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" (at 138.43 95.25 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 138.43 95.25 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 0526f372-a22f-44de-80d1-37ccfd28de58))
-    (pin "2" (uuid 5552c9f4-db35-4254-9abd-e5e002361ae3))
-    (pin "3" (uuid 8d7290bb-3889-4501-9466-e74d7d8fefbf))
-    (instances
-      (project "bigbro_box"
-        (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "SW1") (unit 1)
         )
       )
     )
@@ -4120,7 +4083,7 @@
     (property "Value" "1k2" (at 160.02 86.3599 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" (at 165.1 85.09 0)
+    (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 165.1 85.09 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 165.1 85.09 0)
@@ -4425,7 +4388,7 @@
     (property "Value" "1k" (at 67.3101 170.18 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" (at 68.58 175.26 0)
+    (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 68.58 175.26 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 68.58 175.26 0)
@@ -4567,10 +4530,10 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 147.32 173.99 0) (unit 2)
+  (symbol (lib_id "4xxx:4011") (at 147.32 173.99 0) (unit 4)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 69ad291d-0b36-4741-b787-3e835b9b98fc)
-    (property "Reference" "U4" (at 147.3117 166.37 0)
+    (property "Reference" "U3" (at 147.3117 166.37 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "4011" (at 147.3117 168.91 0)
@@ -4599,7 +4562,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 2)
+          (reference "U3") (unit 4)
         )
       )
     )
@@ -4776,10 +4739,10 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 59.69 142.24 0) (unit 3)
+  (symbol (lib_id "4xxx:4011") (at 59.69 142.24 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 83dc0afa-6570-4c67-a0e7-e1ad90eeae65)
-    (property "Reference" "U4" (at 44.45 140.97 0)
+    (property "Reference" "U3" (at 44.45 140.97 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "4011" (at 44.45 143.51 0)
@@ -4808,7 +4771,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 3)
+          (reference "U3") (unit 1)
         )
       )
     )
@@ -4916,7 +4879,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 119.38 173.99 0) (unit 1)
+  (symbol (lib_id "4xxx:4011") (at 119.38 173.99 0) (unit 2)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 8e1e446d-1302-4311-be26-af330743b4d2)
     (property "Reference" "U4" (at 119.3717 166.37 0)
@@ -4948,7 +4911,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 1)
+          (reference "U4") (unit 2)
         )
       )
     )
@@ -5051,7 +5014,7 @@
     (property "Value" "1k" (at 328.93 99.06 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" (at 328.93 101.6 0)
+    (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 328.93 101.6 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 328.93 101.6 0)
@@ -5207,7 +5170,7 @@
     (property "Value" "10k" (at 30.48 132.0799 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" (at 35.56 130.81 0)
+    (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 35.56 130.81 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 35.56 130.81 0)
@@ -5275,7 +5238,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 59.69 151.13 0) (unit 4)
+  (symbol (lib_id "4xxx:4011") (at 59.69 151.13 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid b2eb3e22-a247-4eed-b4a3-7ae7aa73b811)
     (property "Reference" "U4" (at 44.45 149.86 0)
@@ -5307,16 +5270,16 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U4") (unit 4)
+          (reference "U4") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 87.63 144.78 0) (unit 3)
+  (symbol (lib_id "4xxx:4011") (at 87.63 144.78 0) (unit 4)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid b8daa90d-9ca9-4ecf-a615-71e7fe5c6ddb)
-    (property "Reference" "U3" (at 87.63 149.86 0)
+    (property "Reference" "U4" (at 87.63 149.86 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "4011" (at 87.63 152.4 0)
@@ -5345,7 +5308,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U3") (unit 3)
+          (reference "U4") (unit 4)
         )
       )
     )
@@ -5425,10 +5388,10 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 87.63 124.46 0) (unit 4)
+  (symbol (lib_id "4xxx:4011") (at 87.63 124.46 0) (unit 3)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid c5cf5b3f-a0b5-4e7b-a881-ce8e65437681)
-    (property "Reference" "U3" (at 87.63 116.84 0)
+    (property "Reference" "U4" (at 87.63 116.84 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Value" "4011" (at 87.63 119.38 0)
@@ -5457,7 +5420,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U3") (unit 4)
+          (reference "U4") (unit 3)
         )
       )
     )
@@ -5546,7 +5509,7 @@
     (property "Value" "2k2" (at 160.02 93.9799 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder" (at 165.1 92.71 0)
+    (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 165.1 92.71 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 165.1 92.71 0)
@@ -5726,7 +5689,7 @@
     )
   )
 
-  (symbol (lib_id "4xxx:4011") (at 119.38 127 0) (unit 1)
+  (symbol (lib_id "4xxx:4011") (at 119.38 127 0) (unit 3)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid f12d3a7f-55f9-470d-b4ae-24328d539386)
     (property "Reference" "U3" (at 119.38 118.11 0)
@@ -5758,7 +5721,7 @@
     (instances
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
-          (reference "U3") (unit 1)
+          (reference "U3") (unit 3)
         )
       )
     )
@@ -5859,6 +5822,32 @@
       (project "bigbro_box"
         (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
           (reference "TP6") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Switch:SW_SPST") (at 138.43 95.25 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid f96d9093-20a6-4e88-8859-c48e6cf326af)
+    (property "Reference" "SW1" (at 138.43 90.17 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "SW_SPST" (at 138.43 92.71 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" (at 138.43 95.25 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 138.43 95.25 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid d05721f8-e87d-462c-a409-703eb5be5902))
+    (pin "2" (uuid d4cbab66-b5fb-43f3-b65e-794bfb07d8f4))
+    (instances
+      (project "bigbro_box"
+        (path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+          (reference "SW1") (unit 1)
         )
       )
     )
