@@ -548,7 +548,7 @@
     (property "ki_keywords" "mounting hole")
     (path "/c5fb2c03-82f4-4fa4-a91b-2f76afc09a5c")
     (attr exclude_from_pos_files)
-    (fp_text reference "H1" (at 0 -4.2) (layer "F.SilkS")
+    (fp_text reference "H1" (at 4.318 -2.286) (layer "F.SilkS") hide
         (effects (font (size 1 1) (thickness 0.15)))
       (tstamp 149f1a1f-e86e-4b6f-a475-1cf879dd688c)
     )
@@ -968,7 +968,7 @@
 
   (footprint "hal9k-graphics:hal9k-logo_20mm" (layer "F.Cu")
     (tstamp 526da4d4-9f6b-4bcd-977b-52b1cd418dea)
-    (at 148.5 111.7)
+    (at 146.304 111.252)
     (attr board_only exclude_from_pos_files exclude_from_bom)
     (fp_text reference "G***" (at 0 0) (layer "F.SilkS") hide
         (effects (font (size 1.524 1.524) (thickness 0.3)))
@@ -3165,6 +3165,11 @@
       (net 2 "GND") (pinfunction "GND") (pintype "power_in") (tstamp 31782ad9-ecbd-4f2e-acb2-395c891e1676))
     (pad "10" thru_hole circle (at 22.86 -15.24) (size 1.65 1.65) (drill 0.9) (layers "*.Cu" "*.Mask")
       (net 1 "+5V") (pinfunction "5V") (pintype "power_in") (tstamp eab6ddec-57c9-4ac3-b244-220f58df1a94))
+    (model "${KIPRJMOD}/lib/3D/RDM6300-socket.step"
+      (offset (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (footprint "Package_TO_SOT_SMD:SOT-23" (layer "F.Cu")
@@ -3514,7 +3519,7 @@
     (property "ki_keywords" "mounting hole")
     (path "/46febb50-b29d-41cd-8fe2-14e4b022a0b5")
     (attr exclude_from_pos_files)
-    (fp_text reference "H2" (at 0 -4.2) (layer "F.SilkS")
+    (fp_text reference "H2" (at 0 -4.2) (layer "F.SilkS") hide
         (effects (font (size 1 1) (thickness 0.15)))
       (tstamp 3d1f2983-f48b-4601-a033-c7ee919762ce)
     )
@@ -3691,7 +3696,7 @@
     (property "ki_keywords" "mounting hole")
     (path "/4bd642e0-ad5a-4552-8c77-3747e5b1b82f")
     (attr exclude_from_pos_files)
-    (fp_text reference "H3" (at 0 -4.2) (layer "F.SilkS")
+    (fp_text reference "H3" (at -4.318 -3.048) (layer "F.SilkS") hide
         (effects (font (size 1 1) (thickness 0.15)))
       (tstamp d7e582a2-7659-4685-aa15-b9fa1a45a4a8)
     )
@@ -3783,7 +3788,7 @@
     (property "ki_keywords" "mounting hole")
     (path "/c1b30e4a-6da8-4e8d-9f1f-4f5211b2d100")
     (attr exclude_from_pos_files)
-    (fp_text reference "H4" (at 0 -4.2) (layer "F.SilkS")
+    (fp_text reference "H4" (at 0 -4.2) (layer "F.SilkS") hide
         (effects (font (size 1 1) (thickness 0.15)))
       (tstamp 4a40e4f3-764a-4836-a2ef-51f1f78bd39c)
     )
