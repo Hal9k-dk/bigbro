@@ -5225,7 +5225,7 @@
     (property "Reference" "R9" (at 177.8 170.815 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "330" (at 177.8 173.355 0)
+    (property "Value" "680" (at 177.8 173.355 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Resistor_SMD:R_0603_1608Metric" (at 173.482 171.45 90)
