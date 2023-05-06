@@ -121,6 +121,35 @@ static int set_instance(int argc, char** argv)
     return 0;
 }
 
+static int reboot(int, char**)
+{
+    printf("Reboot...\n");
+    esp_restart();
+    return 0;
+}
+
+static int read_switch(int, char**)
+{
+    for (int n = 0; n < 50; ++n)
+    {
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        printf("Switch %d\n", (int) !gpio_get_level(CARD_SW));
+    }
+    printf("done\n");
+    return 0;
+}
+
+static int read_rfid(int, char**)
+{
+    for (int n = 0; n < 100; ++n)
+    {
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        //!!printf("RFID %" PRId64 "\n", rfid.poll());
+    }
+    printf("done\n");
+    return 0;
+}
+
 void initialize_console()
 {
     /* Disable buffering on stdin */
@@ -222,6 +251,33 @@ void run_console()
         .argtable = &set_instance_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_instance_cmd));
+
+    const esp_console_cmd_t reboot_cmd = {
+        .command = "reboot",
+        .help = "Reboot",
+        .hint = nullptr,
+        .func = &reboot,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&reboot_cmd));
+    
+    const esp_console_cmd_t read_switch_cmd = {
+        .command = "switch",
+        .help = "Read switch",
+        .hint = nullptr,
+        .func = &read_switch,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&read_switch_cmd));
+
+    const esp_console_cmd_t read_rfid_cmd = {
+        .command = "rfid",
+        .help = "Read RFID",
+        .hint = nullptr,
+        .func = &read_rfid,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&read_rfid_cmd));
 
     const char* prompt = LOG_COLOR_I "bigbro> " LOG_RESET_COLOR;
     int probe_status = linenoiseProbe();
