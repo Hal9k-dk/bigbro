@@ -11,8 +11,6 @@
 #include "hw.h"
 #include "reader.h"
 
-auto display = hagl_init();
-
 extern "C"
 void app_main()
 {
@@ -21,7 +19,9 @@ void app_main()
     printf("BigBro v %s\n", VERSION);
 
     xTaskCreate(rfid_task, "rfid_task", 10*1024, NULL, 5, NULL);
-    
+
+    auto display = hagl_init();
+
     printf("Press a key to enter console\n");
     bool debug = false;
     for (int i = 0; i < 20; ++i)
@@ -46,8 +46,9 @@ void app_main()
         int16_t y0 = rand() % display->height;
         int16_t radius = rand() % 100;
         hagl_color_t color = rand() % 0xffff;
-
+            
         hagl_fill_circle(display, x0, y0, radius, color);
+        vTaskDelay(10/portTICK_PERIOD_MS);
     }
 
     printf("Vibing...\n");
