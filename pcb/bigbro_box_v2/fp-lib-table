@@ -18,4 +18,5 @@
   (lib (name "Relay_THT")(type "KiCad")(uri "${KIPRJMOD}/pretty/Relay_THT.pretty")(options "")(descr ""))
   (lib (name "Package_SO")(type "KiCad")(uri "${KIPRJMOD}/pretty/Package_SO.pretty")(options "")(descr ""))
   (lib (name "Button_Switch_SMD")(type "KiCad")(uri "${KIPRJMOD}/pretty/Button_Switch_SMD.pretty")(options "")(descr ""))
+  (lib (name "Connector_PinSocket_2.54mm")(type "KiCad")(uri "${KIPRJMOD}/pretty/Connector_PinSocket_2.54mm.pretty")(options "")(descr ""))
 )
