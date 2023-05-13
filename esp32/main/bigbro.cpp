@@ -8,6 +8,7 @@
 
 #include "console.h"
 #include "defs.h"
+#include "hw.h"
 #include "reader.h"
 
 auto display = hagl_init();
@@ -15,17 +16,12 @@ auto display = hagl_init();
 extern "C"
 void app_main()
 {
+    init_hardware();
+
     printf("BigBro v %s\n", VERSION);
 
-    gpio_config_t io_conf;
-    io_conf.intr_type = GPIO_INTR_DISABLE;
-    io_conf.mode = GPIO_MODE_INPUT;
-    // bit mask of the pins that you want to set
-    io_conf.pin_bit_mask = (1ULL << CARD_SW);
-    io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
-    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-    ESP_ERROR_CHECK(gpio_config(&io_conf));
-
+    xTaskCreate(rfid_task, "rfid_task", 10*1024, NULL, 5, NULL);
+    
     printf("Press a key to enter console\n");
     bool debug = false;
     for (int i = 0; i < 20; ++i)
@@ -41,7 +37,6 @@ void app_main()
         run_console();        // never returns
     
     printf("\nStarting application\n");
-    xTaskCreate(rfid_task, "rfid_task", 10*1024, NULL, 5, NULL);
     //xTaskCreate(led_task, "led_task", 4*1024, NULL, 5, NULL);
 
     printf("Running display test\n");

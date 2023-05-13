@@ -47,7 +47,7 @@ void rfid_task(void*)
 
     ESP_ERROR_CHECK(uart_driver_install(UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
     ESP_ERROR_CHECK(uart_param_config(UART_PORT_NUM, &uart_config));
-    ESP_ERROR_CHECK(uart_set_pin(UART_PORT_NUM, PIN_TXD, RFID_RXD, PIN_RTS, PIN_CTS));
+    ESP_ERROR_CHECK(uart_set_pin(UART_PORT_NUM, PIN_TXD, PIN_RFID_RXD, PIN_RTS, PIN_CTS));
 
     // Configure a temporary buffer for the incoming data
     uint8_t data[BUF_SIZE];
@@ -64,7 +64,6 @@ void rfid_task(void*)
                   {
                        std::lock_guard<std::mutex> g(last_cardid_mutex);
                        last_cardid = decoder.get_id();
-                       //printf("%s\n", last_cardid.c_str());
                   }
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);

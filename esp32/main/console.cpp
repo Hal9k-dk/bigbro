@@ -1,5 +1,7 @@
 #include "console.h"
 #include "defs.h"
+#include "hw.h"
+#include "reader.h"
 
 #include <string>
 
@@ -133,7 +135,7 @@ static int read_switch(int, char**)
     for (int n = 0; n < 50; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
-        printf("Switch %d\n", (int) !gpio_get_level(CARD_SW));
+        printf("Switch %d\n", (int) !gpio_get_level(PIN_CARD_SW));
     }
     printf("done\n");
     return 0;
@@ -144,7 +146,20 @@ static int read_rfid(int, char**)
     for (int n = 0; n < 100; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
-        //!!printf("RFID %" PRId64 "\n", rfid.poll());
+        printf("RFID %" PRId64 "\n", get_and_clear_last_cardid());
+    }
+    printf("done\n");
+    return 0;
+}
+
+static int toggle_relay(int, char**)
+{
+    for (int n = 0; n < 10; ++n)
+    {
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        set_relay(true);
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        set_relay(false);
     }
     printf("done\n");
     return 0;
@@ -278,6 +293,15 @@ void run_console()
         .argtable = nullptr
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&read_rfid_cmd));
+
+    const esp_console_cmd_t toggle_relay_cmd = {
+        .command = "relay",
+        .help = "Toggle relay",
+        .hint = nullptr,
+        .func = &toggle_relay,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&toggle_relay_cmd));
 
     const char* prompt = LOG_COLOR_I "bigbro> " LOG_RESET_COLOR;
     int probe_status = linenoiseProbe();
