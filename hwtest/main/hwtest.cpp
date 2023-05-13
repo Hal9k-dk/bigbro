@@ -8,9 +8,14 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-constexpr const int inputs[] = {
-    // Card switch
-    25,
+struct pin_def
+{
+    int pin = 0;
+    const char* name = nullptr;
+};
+    
+constexpr const pin_def inputs[] = {
+    { 25, "Card switch" },
 };
 
 // Only ADC1 is supported
@@ -19,27 +24,17 @@ constexpr const int analog_inputs[] = {
     3,
 };
 
-constexpr const int outputs[] = {
-    // Display A0/DC
-    2,
-    // Display reset
-    4,
-    // Display backlight
-    14,
-    // Display CS
-    15,
-    // Display SCK
-    18,
-    // Display SDA
-    23,
-    // Relay
-    16,
-    // Ext1
-    13,
-    // Ext2
-    26,
-    // Ext3
-    27,
+constexpr const pin_def outputs[] = {
+    { 2, "Display A0/DC" },
+    { 4, "Display reset" },
+    { 14, "Display backlight" },
+    { 15, "Display CS" },
+    { 18, "Display SCK" },
+    { 23, "Display SDA" },
+    { 16, "Relay" },
+    { 13, "Ext1" },
+    { 26, "Ext2" },
+    { 27, "Ext3" },
 };
 
 // -- end of config
@@ -53,8 +48,8 @@ void init_hw()
     io_conf.intr_type = GPIO_INTR_DISABLE;
     io_conf.mode = GPIO_MODE_INPUT;
     io_conf.pin_bit_mask = 0;
-    for (auto pin : inputs)
-        io_conf.pin_bit_mask |= (1ULL << pin);
+    for (auto pin_def : inputs)
+        io_conf.pin_bit_mask |= (1ULL << pin_def.pin);
     io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
@@ -62,14 +57,14 @@ void init_hw()
     // Outputs
     io_conf.mode = GPIO_MODE_OUTPUT;
     io_conf.pin_bit_mask = 0;
-    for (auto pin : outputs)
-        io_conf.pin_bit_mask |= (1ULL << pin);
+    for (auto pin_def : outputs)
+        io_conf.pin_bit_mask |= (1ULL << pin_def.pin);
     io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
-    for (auto pin : outputs)
-        ESP_ERROR_CHECK(gpio_set_level(static_cast<gpio_num_t>(pin), false));
+    for (auto pin_def : outputs)
+        ESP_ERROR_CHECK(gpio_set_level(static_cast<gpio_num_t>(pin_def.pin), false));
 
     // Analog in
     
@@ -94,22 +89,22 @@ void init_hw()
 
 void toggle_outputs()
 {
-    for (auto pin : outputs)
+    for (auto pin_def : outputs)
     {
-        printf("Set pin %d HIGH\n", pin);
-        ESP_ERROR_CHECK(gpio_set_level(static_cast<gpio_num_t>(pin), true));
+        printf("Set pin %2d (%s) HIGH\n", pin_def.pin, pin_def.name);
+        ESP_ERROR_CHECK(gpio_set_level(static_cast<gpio_num_t>(pin_def.pin), true));
         vTaskDelay(1000/portTICK_PERIOD_MS);
-        printf("           LOW\n");
-        ESP_ERROR_CHECK(gpio_set_level(static_cast<gpio_num_t>(pin), false));
+        printf(" - LOW\n");
+        ESP_ERROR_CHECK(gpio_set_level(static_cast<gpio_num_t>(pin_def.pin), false));
     }
 }
 
 void read_inputs()
 {
-    for (auto pin : inputs)
+    for (auto pin_def : inputs)
     {
-        printf("Pin %d is %s\n", pin,
-               gpio_get_level(static_cast<gpio_num_t>(pin)) ? "HIGH" : "LOW");
+        printf("Pin %2d (%s) is %s\n", pin_def.pin, pin_def.name,
+               gpio_get_level(static_cast<gpio_num_t>(pin_def.pin)) ? "HIGH" : "LOW");
     }
 }
 
