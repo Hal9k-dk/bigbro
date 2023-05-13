@@ -15,6 +15,7 @@ struct pin_def
 };
     
 constexpr const pin_def inputs[] = {
+    { 17, "RFID TX" },
     { 25, "Card switch" },
 };
 
