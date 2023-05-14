@@ -1207,11 +1207,11 @@
         )
       )
     )
-    (symbol "Device:Q_NMOS_GDS" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)
+    (symbol "Device:Q_NMOS_GSD" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)
       (property "Reference" "Q" (at 5.08 1.27 0)
         (effects (font (size 1.27 1.27)) (justify left))
       )
-      (property "Value" "Q_NMOS_GDS" (at 5.08 -1.27 0)
+      (property "Value" "Q_NMOS_GSD" (at 5.08 -1.27 0)
         (effects (font (size 1.27 1.27)) (justify left))
       )
       (property "Footprint" "" (at 5.08 2.54 0)
@@ -1223,10 +1223,10 @@
       (property "ki_keywords" "transistor NMOS N-MOS N-MOSFET" (at 0 0 0)
         (effects (font (size 1.27 1.27)) hide)
       )
-      (property "ki_description" "N-MOSFET transistor, gate/drain/source" (at 0 0 0)
+      (property "ki_description" "N-MOSFET transistor, gate/source/drain" (at 0 0 0)
         (effects (font (size 1.27 1.27)) hide)
       )
-      (symbol "Q_NMOS_GDS_0_1"
+      (symbol "Q_NMOS_GSD_0_1"
         (polyline
           (pts
             (xy 0.0508 0)
@@ -1369,17 +1369,17 @@
           (fill (type outline))
         )
       )
-      (symbol "Q_NMOS_GDS_1_1"
+      (symbol "Q_NMOS_GSD_1_1"
         (pin input line (at -5.08 0 0) (length 5.08)
           (name "G" (effects (font (size 1.27 1.27))))
           (number "1" (effects (font (size 1.27 1.27))))
         )
-        (pin passive line (at 2.54 5.08 270) (length 2.54)
-          (name "D" (effects (font (size 1.27 1.27))))
-          (number "2" (effects (font (size 1.27 1.27))))
-        )
         (pin passive line (at 2.54 -5.08 90) (length 2.54)
           (name "S" (effects (font (size 1.27 1.27))))
+          (number "2" (effects (font (size 1.27 1.27))))
+        )
+        (pin passive line (at 2.54 5.08 270) (length 2.54)
+          (name "D" (effects (font (size 1.27 1.27))))
           (number "3" (effects (font (size 1.27 1.27))))
         )
       )
@@ -4064,7 +4064,7 @@
     )
   )
 
-  (symbol (lib_id "Device:Q_NMOS_GDS") (at 339.09 101.6 0) (unit 1)
+  (symbol (lib_id "Device:Q_NMOS_GSD") (at 339.09 101.6 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 217c24b6-b2ff-44f2-9bb1-339757f2692c)
     (property "Reference" "Q3" (at 345.44 100.965 0)
