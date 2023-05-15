@@ -5,4 +5,4 @@
 
 #include "esp_system.h"
 
-esp_err_t connect(const std::vector<std::pair<std::string, std::string>>& creds);
+esp_err_t connect();

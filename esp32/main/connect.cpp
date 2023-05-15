@@ -18,18 +18,59 @@
 #include "esp_wifi_default.h"
 #include "esp_log.h"
 #include "esp_netif.h"
-#include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
+#include "nvs_flash.h"
 
-static xSemaphoreHandle s_semph_get_ip_addrs;
+static SemaphoreHandle_t s_semph_get_ip_addrs;
 static esp_netif_t* s_esp_netif = NULL;
 
 static esp_netif_t* wifi_start(const std::pair<std::string, std::string>& creds);
 static void wifi_stop();
+
+void get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf_size)
+{
+    auto err = nvs_get_str(my_handle, key, buf, &buf_size);
+    switch (err)
+    {
+    case ESP_OK:
+        return;
+    case ESP_ERR_NVS_NOT_FOUND:
+        printf("%s: not found\n", key);
+        break;
+    default:
+        printf("%s: NVS error %d\n", key, err);
+        break;
+    }
+    printf("Restart in 10 seconds\n");
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
+    printf("Restart in 5 seconds\n");
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
+    esp_restart();
+}
+
+std::vector<std::pair<std::string, std::string>> get_wifi_credentials(char* buf)
+{
+    std::vector<std::pair<std::string, std::string>> v;
+    bool is_ssid = true;
+    std::string ssid;
+    char* p = buf;
+    while (1)
+    {
+        char* token = strsep(&p, ":");
+        if (!token)
+            break;
+        if (is_ssid)
+            ssid = std::string(token);
+        else
+            v.push_back(std::make_pair(ssid, std::string(token)));
+        is_ssid = !is_ssid;
+    }
+    return v;
+}
 
 /**
  * @brief Checks the netif description if it contains specified prefix.
@@ -56,8 +97,17 @@ static void on_got_ip(void* arg, esp_event_base_t event_base,
     xSemaphoreGive(s_semph_get_ip_addrs);
 }
 
-esp_err_t connect(const std::vector<std::pair<std::string, std::string>>& creds)
+esp_err_t connect()
 {
+    nvs_handle my_handle;
+    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
+    char buf[256];
+    get_nvs_string(my_handle, WIFI_KEY, buf, sizeof(buf));
+    const auto creds = get_wifi_credentials(buf);
+    //get_nvs_string(my_handle, GATEWAY_TOKEN_KEY, config_gateway_token, sizeof(config_gateway_token));
+    //get_nvs_string(my_handle, INSTANCE_KEY, config_instance, sizeof(config_instance));
+    nvs_close(my_handle);
+
     if (s_semph_get_ip_addrs != NULL)
         return ESP_ERR_INVALID_STATE;
     s_semph_get_ip_addrs = xSemaphoreCreateCounting(1, 0);
@@ -87,6 +137,7 @@ esp_err_t connect(const std::vector<std::pair<std::string, std::string>>& creds)
             ESP_LOGI(TAG, "- IPv4 address: " IPSTR, IP2STR(&ip.ip));
         }
     }
+    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
     return ESP_OK;
 }
 
@@ -104,7 +155,7 @@ esp_err_t disconnect()
 static void on_wifi_disconnect(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
-    ESP_LOGI(TAG, "on_wifi_disconnect: %d", event_id);
+    //ESP_LOGI(TAG, "on_wifi_disconnect: %d", event_id);
     ESP_LOGI(TAG, "Wi-Fi disconnected, trying to reconnect...");
     esp_err_t err = esp_wifi_connect();
     if (err == ESP_ERR_WIFI_NOT_STARTED)

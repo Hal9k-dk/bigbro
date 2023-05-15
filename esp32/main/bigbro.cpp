@@ -6,6 +6,7 @@
 #include <hagl_hal.h>
 #include <hagl.h>
 
+#include "connect.h"
 #include "console.h"
 #include "defs.h"
 #include "hw.h"
@@ -51,6 +52,9 @@ void app_main()
         vTaskDelay(10/portTICK_PERIOD_MS);
     }
 
+    ESP_ERROR_CHECK(connect());
+    printf("Connected to WiFi\n");
+    
     printf("Vibing...\n");
     while (1)
         vTaskDelay(1);
