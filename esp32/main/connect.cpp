@@ -55,19 +55,17 @@ void get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf
 std::vector<std::pair<std::string, std::string>> get_wifi_credentials(char* buf)
 {
     std::vector<std::pair<std::string, std::string>> v;
-    bool is_ssid = true;
-    std::string ssid;
     char* p = buf;
     while (1)
     {
-        char* token = strsep(&p, ":");
+        char* token = strsep(&p, "\r");
         if (!token)
             break;
-        if (is_ssid)
-            ssid = std::string(token);
-        else
-            v.push_back(std::make_pair(ssid, std::string(token)));
-        is_ssid = !is_ssid;
+        std::string ssid = std::string(token);
+        token = strsep(&p, "\n");
+        if (!token)
+            break;
+        v.push_back(std::make_pair(ssid, std::string(token)));
     }
     return v;
 }
@@ -104,6 +102,11 @@ esp_err_t connect()
     char buf[256];
     get_nvs_string(my_handle, WIFI_KEY, buf, sizeof(buf));
     const auto creds = get_wifi_credentials(buf);
+    if (creds.empty())
+    {
+        ESP_LOGI(TAG, "No WiFi credentials");
+        return ESP_ERR_NOT_FOUND;
+    }
     //get_nvs_string(my_handle, GATEWAY_TOKEN_KEY, config_gateway_token, sizeof(config_gateway_token));
     //get_nvs_string(my_handle, INSTANCE_KEY, config_instance, sizeof(config_instance));
     nvs_close(my_handle);

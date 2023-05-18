@@ -47,10 +47,8 @@ int add_wifi_credentials(int argc, char** argv)
     if (nvs_get_str(my_handle, WIFI_KEY, buf, &size) == ESP_OK)
     {
         creds = std::string(buf);
-        if (!creds.empty())
-            creds += std::string(":");
     }
-    creds += std::string(ssid) + std::string(":") + std::string(password);
+    creds += std::string(ssid) + std::string("\r") + std::string(password) + std::string("\n");
     ESP_ERROR_CHECK(nvs_set_str(my_handle, WIFI_KEY, creds.c_str()));
     nvs_close(my_handle);
     printf("OK: Added WiFi credentials %s/%s\n", ssid, password);
