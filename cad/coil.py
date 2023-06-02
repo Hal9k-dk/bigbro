@@ -3,9 +3,9 @@ import cadquery as cq
 corner_dia = 2
 rod_dia = 4
 knob_expand = 1.1
-h = 3.5
-hcc = 41
-vcc = 29
+h = 2
+hcc = 42.5 - rod_dia
+vcc = 31.5 - rod_dia
 
 top = (cq.Workplane("XY")
        .transformed(offset=(0, 0, h))
