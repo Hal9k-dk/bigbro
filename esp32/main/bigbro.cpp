@@ -36,7 +36,7 @@ void app_main()
 
     auto display = hagl_init();
 
-    printf("Press a key to enter console\n");
+    printf("\n\nPress a key to enter console\n");
     bool debug = false;
     for (int i = 0; i < 20; ++i)
     {
@@ -48,22 +48,10 @@ void app_main()
         vTaskDelay(100/portTICK_PERIOD_MS);
     }
     if (debug)
-        run_console();        // never returns
+        run_console(display);        // never returns
     
     printf("\nStarting application\n");
     //xTaskCreate(led_task, "led_task", 4*1024, NULL, 5, NULL);
-
-    printf("Running display test\n");
-
-    for (uint16_t i = 1; i < 500; i++) {
-        int16_t x0 = rand() % display->width;
-        int16_t y0 = rand() % display->height;
-        int16_t radius = rand() % 100;
-        hagl_color_t color = rand() % 0xffff;
-            
-        hagl_fill_circle(display, x0, y0, radius, color);
-        vTaskDelay(10/portTICK_PERIOD_MS);
-    }
 
     ESP_ERROR_CHECK(connect());
     printf("Connected to WiFi\n");

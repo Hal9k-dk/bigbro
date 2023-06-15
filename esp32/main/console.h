@@ -1,3 +1,5 @@
 #pragma once
 
-void run_console();
+#include <hagl.h>
+
+void run_console(hagl_backend_t* display);
