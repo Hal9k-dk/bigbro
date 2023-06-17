@@ -11,6 +11,7 @@ result = (cq.Workplane("XY")
          )
 
 # display hole
+# TODO: Adjust position/size
 disp_y_offset = 0
 disp_x_offset = 6
 dhh = 27
