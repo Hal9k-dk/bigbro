@@ -53,9 +53,23 @@ void init_hardware()
         }
     };
     ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+
+    ESP_ERROR_CHECK(ledc_fade_func_install(0));
 }
 
 void set_relay(bool on)
 {
     ESP_ERROR_CHECK(gpio_set_level(PIN_RELAY, on));
+}
+
+void set_backlight(int backlight)
+{
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, backlight));
+    ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+}
+
+void fade_backlight(int backlight, int ms)
+{
+    ledc_set_fade_with_time(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, backlight, ms);
+    ledc_fade_start(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, LEDC_FADE_NO_WAIT);
 }

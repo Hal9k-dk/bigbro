@@ -49,7 +49,7 @@ void app_main()
     }
     if (debug)
         run_console(display);        // never returns
-    
+
     printf("\nStarting application\n");
     //xTaskCreate(led_task, "led_task", 4*1024, NULL, 5, NULL);
 

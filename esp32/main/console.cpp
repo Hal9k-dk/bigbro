@@ -169,36 +169,45 @@ static int toggle_relay(int, char**)
 static int test_display(int, char**)
 {
     printf("Running display test\n");
+    set_backlight(255);
 
-    // ledc_set_fade_with_time()
-    // ledc_set_fade_with_step()
-    // ledc_set_fade()
-
-    
-    for (int j = 1; j < 7; ++j)
-    {
-        int backlight = j * 45;
-        if (backlight > 255)
-            backlight = 255;
-        printf("Backlight %d\n", backlight);
-        if (backlight >= 255)
-            ESP_ERROR_CHECK(gpio_set_level(PIN_BACKLIGHT, 0));
-        else
-        {
-            ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, backlight));
-            ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
-        }
-        
-        for (uint16_t i = 1; i < 100; i++) {
-            int16_t x0 = rand() % display->width;
-            int16_t y0 = rand() % display->height;
-            int16_t radius = rand() % 100;
-            hagl_color_t color = rand() % 0xffff;
+    for (uint16_t i = 1; i < 100; i++) {
+        int16_t x0 = rand() % display->width;
+        int16_t y0 = rand() % display->height;
+        int16_t radius = rand() % 100;
+        hagl_color_t color = rand() % 0xffff;
             
-            hagl_fill_circle(display, x0, y0, radius, color);
-            vTaskDelay(50/portTICK_PERIOD_MS);
-        }
+        hagl_fill_circle(display, x0, y0, radius, color);
+        vTaskDelay(50/portTICK_PERIOD_MS);
     }
+
+    return 0;
+}
+
+// static
+int test_backlight(int, char**)
+{
+    printf("Running backlight test\n");
+
+    if (0)
+    for (uint16_t i = 1; i < 3; i++)
+        for (int j = 0; j < 8; ++j)
+        {
+            const int backlight = 31 + j * 32;
+            printf("Backlight %d\n", backlight);
+            set_backlight(backlight);
+            vTaskDelay(500/portTICK_PERIOD_MS);
+        }
+
+    printf("Backlight fade from zero\n");
+    set_backlight(0);
+    vTaskDelay(500/portTICK_PERIOD_MS);
+    fade_backlight(255, 5000);
+    vTaskDelay(6000/portTICK_PERIOD_MS);
+    printf("Backlight fade to zero\n");
+    fade_backlight(0, 5000);
+    vTaskDelay(6000/portTICK_PERIOD_MS);
+    
     return 0;
 }
 
@@ -350,6 +359,15 @@ void run_console(hagl_backend_t* display_arg)
         .argtable = nullptr
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_display_cmd));
+
+    const esp_console_cmd_t test_backlight_cmd = {
+        .command = "backlight",
+        .help = "Test backlight",
+        .hint = nullptr,
+        .func = &test_backlight,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_backlight_cmd));
 
     const char* prompt = LOG_COLOR_I "bigbro> " LOG_RESET_COLOR;
     int probe_status = linenoiseProbe();
