@@ -11,7 +11,6 @@ result = (cq.Workplane("XY")
          )
 
 # display hole
-# TODO: Adjust position/size
 disp_y_offset = 0
 disp_x_offset = 5
 dhh = 27
@@ -25,7 +24,7 @@ disphole = (cq.Workplane("XY")
             .transformed(offset=(disp_x_offset, disp_y_offset, 0))
             .box(dhw+2*thickness, dhh+2*thickness, thickness, centerXY)
             .edges(">Z")
-            .chamfer(thickness*0.99, 2)
+            .chamfer(thickness*0.99)
             )
 rod_d = 1
 result = (result.cut(disphole)
