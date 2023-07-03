@@ -1,11 +1,12 @@
 o_width = 70
 o_height = 136
 sh_th = 4
-front_th = 8
+front_th = 6
+fillet_r = 3
 ### Card pocket
-card_w = 54
+card_w = 54.5
 card_h = 50 # total 85, 50 is the size of the pocket
-card_th = 1.7
+card_th = 1.2
 ### Keyfob pocket
 keyfob_d = 32.5
 keyfob_th = 4.5
@@ -19,14 +20,23 @@ dhw = 28
 dh = 30
 dw = 40.5
 dwextra = 7
-w1 = 3
-h2 = 6.3
+w1 = 3-1 # clip width
+h2 = 6.3 # clip height
 disp_wth = 3
-rod_d = 1
+rod_d = 1 # clip protusion diameter
 # inserts and screws
 insert_l = 4
 insert_r = 2.05
 insert_sr = 1.5
+screw_hole_r = 3.5/2
 screw_head_r = 3
 screw_head_h = 2.5
 mh_inset = 4
+# Middle section
+mid_th = 3
+# Switch
+w1 = 4.5
+w2 = 6.4
+l1 = 15
+l2 = 20
+h2 = 13-1.25
