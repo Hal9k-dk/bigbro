@@ -15,27 +15,32 @@ res = (cq.Workplane("XY")
 # switch
 switch_y_offset = 25
 res = (res
+       # long hole
        .workplaneFromTagged("o")
        .transformed(offset=(0, switch_y_offset, 0))
-       .rect(w1, l2)
+       .rect(sw_w1, sw_l2)
        .cutThruAll()
+       # right block
        .workplaneFromTagged("o")
-       .transformed(offset=(w1/2, switch_y_offset, 0))
-       .box(w1, l2, h2, centered=noCenter)
+       .transformed(offset=(sw_w2/2, switch_y_offset, mid_th))
+       .box(sw_w1, sw_l2, sw_h2, centered=noCenter)
        .workplaneFromTagged("o")
-       .transformed(offset=(-1.5*w1, switch_y_offset, 0))
-       .box(w1, l2, h2, centered=noCenter)
+       # left block
+       .transformed(offset=(-sw_w1-sw_w2/2, switch_y_offset, mid_th))
+       .box(sw_w1, sw_l2, sw_h2, centered=noCenter)
        .workplaneFromTagged("o")
-       .transformed(offset=(w2/2-0.5, switch_y_offset+l2/2, h2-1),
+       # right ridge
+       .transformed(offset=(sw_w2/2+0.5, switch_y_offset+sw_l2/2, mid_th+sw_h2-1),
                     rotate=(90, 0, 0))
-       .circle(1).extrude(l2)
+       .circle(1).extrude(sw_l2)
        .workplaneFromTagged("o")
-       .transformed(offset=(-w2/2+0.5, switch_y_offset+l2/2, h2-1),
+       .transformed(offset=(-sw_w2/2-0.5, switch_y_offset+sw_l2/2, mid_th+sw_h2-1),
                     rotate=(90, 0, 0))
-       .circle(1).extrude(l2)
+       .circle(1).extrude(sw_l2)
        .workplaneFromTagged("o")
-       .transformed(offset=(0, switch_y_offset+l1/2+0, 0))
-       .rect(w2, l2 - l1)
+       .transformed(offset=(0, switch_y_offset+sw_l1/2+0, 0))
+       # short hole
+       .rect(sw_w2, sw_l2 - sw_l1)
        .cutBlind(mid_th)
 )
 
