@@ -28,15 +28,15 @@ rod_d = 1 # clip protusion diameter
 insert_l = 4
 insert_r = 2.05
 insert_sr = 1.5
-screw_hole_r = 3.5/2
+screw_hole_r = 3.2/2
 screw_head_r = 3
 screw_head_h = 2.5
 mh_inset = 4
 # Middle section
 mid_th = 3
 # Switch
-w1 = 4.5
-w2 = 6.4
-l1 = 15
-l2 = 20
-h2 = 13-1.25
+sw_w1 = 4.5
+sw_w2 = 6.4
+sw_l1 = 15
+sw_l2 = 20
+sw_h2 = 13-1.25

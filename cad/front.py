@@ -21,7 +21,7 @@ res = (cq.Workplane("XY")
        .tag("o")
        .box(o_width, o_height, front_th, centered=(True, True, False))
        .edges(">Z or |Z")
-       .fillet(3)
+       .fillet(fillet_r)
       )
 
 # card cutout
@@ -77,13 +77,9 @@ res = (res
        .transformed(offset=(disp_x_center - dw/2 - 0.5*w1, disp_y_offset + clip_h/2, z_offset+1),
                     rotate=(90, 0, 0))
        .circle(rod_d/2).extrude(clip_h)
-       # screw holes
-       .workplaneFromTagged("o")
-       #.transformed(offset=(0, disp_offset, 0))
-       #.rect(disp_w, disp_h)
-       #.cutThruAll()
       )
 
+# screw holes
 res = (res
       .workplaneFromTagged("o")
       .rect(o_width - 2*mh_inset, o_height - 2*mh_inset, forConstruction=True)
@@ -93,4 +89,4 @@ res = (res
       )
 
 show_object(res)
-#show_object(screwposts)
+
