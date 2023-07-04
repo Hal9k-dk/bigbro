@@ -35,7 +35,7 @@ mh_inset = 4
 # Middle section
 mid_th = 3
 # Switch
-sw_w1 = 4.5
+sw_w1 = 5
 sw_w2 = 6.4
 sw_l1 = 15
 sw_l2 = 20
