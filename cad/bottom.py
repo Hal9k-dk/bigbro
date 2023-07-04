@@ -11,6 +11,17 @@ def square_screwpost_body(d, h, r):
             .edges("|Z").fillet(r)
             )
 
+# PCB standoff
+def round_standoff(d, h):
+    max_d = min(h, 3*insert_l)
+    return (cq.Workplane()
+            .cylinder(radius=d/2, height=h)
+            .faces(">Z")
+            .circle(insert_r).cutBlind(-insert_l)
+            .faces(">Z")
+            .circle(insert_sr+.25).cutBlind(-max_d)
+            )
+
 res = (cq.Workplane("XY")
        .tag("o")
        .box(o_width, o_height, bottom_th, centered=(True, True, False))
@@ -64,4 +75,34 @@ res = (res
           .circle(3.5/2).cutThruAll()
           )
 
+# PCB standoffs
+standoff_h = 5
+standoff_d = 10
+
+standoff = round_standoff(standoff_d, standoff_h)
+pcb_x = -o_width/2 - 56 + 5
+pcb_y = -o_height/2 - 66 + 15
+standoff1 = (res
+             .workplaneFromTagged("o")
+             .transformed(offset=(pcb_x + 89, pcb_y + 74, sh_th+standoff_h/2))
+             .eachpoint(lambda loc: standoff.val().moved(loc), True))
+
+standoff2 = (res
+             .workplaneFromTagged("o")
+             .transformed(offset=(pcb_x + 63, pcb_y + 99, sh_th+standoff_h/2))
+             .eachpoint(lambda loc: standoff.val().moved(loc), True))
+
+standoff3 = (res
+             .workplaneFromTagged("o")
+             .transformed(offset=(pcb_x + 63, pcb_y + 161, sh_th+standoff_h/2))
+             .eachpoint(lambda loc: standoff.val().moved(loc), True))
+
+standoff4 = (res
+             .workplaneFromTagged("o")
+             .transformed(offset=(pcb_x + 104, pcb_y + 161, sh_th+standoff_h/2))
+             .eachpoint(lambda loc: standoff.val().moved(loc), True))
+
+res = res.union(standoff1).union(standoff2).union(standoff3).union(standoff4)
+
 show_object(res)
+
