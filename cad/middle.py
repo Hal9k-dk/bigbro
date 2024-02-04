@@ -13,7 +13,7 @@ res = (cq.Workplane("XY")
       )
 
 # switch
-switch_y_offset = 25
+switch_y_offset = 47
 res = (res
        # long hole
        .workplaneFromTagged("o")

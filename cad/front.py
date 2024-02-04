@@ -89,4 +89,3 @@ res = (res
       )
 
 show_object(res)
-
