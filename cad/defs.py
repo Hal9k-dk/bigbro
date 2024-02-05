@@ -25,8 +25,8 @@ h2 = 6.3 # clip height
 disp_wth = 3
 rod_d = 1 # clip protusion diameter
 # inserts and screws
-insert_l = 4
-insert_r = 2.05
+insert_l = 4.5
+insert_r = 4.7/2
 insert_sr = 1.75
 screw_hole_r = 3.2/2
 screw_head_r = 3
