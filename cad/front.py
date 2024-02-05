@@ -4,19 +4,6 @@ from defs import *
 
 centerXY = (True, True, False)
 
-# Screwpost for corners of a box, with heat insert nut
-def square_screwpost_nut(d, h, r):
-    return (cq.Workplane()
-            .box(d, d, h)
-            .edges("|Z").fillet(r)
-            .faces(">Z")
-            # hole for insert
-            .circle(insert_r).cutBlind(-insert_l)
-            # hole for screw end
-            .faces(">Z")
-            .circle(insert_sr+.25).cutBlind(-3*insert_l)
-            )
-
 res = (cq.Workplane("XY")
        .tag("o")
        .box(o_width, o_height, front_th, centered=(True, True, False))
