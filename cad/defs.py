@@ -18,9 +18,9 @@ dhh = 27
 dhw = 28
 # display size
 dh = 30
-dw = 40.5
+dw = 43.5
 dwextra = 7
-w1 = 3-1 # clip width
+w1 = 2 # clip width
 h2 = 6.3 # clip height
 disp_wth = 3
 rod_d = 1 # clip protusion diameter

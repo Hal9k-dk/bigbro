@@ -51,18 +51,16 @@ res = (res
        .cut(dispcutout)
        # display holders
        .workplaneFromTagged("o")
-       .transformed(offset=(disp_x_center + dw/2+w1/2, disp_y_offset, z_offset))
-       .box(w1, clip_h , h2, centered=(False, True, False))
+       .transformed(offset=(disp_x_center + w1/2 + dw/2, disp_y_offset, z_offset))
+       .box(w1, clip_h , h2, centered=(True, True, False))
        .workplaneFromTagged("o")
-       .transformed(offset=(disp_x_center + dw/2+w1/2, disp_y_offset + clip_h/2, z_offset+1),
-                    rotate=(90, 0, 0))
-       .circle(rod_d/2).extrude(clip_h )
+       .transformed(offset=(disp_x_center + dw/2, disp_y_offset + clip_h/2, z_offset+1), rotate=(90, 0, 0))
+       .circle(rod_d/2).extrude(clip_h)
        .workplaneFromTagged("o")
-       .transformed(offset=(disp_x_center - dw/2 - 1.5*w1, disp_y_offset, z_offset))
-       .box(w1, clip_h, h2, centered=(False, True, False))
+       .transformed(offset=(disp_x_center - w1/2 - dw/2, disp_y_offset, z_offset))
+       .box(w1, clip_h, h2, centered=(True, True, False))
        .workplaneFromTagged("o")
-       .transformed(offset=(disp_x_center - dw/2 - 0.5*w1, disp_y_offset + clip_h/2, z_offset+1),
-                    rotate=(90, 0, 0))
+       .transformed(offset=(disp_x_center - dw/2, disp_y_offset + clip_h/2, z_offset+1), rotate=(90, 0, 0))
        .circle(rod_d/2).extrude(clip_h)
       )
 
