@@ -2,7 +2,6 @@
 
 #include "cJSON.h"
 
-#include "cardreader.h"
 #include "defs.h"
 #include "display.h"
 #include "format.h"
@@ -11,6 +10,8 @@
 #include "nvs.h"
 #include "reader.h"
 #include "slack.h"
+
+#include <thread>
 
 #ifdef DEBUG_HEAP
 

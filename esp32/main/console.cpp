@@ -2,6 +2,7 @@
 #include "defs.h"
 #include "display.h"
 #include "hw.h"
+#include "logger.h"
 #include "nvs.h"
 #include "reader.h"
 
@@ -19,6 +20,16 @@
 #include "argtable3/argtable3.h"
 
 static Display* display = nullptr;
+
+static int test_reader(int, char**)
+{
+    printf("Running reader test\n");
+
+    const auto id = get_and_clear_last_cardid();
+    printf("Card ID " CARD_ID_FORMAT "\n", id);
+    
+    return 0;
+}
 
 struct
 {
@@ -115,6 +126,31 @@ int set_acs_credentials(int argc, char** argv)
     return 0;
 }
 
+struct
+{
+    struct arg_str* token;
+    struct arg_end* end;
+} set_slack_credentials_args;
+
+int set_slack_credentials(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_slack_credentials_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_slack_credentials_args.end, argv[0]);
+        return 1;
+    }
+    const auto token = set_slack_credentials_args.token->sval[0];
+    if (strlen(token) < 32)
+    {
+        printf("ERROR: Invalid token\n");
+        return 1;
+    }
+    set_slack_token(token);
+    printf("OK: Slack token set to %s\n", token);
+    return 0;
+}
+
 static int reboot(int, char**)
 {
     printf("Reboot...\n");
@@ -171,6 +207,29 @@ static int test_display(int, char**)
         hagl_fill_circle(display->hagl(), x0, y0, radius, color);
         vTaskDelay(50/portTICK_PERIOD_MS);
     }
+
+    return 0;
+}
+
+static int test_logger(int, char**)
+{
+    printf("Running logger test\n");
+
+    Logger::instance().set_log_to_gateway(true);
+    Logger::instance().log("ESP test log: normal");
+    Logger::instance().log_verbose("ESP test log: verbose");
+    Logger::instance().log_backend(42, "ESP test log: backend");
+    Logger::instance().log_unknown_card(0x12345678);
+
+    return 0;
+}
+
+static int test_slack(int, char**)
+{
+    printf("Running Slack test\n");
+
+    Slack_writer::instance().send_message(format("BigBro (%) says hi",
+                                                 get_identifier().c_str()));
 
     return 0;
 }
@@ -263,6 +322,15 @@ void run_console(Display& display_arg)
 
     esp_console_register_help_command();
 
+    const esp_console_cmd_t test_reader_cmd = {
+        .command = "test_reader",
+        .help = "Test card reader",
+        .hint = nullptr,
+        .func = &test_reader,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_reader_cmd));
+
     add_wifi_credentials_args.ssid = arg_str1(NULL, NULL, "<ssid>", "SSID");
     add_wifi_credentials_args.password = arg_strn(NULL, NULL, "<password>", 0, 1, "Password");
     add_wifi_credentials_args.end = arg_end(2);
@@ -324,6 +392,33 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&reboot_cmd));
     
+    const esp_console_cmd_t test_card_cache_cmd = {
+        .command = "test_card_cache",
+        .help = "Test card cache",
+        .hint = nullptr,
+        .func = &test_card_cache,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_card_cache_cmd));
+
+    const esp_console_cmd_t test_logger_cmd = {
+        .command = "test_logger",
+        .help = "Test logger",
+        .hint = nullptr,
+        .func = &test_logger,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_logger_cmd));
+
+    const esp_console_cmd_t test_slack_cmd = {
+        .command = "test_slack",
+        .help = "Test Slack",
+        .hint = nullptr,
+        .func = &test_slack,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_slack_cmd));
+
     const esp_console_cmd_t read_switch_cmd = {
         .command = "switch",
         .help = "Read switch",
