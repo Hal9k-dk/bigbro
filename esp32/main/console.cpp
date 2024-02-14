@@ -1,6 +1,8 @@
 #include "console.h"
 #include "defs.h"
+#include "display.h"
 #include "hw.h"
+#include "nvs.h"
 #include "reader.h"
 
 #include <string>
@@ -12,13 +14,11 @@
 
 #include <driver/ledc.h>
 #include <driver/uart.h>
-#include <nvs.h>
-#include <nvs_flash.h>
 
 #include "linenoise/linenoise.h"
 #include "argtable3/argtable3.h"
 
-static hagl_backend_t* display = nullptr;
+static Display* display = nullptr;
 
 struct
 {
@@ -42,29 +42,52 @@ int add_wifi_credentials(int argc, char** argv)
         printf("ERROR: Invalid SSID value\n");
         return 1;
     }
-    nvs_handle my_handle;
-    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    std::string creds;
-    char buf[256];
-    auto size = sizeof(buf);
-    if (nvs_get_str(my_handle, WIFI_KEY, buf, &size) == ESP_OK)
-    {
-        creds = std::string(buf);
-    }
-    creds += std::string(ssid) + std::string("\r") + std::string(password) + std::string("\n");
-    ESP_ERROR_CHECK(nvs_set_str(my_handle, WIFI_KEY, creds.c_str()));
-    nvs_close(my_handle);
+    add_wifi_credentials(ssid, password);
     printf("OK: Added WiFi credentials %s/%s\n", ssid, password);
+    return 0;
+}
+
+int list_wifi_creds(int argc, char** argv)
+{
+    const auto creds = get_wifi_creds();
+    for (const auto& c : creds)
+    {
+        printf("%-20s %s\n", c.first.c_str(),
+               c.second.empty() ? "" : "***");
+    }
+    printf("OK: Listed %d WiFi credentials\n", static_cast<int>(creds.size()));
     return 0;
 }
 
 int clear_wifi_credentials(int, char**)
 {
-    nvs_handle my_handle;
-    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    ESP_ERROR_CHECK(nvs_set_str(my_handle, WIFI_KEY, ""));
-    nvs_close(my_handle);
+    clear_wifi_credentials();
     printf("OK: WiFi credentials cleared\n");
+    return 0;
+}
+
+struct
+{
+    struct arg_str* identifier;
+    struct arg_end* end;
+} set_identifier_args;
+
+int set_identifier(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_identifier_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_identifier_args.end, argv[0]);
+        return 1;
+    }
+    const auto identifier = set_identifier_args.identifier->sval[0];
+    if (strlen(identifier) < 2)
+    {
+        printf("ERROR: Invalid identifier\n");
+        return 1;
+    }
+    set_identifier(identifier);
+    printf("OK: Identifier set to %s\n", identifier);
     return 0;
 }
 
@@ -88,39 +111,7 @@ int set_acs_credentials(int argc, char** argv)
         printf("ERROR: Invalid token\n");
         return 1;
     }
-    nvs_handle my_handle;
-    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    ESP_ERROR_CHECK(nvs_set_str(my_handle, ACS_TOKEN_KEY, token));
-    nvs_close(my_handle);
-    printf("OK: ACS token set to %s\n", token);
-    return 0;
-}
-
-struct
-{
-    struct arg_str* instance;
-    struct arg_end* end;
-} set_instance_args;
-
-static int set_instance(int argc, char** argv)
-{
-    int nerrors = arg_parse(argc, argv, (void**) &set_instance_args);
-    if (nerrors != 0)
-    {
-        arg_print_errors(stderr, set_instance_args.end, argv[0]);
-        return 1;
-    }
-    const auto instance = set_instance_args.instance->sval[0];
-    if (strlen(instance) < 2)
-    {
-        printf("ERROR: Invalid instance\n");
-        return 1;
-    }
-    nvs_handle my_handle;
-    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    ESP_ERROR_CHECK(nvs_set_str(my_handle, INSTANCE_KEY, instance));
-    nvs_close(my_handle);
-    printf("OK: Instance set to %s\n", instance);
+    set_acs_token(token);
     return 0;
 }
 
@@ -172,12 +163,12 @@ static int test_display(int, char**)
     set_backlight(255);
 
     for (uint16_t i = 1; i < 100; i++) {
-        int16_t x0 = rand() % display->width;
-        int16_t y0 = rand() % display->height;
+        int16_t x0 = rand() % display->hagl()->width;
+        int16_t y0 = rand() % display->hagl()->height;
         int16_t radius = rand() % 100;
         hagl_color_t color = rand() % 0xffff;
             
-        hagl_fill_circle(display, x0, y0, radius, color);
+        hagl_fill_circle(display->hagl(), x0, y0, radius, color);
         vTaskDelay(50/portTICK_PERIOD_MS);
     }
 
@@ -264,9 +255,9 @@ void initialize_console()
     linenoiseHistorySetMaxLen(100);
 }
 
-void run_console(hagl_backend_t* display_arg)
+void run_console(Display& display_arg)
 {
-    display = display_arg;
+    display = &display_arg;
     
     initialize_console();
 
@@ -284,6 +275,15 @@ void run_console(hagl_backend_t* display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&add_wifi_credentials_cmd));
 
+    const esp_console_cmd_t list_wifi_credentials_cmd = {
+        .command = "list_wifi",
+        .help = "List WiFi credentials",
+        .hint = nullptr,
+        .func = &list_wifi_creds,
+        .argtable = nullptr,
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&list_wifi_credentials_cmd));
+
     const esp_console_cmd_t clear_wifi_credentials_cmd = {
         .command = "clearwifi",
         .help = "Clear WiFi credentials",
@@ -292,6 +292,17 @@ void run_console(hagl_backend_t* display_arg)
         .argtable = nullptr
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&clear_wifi_credentials_cmd));
+
+    set_identifier_args.identifier = arg_str1(NULL, NULL, "<ident>", "Identifier");
+    set_identifier_args.end = arg_end(2);
+    const esp_console_cmd_t set_identifier_cmd = {
+        .command = "ident",
+        .help = "Set identifier",
+        .hint = nullptr,
+        .func = &set_identifier,
+        .argtable = &set_identifier_args
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_identifier_cmd));
 
     set_acs_credentials_args.token = arg_str1(NULL, NULL, "<token>", "ACS token");
     set_acs_credentials_args.end = arg_end(2);
@@ -303,17 +314,6 @@ void run_console(hagl_backend_t* display_arg)
         .argtable = &set_acs_credentials_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_acs_credentials_cmd));
-
-    set_instance_args.instance = arg_str1(NULL, NULL, "<instance>", "Instance");
-    set_instance_args.end = arg_end(2);
-    const esp_console_cmd_t set_instance_cmd = {
-        .command = "set_instance",
-        .help = "Set instance",
-        .hint = nullptr,
-        .func = &set_instance,
-        .argtable = &set_instance_args
-    };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&set_instance_cmd));
 
     const esp_console_cmd_t reboot_cmd = {
         .command = "reboot",

@@ -17,58 +17,18 @@
 #include "esp_wifi.h"
 #include "esp_wifi_default.h"
 #include "esp_log.h"
-#include "esp_netif.h"
+#include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
-#include "nvs_flash.h"
 
 static SemaphoreHandle_t s_semph_get_ip_addrs;
 static esp_netif_t* s_esp_netif = NULL;
 
-static esp_netif_t* wifi_start(const std::pair<std::string, std::string>& creds);
+static esp_netif_t* wifi_start(const std::string& ssid, const std::string& password);
 static void wifi_stop();
-
-void get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf_size)
-{
-    auto err = nvs_get_str(my_handle, key, buf, &buf_size);
-    switch (err)
-    {
-    case ESP_OK:
-        return;
-    case ESP_ERR_NVS_NOT_FOUND:
-        printf("%s: not found\n", key);
-        break;
-    default:
-        printf("%s: NVS error %d\n", key, err);
-        break;
-    }
-    printf("Restart in 10 seconds\n");
-    vTaskDelay(5000 / portTICK_PERIOD_MS);
-    printf("Restart in 5 seconds\n");
-    vTaskDelay(5000 / portTICK_PERIOD_MS);
-    esp_restart();
-}
-
-std::vector<std::pair<std::string, std::string>> get_wifi_credentials(char* buf)
-{
-    std::vector<std::pair<std::string, std::string>> v;
-    char* p = buf;
-    while (1)
-    {
-        char* token = strsep(&p, "\r");
-        if (!token)
-            break;
-        std::string ssid = std::string(token);
-        token = strsep(&p, "\n");
-        if (!token)
-            break;
-        v.push_back(std::make_pair(ssid, std::string(token)));
-    }
-    return v;
-}
 
 /**
  * @brief Checks the netif description if it contains specified prefix.
@@ -81,6 +41,11 @@ static bool is_our_netif(const char* prefix, esp_netif_t* netif)
 }
 
 static esp_ip4_addr_t s_ip_addr;
+
+esp_ip4_addr_t get_ip_address()
+{
+    return s_ip_addr;
+}
 
 static void on_got_ip(void* arg, esp_event_base_t event_base,
                       int32_t event_id, void* event_data)
@@ -95,37 +60,24 @@ static void on_got_ip(void* arg, esp_event_base_t event_base,
     xSemaphoreGive(s_semph_get_ip_addrs);
 }
 
-esp_err_t connect()
+bool connect(const wifi_creds_t& creds)
 {
-    nvs_handle my_handle;
-    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    char buf[256];
-    get_nvs_string(my_handle, WIFI_KEY, buf, sizeof(buf));
-    const auto creds = get_wifi_credentials(buf);
-    if (creds.empty())
-    {
-        ESP_LOGI(TAG, "No WiFi credentials");
-        return ESP_ERR_NOT_FOUND;
-    }
-    //get_nvs_string(my_handle, GATEWAY_TOKEN_KEY, config_gateway_token, sizeof(config_gateway_token));
-    //get_nvs_string(my_handle, INSTANCE_KEY, config_instance, sizeof(config_instance));
-    nvs_close(my_handle);
-
     if (s_semph_get_ip_addrs != NULL)
         return ESP_ERR_INVALID_STATE;
     s_semph_get_ip_addrs = xSemaphoreCreateCounting(1, 0);
     int index = 0;
-    s_esp_netif = wifi_start(creds[index]);
+    s_esp_netif = wifi_start(creds[index].first, creds[index].second);
     ESP_ERROR_CHECK(esp_register_shutdown_handler(&wifi_stop));
-    ESP_LOGI(TAG, "Waiting for IP(s)");
+    ESP_LOGI(TAG, "Waiting for IP");
     while (!xSemaphoreTake(s_semph_get_ip_addrs, 10000/portTICK_PERIOD_MS))
     {
-        ESP_LOGI(TAG, "Trying next SSID");
+        ESP_LOGI(TAG, "Failed to connect");
         wifi_stop();
         ++index;
         if (index >= creds.size())
-            index = 0;
-        s_esp_netif = wifi_start(creds[index]);
+            return false;
+        ESP_LOGI(TAG, "Trying next SSID");
+        s_esp_netif = wifi_start(creds[index].first, creds[index].second);
     }
     ESP_LOGI(TAG, "Got IP(s)");
     // iterate over active interfaces, and print out IPs of "our" netifs
@@ -140,8 +92,7 @@ esp_err_t connect()
             ESP_LOGI(TAG, "- IPv4 address: " IPSTR, IP2STR(&ip.ip));
         }
     }
-    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
-    return ESP_OK;
+    return true;
 }
 
 esp_err_t disconnect()
@@ -158,7 +109,7 @@ esp_err_t disconnect()
 static void on_wifi_disconnect(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
-    //ESP_LOGI(TAG, "on_wifi_disconnect: %d", event_id);
+    ESP_LOGI(TAG, "on_wifi_disconnect: %d", (int) event_id);
     ESP_LOGI(TAG, "Wi-Fi disconnected, trying to reconnect...");
     esp_err_t err = esp_wifi_connect();
     if (err == ESP_ERR_WIFI_NOT_STARTED)
@@ -166,7 +117,7 @@ static void on_wifi_disconnect(void* arg, esp_event_base_t event_base,
     ESP_ERROR_CHECK(err);
 }
 
-static esp_netif_t* wifi_start(const std::pair<std::string, std::string>& creds)
+static esp_netif_t* wifi_start(const std::string& ssid, const std::string& password)
 {
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
@@ -190,8 +141,8 @@ static esp_netif_t* wifi_start(const std::pair<std::string, std::string>& creds)
 
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config));
-    strncpy((char*) wifi_config.sta.ssid, creds.first.c_str(), sizeof(wifi_config.sta.ssid));
-    strncpy((char*) wifi_config.sta.password, creds.second.c_str(), sizeof(wifi_config.sta.password));
+    strncpy((char*) wifi_config.sta.ssid, ssid.c_str(), sizeof(wifi_config.sta.ssid));
+    strncpy((char*) wifi_config.sta.password, password.c_str(), sizeof(wifi_config.sta.password));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
     ESP_LOGI(TAG, "Connecting to %s", wifi_config.sta.ssid);
@@ -233,3 +184,7 @@ esp_netif_t* get_netif()
 {
     return s_esp_netif;
 }
+
+// Local Variables:
+// compile-command: "cd .. && idf.py build"
+// End:

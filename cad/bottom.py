@@ -70,7 +70,7 @@ res = (res
 # holes for wall fitting
 res = (res
        #.workplaneFromTagged("bottom")
-          .transformed(offset=(0, o_height/2 - 15, 0))
+          .transformed(offset=(0, o_height/2 - 10, 0))
           .rarray(wh_dist, 1, 2, 1)
           .circle(3.5/2).cutThruAll()
           )
@@ -81,7 +81,7 @@ standoff_d = 10
 
 standoff = round_standoff(standoff_d, standoff_h)
 pcb_x = -o_width/2 - 56 + 5
-pcb_y = -o_height/2 - 66 + 15
+pcb_y = -o_height/2 - 66 + 23
 standoff1 = (res
              .workplaneFromTagged("o")
              .transformed(offset=(pcb_x + 89, pcb_y + 74, sh_th+standoff_h/2))

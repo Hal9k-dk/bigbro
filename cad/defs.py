@@ -41,7 +41,7 @@ sw_l1 = 15
 sw_l2 = 20
 sw_h2 = 13-1.25
 # Bottom section
-bottom_th = 30 + sh_th
+bottom_th = 33 + sh_th
 gland_r = 13/2 # PG7
 gland_z = 15
 gland_cc = 30

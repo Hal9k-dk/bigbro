@@ -1,12 +1,17 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include <driver/gpio.h>
 
 constexpr const char* VERSION = "0.1";
 
+constexpr const char* IDENTIFIER_KEY = "id";
 constexpr const char* WIFI_KEY = "wifi";
-constexpr const char* INSTANCE_KEY = "inst";
 constexpr const char* ACS_TOKEN_KEY = "acs";
+constexpr const char* GATEWAY_TOKEN_KEY = "gwt";
+constexpr const char* SLACK_TOKEN_KEY = "slt";
 
 constexpr const auto PIN_CARD_SW = (gpio_num_t) 25;
 constexpr const auto PIN_RELAY = (gpio_num_t) 16;
@@ -19,3 +24,11 @@ extern char config_acs_token[];
 extern char config_instance;
 
 constexpr const char* TAG = "BIGBRO";
+
+#define CARD_ID_FORMAT "%010llX"
+
+using wifi_creds_t = std::vector<std::pair<std::string, std::string>>;
+
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:

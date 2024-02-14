@@ -1,5 +1,5 @@
 #pragma once
 
-#include <hagl.h>
+class Display;
 
-void run_console(hagl_backend_t* display);
+void run_console(Display& display);
