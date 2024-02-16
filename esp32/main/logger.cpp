@@ -152,6 +152,7 @@ void Logger::log_sync(const char* stamp, const char* text)
 
 void Logger::thread_body()
 {
+    ESP_LOGI(TAG, "Logger thread started")
     Item item;
     while (1)
     {

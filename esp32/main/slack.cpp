@@ -22,6 +22,10 @@ Slack_writer& Slack_writer::instance()
 void Slack_writer::set_token(const std::string& token)
 {
     api_token = token;
+    if (api_token.empty())
+    {
+        ESP_LOGE(TAG, "Slack: Empty API token");
+    }
 }
 
 void Slack_writer::set_params(bool test_mode)

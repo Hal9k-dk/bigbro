@@ -20,6 +20,7 @@ void clear_wifi_credentials()
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, WIFI_KEY, ""));
     nvs_close(my_handle);
+    wifi_creds.clear();
 }
 
 void add_wifi_credentials(const char* ssid, const char* password)
@@ -36,12 +37,13 @@ void add_wifi_credentials(const char* ssid, const char* password)
     nvs_close(my_handle);
 }
 
-void set_identifier(const char* identifier)
+void set_identifier(const char* identifier_arg)
 {
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    ESP_ERROR_CHECK(nvs_set_str(my_handle, IDENTIFIER_KEY, identifier));
+    ESP_ERROR_CHECK(nvs_set_str(my_handle, IDENTIFIER_KEY, identifier_arg));
     nvs_close(my_handle);
+    strcpy(identifier, identifier_arg);
 }
 
 void set_acs_token(const char* token)

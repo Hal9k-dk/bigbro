@@ -1,10 +1,13 @@
+#include "cardcache.h"
 #include "console.h"
 #include "defs.h"
 #include "display.h"
+#include "format.h"
 #include "hw.h"
 #include "logger.h"
 #include "nvs.h"
 #include "reader.h"
+#include "slack.h"
 
 #include <string>
 
@@ -28,6 +31,17 @@ static int test_reader(int, char**)
     const auto id = get_and_clear_last_cardid();
     printf("Card ID " CARD_ID_FORMAT "\n", id);
     
+    return 0;
+}
+
+static int test_card_cache(int, char**)
+{
+    printf("Running card cache test\n");
+
+    const auto result = Card_cache::instance().has_access(0x13006042CF);
+    printf("Access: %d\n", static_cast<int>(result.access));
+    printf("User:   %d\n", result.user_id);
+
     return 0;
 }
 
@@ -228,7 +242,7 @@ static int test_slack(int, char**)
 {
     printf("Running Slack test\n");
 
-    Slack_writer::instance().send_message(format("BigBro (%) says hi",
+    Slack_writer::instance().send_message(format("BigBro (%s) says hi",
                                                  get_identifier().c_str()));
 
     return 0;
@@ -382,6 +396,17 @@ void run_console(Display& display_arg)
         .argtable = &set_acs_credentials_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_acs_credentials_cmd));
+
+    set_slack_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Slack token");
+    set_slack_credentials_args.end = arg_end(2);
+    const esp_console_cmd_t set_slack_credentials_cmd = {
+        .command = "slack",
+        .help = "Set Slack credentials",
+        .hint = nullptr,
+        .func = &set_slack_credentials,
+        .argtable = &set_slack_credentials_args
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_slack_credentials_cmd));
 
     const esp_console_cmd_t reboot_cmd = {
         .command = "reboot",
