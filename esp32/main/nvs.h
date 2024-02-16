@@ -13,6 +13,7 @@ wifi_creds_t get_wifi_creds();
 void clear_wifi_credentials();
 void add_wifi_credentials(const char* ssid, const char* password);
 void set_acs_token(const char* token);
+void set_gateway_token(const char* token);
 void set_identifier(const char* token);
 void set_slack_token(const char* token);
 

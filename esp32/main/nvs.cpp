@@ -153,6 +153,8 @@ void init_nvs()
         wifi_creds = parse_wifi_credentials(buf);
     if (!get_nvs_string(my_handle, ACS_TOKEN_KEY, acs_token, sizeof(acs_token)))
         acs_token[0] = 0;
+    if (!get_nvs_string(my_handle, GATEWAY_TOKEN_KEY, gateway_token, sizeof(gateway_token)))
+        gateway_token[0] = 0;
     if (!get_nvs_string(my_handle, SLACK_TOKEN_KEY, slack_token, sizeof(slack_token)))
         slack_token[0] = 0;
     nvs_close(my_handle);

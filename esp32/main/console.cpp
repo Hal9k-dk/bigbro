@@ -144,6 +144,31 @@ struct
 {
     struct arg_str* token;
     struct arg_end* end;
+} set_gw_credentials_args;
+
+int set_gw_credentials(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_gw_credentials_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_gw_credentials_args.end, argv[0]);
+        return 1;
+    }
+    const auto token = set_gw_credentials_args.token->sval[0];
+    if (strlen(token) < 32)
+    {
+        printf("ERROR: Invalid token\n");
+        return 1;
+    }
+    set_gateway_token(token);
+    printf("OK: Gateway token set to %s\n", token);
+    return 0;
+}
+
+struct
+{
+    struct arg_str* token;
+    struct arg_end* end;
 } set_slack_credentials_args;
 
 int set_slack_credentials(int argc, char** argv)
@@ -230,9 +255,9 @@ static int test_logger(int, char**)
     printf("Running logger test\n");
 
     Logger::instance().set_log_to_gateway(true);
-    Logger::instance().log("ESP test log: normal");
-    Logger::instance().log_verbose("ESP test log: verbose");
-    Logger::instance().log_backend(42, "ESP test log: backend");
+    Logger::instance().log("BigBro test log: normal");
+    Logger::instance().log_verbose("BigBro test log: verbose");
+    Logger::instance().log_backend(42, "BigBro test log: backend");
     Logger::instance().log_unknown_card(0x12345678);
 
     return 0;
@@ -396,6 +421,17 @@ void run_console(Display& display_arg)
         .argtable = &set_acs_credentials_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_acs_credentials_cmd));
+
+    set_gw_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Gateway token");
+    set_gw_credentials_args.end = arg_end(2);
+    const esp_console_cmd_t set_gw_credentials_cmd = {
+        .command = "gw",
+        .help = "Set gateway credentials",
+        .hint = nullptr,
+        .func = &set_gw_credentials,
+        .argtable = &set_gw_credentials_args
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_gw_credentials_cmd));
 
     set_slack_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Slack token");
     set_slack_credentials_args.end = arg_end(2);
