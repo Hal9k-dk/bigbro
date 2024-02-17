@@ -9,6 +9,7 @@
 
 extern uint16_t COLOUR_WHITE;
 extern uint16_t COLOUR_YELLOW;
+extern uint16_t COLOUR_RED;
 
 class Display
 {

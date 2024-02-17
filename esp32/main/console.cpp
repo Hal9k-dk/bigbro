@@ -199,10 +199,10 @@ static int reboot(int, char**)
 
 static int read_switch(int, char**)
 {
-    for (int n = 0; n < 50; ++n)
+    for (int n = 0; n < 10; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
-        printf("Switch %d\n", (int) !gpio_get_level(PIN_CARD_SW));
+        printf("Switch closed: %d\n", read_switch());
     }
     printf("done\n");
     return 0;

@@ -57,6 +57,11 @@ void init_hardware()
     ESP_ERROR_CHECK(ledc_fade_func_install(0));
 }
 
+bool read_switch()
+{
+    return gpio_get_level(PIN_CARD_SW);
+}
+
 void set_relay(bool on)
 {
     ESP_ERROR_CHECK(gpio_set_level(PIN_RELAY, on));

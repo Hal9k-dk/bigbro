@@ -23,6 +23,8 @@ static constexpr const int STATUS_HEIGHT = 20;
 static constexpr const int TIME_HEIGHT = 20;
 
 uint16_t COLOUR_WHITE = 0;
+uint16_t COLOUR_YELLOW = 0;
+uint16_t COLOUR_RED = 0;
 
 Display::Display(hagl_backend_t* tft)
     : tft(tft)
@@ -41,6 +43,8 @@ Display::Display(hagl_backend_t* tft)
     large_textheight = tft.fontHeight(GFXFF) + 1;
     */
     COLOUR_WHITE = hagl_color(tft, 255, 255, 255);
+    COLOUR_YELLOW = hagl_color(tft, 255, 255, 0);
+    COLOUR_RED = hagl_color(tft, 255, 0, 0);
 }
 
 void Display::clear()

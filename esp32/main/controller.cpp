@@ -22,25 +22,6 @@ static heap_trace_record_t trace_record[NUM_RECORDS]; // This buffer must be in 
 
 #endif // DEBUG_HEAP
 
-static constexpr auto UNLOCKED_ALERT_INTERVAL = std::chrono::seconds(30);
-
-// How long to keep the door open after valid card is presented
-static constexpr auto ENTER_TIME = std::chrono::seconds(6);
-
-// How long to wait before locking when door is closed after leaving
-static constexpr auto LEAVE_TIME = std::chrono::seconds(3);
-
-static constexpr auto TEMP_STATUS_SHOWN_FOR = std::chrono::seconds(10);
-
-// Time door is unlocked after pressing Green
-static constexpr auto UNLOCK_PERIOD = std::chrono::minutes(15);
-static constexpr auto UNLOCK_WARN = std::chrono::minutes(10);
-// Time door is unlocked via Slack
-static constexpr auto GW_UNLOCK_PERIOD = std::chrono::seconds(30);
-
-// Time before warning when entering
-static constexpr auto ENTER_UNLOCKED_WARN = std::chrono::minutes(5);
-
 Controller* Controller::the_instance = nullptr;
 
 Controller::Controller(Display& d)
@@ -66,6 +47,8 @@ void Controller::run()
 {
     std::map<State, std::function<void(Controller*)>> state_map;
     state_map[State::initial] = &Controller::handle_initial;
+    state_map[State::no_access] = &Controller::handle_no_access;
+    state_map[State::allowed] = &Controller::handle_allowed;
 
     display.clear();
 
@@ -83,6 +66,8 @@ void Controller::run()
         card_id = get_and_clear_last_cardid();
         if (card_id)
             Logger::instance().log(format("Card " CARD_ID_FORMAT " swiped", card_id));
+
+        switch_closed = read_switch();
 
         // Handle state
         auto it = state_map.find(state);
@@ -115,38 +100,61 @@ void Controller::run()
 
 void Controller::handle_initial()
 {
-    //state = State::locked;
+    state = State::no_access;
 }
 
-void Controller::check_card(Card_id card_id)
+void Controller::handle_no_access()
+{
+    set_relay(false);
+    if (switch_closed)
+    {
+        check_card();
+    }
+}
+
+void Controller::handle_allowed()
+{
+    set_relay(true);
+    if (!switch_closed)
+    {
+        state = State::no_access;
+    }
+}
+
+void Controller::check_card()
 {
     const auto result = Card_cache::instance().has_access(card_id);
     switch (result.access)
     {
     case Card_cache::Access::Allowed:
-        display.show_message("Valid card swiped");
-        Slack_writer::instance().send_message(format(":key: (%s) Valid card " CARD_ID_FORMAT " swiped, unlocking",
+        display.show_message("Valid card present");
+        Slack_writer::instance().send_message(format(":key: (%s) Valid card " CARD_ID_FORMAT " present, access allowed",
                                                      get_identifier().c_str(), card_id));
-        //state = State::timed_unlock;
+        Logger::instance().log(format("Valid card " CARD_ID_FORMAT " present", card_id));
+        state = State::allowed;
         break;
             
     case Card_cache::Access::Forbidden:
-        display.show_message(format("Blocked card " CARD_ID_FORMAT " swiped", card_id), COLOUR_YELLOW);
-        Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card swiped",
+        display.show_message("Blocked card inserted", COLOUR_RED);
+        Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card inserted",
                                                      get_identifier().c_str()));
-        Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " swiped", card_id));
+        Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
+        state = State::no_access;
         break;
             
     case Card_cache::Access::Unknown:
-        display.show_message(format("Unknown card\n" CARD_ID_FORMAT "\nswiped", card_id), COLOUR_YELLOW);
-        Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " swiped",
+        display.show_message(format("Unknown card\n" CARD_ID_FORMAT "\ninserted", card_id), COLOUR_YELLOW);
+        Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " inserted",
                                                      get_identifier().c_str(), card_id));
         Logger::instance().log_unknown_card(card_id);
+        state = State::no_access;
         break;
                
     case Card_cache::Access::Error:
+        display.show_message("Internal error checking card", COLOUR_RED);
         Slack_writer::instance().send_message(format(":computer_rage: (%s) Internal error checking card: %s",
                                                      get_identifier().c_str(), result.error_msg.c_str()));
+        state = State::no_access;
         break;
     }
 }

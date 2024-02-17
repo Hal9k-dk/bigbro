@@ -84,7 +84,7 @@ void app_main()
         }
     }
     
-    xTaskCreate(rfid_task, "rfid_task", 10*1024, NULL, 5, NULL);
+    xTaskCreate(rfid_task, "rfid_task", 4*1024, NULL, 5, NULL);
 
     printf("\n\nPress a key to enter console\n");
     bool debug = false;
