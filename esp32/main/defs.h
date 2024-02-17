@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <driver/gpio.h>
+#include <driver/uart.h>
 
 constexpr const char* VERSION = "0.1";
 
@@ -13,6 +14,7 @@ constexpr const char* ACS_TOKEN_KEY = "acs";
 constexpr const char* GATEWAY_TOKEN_KEY = "gwt";
 constexpr const char* SLACK_TOKEN_KEY = "slt";
 
+constexpr const auto UART_PORT_NUM = (uart_port_t) 1;
 constexpr const auto PIN_CARD_SW = (gpio_num_t) 25;
 constexpr const auto PIN_RELAY = (gpio_num_t) 16;
 

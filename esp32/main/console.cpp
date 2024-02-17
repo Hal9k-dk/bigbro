@@ -237,16 +237,9 @@ static int test_display(int, char**)
     printf("Running display test\n");
     set_backlight(255);
 
-    for (uint16_t i = 1; i < 100; i++) {
-        int16_t x0 = rand() % display->hagl()->width;
-        int16_t y0 = rand() % display->hagl()->height;
-        int16_t radius = rand() % 100;
-        hagl_color_t color = rand() % 0xffff;
-            
-        hagl_fill_circle(display->hagl(), x0, y0, radius, color);
-        vTaskDelay(50/portTICK_PERIOD_MS);
-    }
-
+    display->clear();
+    display->show_message("My name is Inigo Montoya", COLOUR_RED);
+    
     return 0;
 }
 

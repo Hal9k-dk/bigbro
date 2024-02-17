@@ -34,6 +34,7 @@ void app_main()
     auto tft = hagl_init();
 
     Display display(tft);
+    set_backlight(255);
     display.add_progress(format("BigBro v %s", VERSION));
 
     display.add_progress("NVS init");

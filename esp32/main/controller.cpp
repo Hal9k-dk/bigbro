@@ -59,13 +59,14 @@ void Controller::run()
     
     while (1)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
         display.update();
 
+        const auto old_card_id = card_id;
         card_id = get_and_clear_last_cardid();
-        if (card_id)
-            Logger::instance().log(format("Card " CARD_ID_FORMAT " swiped", card_id));
+        if (card_id != old_card_id)
+            Logger::instance().log(format("Card " CARD_ID_FORMAT " inserted", card_id));
 
         switch_closed = read_switch();
 

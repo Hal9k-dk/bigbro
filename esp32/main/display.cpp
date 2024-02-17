@@ -6,8 +6,8 @@
 
 #include <esp_heap_caps.h>
 
+static constexpr const auto small_font = "TODO";
 /*
-static constexpr const auto small_font = &FreeSans12pt7b;
 static constexpr const auto medium_font = &FreeSansBold18pt7b;
 static constexpr const auto large_font = &FreeSansBold24pt7b;
 static constexpr const auto time_font = &FreeMonoBold12pt7b;
@@ -29,12 +29,8 @@ uint16_t COLOUR_RED = 0;
 Display::Display(hagl_backend_t* tft)
     : tft(tft)
 {
-    /*
-    tft.init();
-    tft.setRotation(1);
-    tft.setTextColor(TFT_CYAN);
     clear();
-
+    /*
     tft.setFreeFont(small_font);
     small_textheight = tft.fontHeight(GFXFF) + 1;
     tft.setFreeFont(medium_font);
@@ -49,27 +45,28 @@ Display::Display(hagl_backend_t* tft)
 
 void Display::clear()
 {
-    //tft.fillScreen(TFT_BLACK);
+    hagl_clear(tft);
 }
 
 void Display::add_progress(const std::string& status)
 {
     /*
-    tft.setTextColor(TFT_WHITE);
-    tft.setFreeFont(small_font);
     const auto w = tft.textWidth(status.c_str(), GFXFF);
     if (w > TFT_HEIGHT)
         printf("String '%s' is too wide\n", status.c_str());
     const auto x = TFT_HEIGHT/2 - w/2;
-    tft.drawString(status.c_str(), x, row * small_textheight, GFXFF);
-    ++row;
+    */
+    int x = 0; //!!
+    hagl_put_text(tft, status.c_str(), x, row * small_textheight, COLOUR_WHITE, small_font);
     lines.push_back(status);
+    ++row;
+    /*
     if (row * small_textheight < TFT_WIDTH)
         return; // still room for more
     // Out of room, scroll up
     lines.erase(lines.begin());
     --row;
-    tft.fillScreen(TFT_BLACK);
+    tft.fillScreen(COLOUR_BLACK);
     printf("scrollin'");
     for (int i = 0; i < lines.size(); ++i)
     {
@@ -97,7 +94,7 @@ void Display::set_status(const std::string& status, uint16_t colour,
 
 void Display::clear_status_area()
 {
-    //tft.fillRect(0, STATUS_HEIGHT, TFT_HEIGHT, TFT_WIDTH - STATUS_HEIGHT - TIME_HEIGHT, TFT_BLACK);
+    //tft.fillRect(0, STATUS_HEIGHT, TFT_HEIGHT, TFT_WIDTH - STATUS_HEIGHT - TIME_HEIGHT, COLOUR_BLACK);
 }
 
 static std::vector<std::string> split(const std::string& s)
@@ -168,8 +165,8 @@ void Display::update()
         // Update time
         char stamp[Logger::TIMESTAMP_SIZE];
         last_clock = Logger::make_timestamp(stamp);
-        tft.fillRect(0, TFT_WIDTH - TIME_HEIGHT, TFT_HEIGHT, TIME_HEIGHT, TFT_BLACK);
-        tft.setTextColor(Gateway::instance().get_allow_open() ? TFT_CYAN : TFT_YELLOW);
+        tft.fillRect(0, TFT_WIDTH - TIME_HEIGHT, TFT_HEIGHT, TIME_HEIGHT, COLOUR_BLACK);
+        tft.setTextColor(Gateway::instance().get_allow_open() ? COLOUR_CYAN : COLOUR_YELLOW);
         tft.setFreeFont(time_font);
         if (clock_x == 0)
         {
@@ -202,8 +199,8 @@ void Display::update()
                                        VERSION, ip_buf,
                                        days, hours, minutes,
                                        mem);
-            tft.fillRect(0, 0, TFT_HEIGHT, STATUS_HEIGHT, TFT_BLACK);
-            tft.setTextColor(TFT_OLIVE);
+            tft.fillRect(0, 0, TFT_HEIGHT, STATUS_HEIGHT, COLOUR_BLACK);
+            tft.setTextColor(COLOUR_OLIVE);
             tft.setFreeFont(status_font);
             tft.drawString(status.c_str(), 0, 0, GFXFF);
         }

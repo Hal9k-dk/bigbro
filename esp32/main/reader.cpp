@@ -2,8 +2,6 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "driver/uart.h"
-#include "driver/gpio.h"
 #include "sdkconfig.h"
 
 #include "defs.h"
@@ -13,7 +11,6 @@
 #include <string>
 
 #define BUF_SIZE (128)
-#define UART_PORT_NUM   1
 #define PIN_TXD (UART_PIN_NO_CHANGE)
 #define PIN_RTS (UART_PIN_NO_CHANGE)
 #define PIN_CTS (UART_PIN_NO_CHANGE)
