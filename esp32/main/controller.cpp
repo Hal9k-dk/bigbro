@@ -136,7 +136,7 @@ void Controller::check_card()
         break;
             
     case Card_cache::Access::Forbidden:
-        display.show_message("Blocked card inserted", COLOUR_RED);
+        display.show_message("Blocked card inserted", RED);
         Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card inserted",
                                                      get_identifier().c_str()));
         Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
@@ -144,7 +144,7 @@ void Controller::check_card()
         break;
             
     case Card_cache::Access::Unknown:
-        display.show_message(format("Unknown card\n" CARD_ID_FORMAT "\ninserted", card_id), COLOUR_YELLOW);
+        display.show_message(format("Unknown card\n" CARD_ID_FORMAT "\ninserted", card_id), YELLOW);
         Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " inserted",
                                                      get_identifier().c_str(), card_id));
         Logger::instance().log_unknown_card(card_id);
@@ -152,7 +152,7 @@ void Controller::check_card()
         break;
                
     case Card_cache::Access::Error:
-        display.show_message("Internal error checking card", COLOUR_RED);
+        display.show_message("Internal error checking card", RED);
         Slack_writer::instance().send_message(format(":computer_rage: (%s) Internal error checking card: %s",
                                                      get_identifier().c_str(), result.error_msg.c_str()));
         state = State::no_access;

@@ -6,7 +6,10 @@
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include "nvs_flash.h"
+#include <esp_log.h>
+#include <esp_spiffs.h>
+#include <esp_vfs.h>
+#include <nvs_flash.h>
 
 static char identifier[20];
 static char acs_token[80];
@@ -158,6 +161,39 @@ void init_nvs()
     if (!get_nvs_string(my_handle, SLACK_TOKEN_KEY, slack_token, sizeof(slack_token)))
         slack_token[0] = 0;
     nvs_close(my_handle);
+}
+
+void mount_spiffs(const char* path, const char* label, size_t max_files)
+{
+    esp_vfs_spiffs_conf_t conf = {
+        .base_path = path,
+        .partition_label = label,
+        .max_files = max_files,
+        .format_if_mount_failed =true
+    };
+
+    ESP_ERROR_CHECK(esp_vfs_spiffs_register(&conf));
+
+    size_t total = 0, used = 0;
+    ESP_ERROR_CHECK(esp_spiffs_info(conf.partition_label, &total, &used));
+    ESP_LOGI(TAG,"Mount %s to %s success", path, label);
+    ESP_LOGI(TAG,"Partition size: total: %d, used: %d", total, used);
+}
+
+void list_spiffs(const char* path)
+{
+    DIR* dir = opendir(path);
+    assert(dir != NULL);
+    while (true)
+    {
+        struct dirent*pe = readdir(dir);
+        if (!pe)
+            break;
+        ESP_LOGI(__FUNCTION__,
+                 "d_name=%s d_ino=%d d_type=%x", pe->d_name,
+                 pe->d_ino, pe->d_type);
+    }
+    closedir(dir);
 }
 
 // Local Variables:

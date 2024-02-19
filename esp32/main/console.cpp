@@ -238,7 +238,7 @@ static int test_display(int, char**)
     set_backlight(255);
 
     display->clear();
-    display->show_message("My name is Inigo Montoya", COLOUR_RED);
+    display->show_message("My name is Inigo Montoya", RED);
     
     return 0;
 }

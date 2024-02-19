@@ -7,9 +7,6 @@
 #include <freertos/task.h>
 #include <nvs_flash.h>
 
-#include <hagl_hal.h>
-#include <hagl.h>
-
 #include "cardcache.h"
 #include "connect.h"
 #include "console.h"
@@ -31,10 +28,13 @@ void app_main()
 
     printf("BigBro v %s\n", VERSION);
 
-    auto tft = hagl_init();
-
-    Display display(tft);
-    set_backlight(255);
+    mount_spiffs("/spiffs", "storage0", 10);
+    list_spiffs("/spiffs/");
+    
+    TFT_t tft;
+    Display display(&tft);
+    //set_backlight(255);
+    
     display.add_progress(format("BigBro v %s", VERSION));
 
     display.add_progress("NVS init");

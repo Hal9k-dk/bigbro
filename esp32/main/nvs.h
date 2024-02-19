@@ -17,6 +17,9 @@ void set_gateway_token(const char* token);
 void set_identifier(const char* token);
 void set_slack_token(const char* token);
 
+void mount_spiffs(const char* path, const char* label, size_t max_files);
+void list_spiffs(const char* path);
+
 // Local Variables:
 // compile-command: "(cd ..; idf.py build)"
 // End:

@@ -6,7 +6,16 @@
 
 #include <esp_heap_caps.h>
 
-static constexpr const auto small_font = "TODO";
+FontxFile fx16G[2];
+FontxFile fx24G[2];
+FontxFile fx32G[2];
+FontxFile fx32L[2];
+
+FontxFile fx16M[2];
+FontxFile fx24M[2];
+FontxFile fx32M[2];
+
+static FontxFile* small_font = nullptr; //!!
 /*
 static constexpr const auto medium_font = &FreeSansBold18pt7b;
 static constexpr const auto large_font = &FreeSansBold24pt7b;
@@ -22,14 +31,21 @@ static constexpr const int STATUS_HEIGHT = 20;
 // Bottom part of screen
 static constexpr const int TIME_HEIGHT = 20;
 
-uint16_t COLOUR_WHITE = 0;
-uint16_t COLOUR_YELLOW = 0;
-uint16_t COLOUR_RED = 0;
-
-Display::Display(hagl_backend_t* tft)
+Display::Display(TFT_t* tft)
     : tft(tft)
 {
-    clear();
+    spi_master_init(tft, CONFIG_MOSI_GPIO, CONFIG_SCLK_GPIO,
+                    CONFIG_TFT_CS_GPIO, CONFIG_DC_GPIO, 
+                    CONFIG_RESET_GPIO, CONFIG_BL_GPIO, -1, -1, -1, -1, -1);
+    lcdInit(tft, 0x7735, CONFIG_WIDTH, CONFIG_HEIGHT,
+            CONFIG_OFFSETX, CONFIG_OFFSETY);
+    InitFontx(fx16G, "/spiffs/ILGH16XB.FNT", ""); // 8x16Dot Gothic
+    InitFontx(fx24G, "/spiffs/ILGH24XB.FNT", ""); // 12x24Dot Gothic
+    InitFontx(fx32G, "/spiffs/ILGH32XB.FNT", ""); // 16x32Dot Gothic
+    InitFontx(fx32L, "/spiffs/LATIN32B.FNT", ""); // 16x32Dot Latinc
+    InitFontx(fx16M, "/spiffs/ILMH16XB.FNT", ""); // 8x16Dot Mincyo
+    InitFontx(fx24M, "/spiffs/ILMH24XB.FNT", ""); // 12x24Dot Mincyo
+    InitFontx(fx32M, "/spiffs/ILMH32XB.FNT", ""); // 16x32Dot Mincyo
     /*
     tft.setFreeFont(small_font);
     small_textheight = tft.fontHeight(GFXFF) + 1;
@@ -38,14 +54,12 @@ Display::Display(hagl_backend_t* tft)
     tft.setFreeFont(large_font);
     large_textheight = tft.fontHeight(GFXFF) + 1;
     */
-    COLOUR_WHITE = hagl_color(tft, 255, 255, 255);
-    COLOUR_YELLOW = hagl_color(tft, 255, 255, 0);
-    COLOUR_RED = hagl_color(tft, 255, 0, 0);
+    clear();
 }
 
 void Display::clear()
 {
-    hagl_clear(tft);
+    lcdFillScreen(tft, BLACK);
 }
 
 void Display::add_progress(const std::string& status)
@@ -57,7 +71,8 @@ void Display::add_progress(const std::string& status)
     const auto x = TFT_HEIGHT/2 - w/2;
     */
     int x = 0; //!!
-    hagl_put_text(tft, status.c_str(), x, row * small_textheight, COLOUR_WHITE, small_font);
+    lcdDrawString(tft, small_font, x, row * small_textheight,
+                  reinterpret_cast<const uint8_t*>(status.c_str()), WHITE);
     lines.push_back(status);
     ++row;
     /*
@@ -66,7 +81,7 @@ void Display::add_progress(const std::string& status)
     // Out of room, scroll up
     lines.erase(lines.begin());
     --row;
-    tft.fillScreen(COLOUR_BLACK);
+    tft.fillScreen(BLACK);
     printf("scrollin'");
     for (int i = 0; i < lines.size(); ++i)
     {
@@ -94,7 +109,7 @@ void Display::set_status(const std::string& status, uint16_t colour,
 
 void Display::clear_status_area()
 {
-    //tft.fillRect(0, STATUS_HEIGHT, TFT_HEIGHT, TFT_WIDTH - STATUS_HEIGHT - TIME_HEIGHT, COLOUR_BLACK);
+    //tft.fillRect(0, STATUS_HEIGHT, TFT_HEIGHT, TFT_WIDTH - STATUS_HEIGHT - TIME_HEIGHT, BLACK);
 }
 
 static std::vector<std::string> split(const std::string& s)
@@ -165,8 +180,8 @@ void Display::update()
         // Update time
         char stamp[Logger::TIMESTAMP_SIZE];
         last_clock = Logger::make_timestamp(stamp);
-        tft.fillRect(0, TFT_WIDTH - TIME_HEIGHT, TFT_HEIGHT, TIME_HEIGHT, COLOUR_BLACK);
-        tft.setTextColor(Gateway::instance().get_allow_open() ? COLOUR_CYAN : COLOUR_YELLOW);
+        tft.fillRect(0, TFT_WIDTH - TIME_HEIGHT, TFT_HEIGHT, TIME_HEIGHT, BLACK);
+        tft.setTextColor(Gateway::instance().get_allow_open() ? CYAN : YELLOW);
         tft.setFreeFont(time_font);
         if (clock_x == 0)
         {
@@ -199,8 +214,8 @@ void Display::update()
                                        VERSION, ip_buf,
                                        days, hours, minutes,
                                        mem);
-            tft.fillRect(0, 0, TFT_HEIGHT, STATUS_HEIGHT, COLOUR_BLACK);
-            tft.setTextColor(COLOUR_OLIVE);
+            tft.fillRect(0, 0, TFT_HEIGHT, STATUS_HEIGHT, BLACK);
+            tft.setTextColor(OLIVE);
             tft.setFreeFont(status_font);
             tft.drawString(status.c_str(), 0, 0, GFXFF);
         }

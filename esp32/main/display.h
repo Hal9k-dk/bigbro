@@ -5,20 +5,16 @@
 #include <string>
 #include <vector>
 
-#include <hagl.h>
-
-extern uint16_t COLOUR_WHITE;
-extern uint16_t COLOUR_YELLOW;
-extern uint16_t COLOUR_RED;
+#include <ili9340.h>
 
 class Display
 {
 public:
-    Display(hagl_backend_t* tft);
+    Display(TFT_t* tft);
 
-    hagl_backend_t* hagl()
+    TFT_t& get_tft()
     {
-        return tft;
+        return *tft;
     }
     
     void clear();
@@ -27,20 +23,20 @@ public:
 
     /// Set the persistent status.
     void set_status(const std::string& status,
-                    uint16_t colour = COLOUR_WHITE, bool large = false);
+                    uint16_t colour = WHITE, bool large = false);
 
     /// Add progress message (used during boot).
     void add_progress(const std::string& status);
 
     /// Show a message in the status area for MESSAGE_DURATION.
-    void show_message(const std::string& message, uint16_t colour = COLOUR_WHITE);
+    void show_message(const std::string& message, uint16_t colour = WHITE);
 
 private:
     void clear_status_area();
     
     void show_text(const std::string& status, uint16_t colour, bool large);
 
-    hagl_backend_t* tft = nullptr;
+    TFT_t* tft = nullptr;
     int small_textheight = 0;
     int medium_textheight = 0;
     int large_textheight = 0;
