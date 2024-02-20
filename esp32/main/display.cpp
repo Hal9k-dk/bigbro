@@ -6,19 +6,10 @@
 
 #include <esp_heap_caps.h>
 
-FontxFile fx16G[2];
-FontxFile fx24G[2];
-FontxFile fx32G[2];
-FontxFile fx32L[2];
-
-FontxFile fx16M[2];
-FontxFile fx24M[2];
-FontxFile fx32M[2];
-
-static FontxFile* small_font = nullptr; //!!
+static FontxFile small_font[2];
+static FontxFile medium_font[2];
+static FontxFile large_font[2];
 /*
-static constexpr const auto medium_font = &FreeSansBold18pt7b;
-static constexpr const auto large_font = &FreeSansBold24pt7b;
 static constexpr const auto time_font = &FreeMonoBold12pt7b;
 static constexpr const auto status_font = &FreeSans9pt7b;
 */
@@ -39,21 +30,17 @@ Display::Display(TFT_t* tft)
                     CONFIG_RESET_GPIO, CONFIG_BL_GPIO, -1, -1, -1, -1, -1);
     lcdInit(tft, 0x7735, CONFIG_WIDTH, CONFIG_HEIGHT,
             CONFIG_OFFSETX, CONFIG_OFFSETY);
-    InitFontx(fx16G, "/spiffs/ILGH16XB.FNT", ""); // 8x16Dot Gothic
-    InitFontx(fx24G, "/spiffs/ILGH24XB.FNT", ""); // 12x24Dot Gothic
-    InitFontx(fx32G, "/spiffs/ILGH32XB.FNT", ""); // 16x32Dot Gothic
-    InitFontx(fx32L, "/spiffs/LATIN32B.FNT", ""); // 16x32Dot Latinc
-    InitFontx(fx16M, "/spiffs/ILMH16XB.FNT", ""); // 8x16Dot Mincyo
-    InitFontx(fx24M, "/spiffs/ILMH24XB.FNT", ""); // 12x24Dot Mincyo
-    InitFontx(fx32M, "/spiffs/ILMH32XB.FNT", ""); // 16x32Dot Mincyo
-    /*
-    tft.setFreeFont(small_font);
-    small_textheight = tft.fontHeight(GFXFF) + 1;
-    tft.setFreeFont(medium_font);
-    medium_textheight = tft.fontHeight(GFXFF) + 1;
-    tft.setFreeFont(large_font);
-    large_textheight = tft.fontHeight(GFXFF) + 1;
-    */
+    InitFontx(small_font, "/spiffs/ILGH16XB.FNT", ""); // 8x16Dot Gothic
+    InitFontx(medium_font, "/spiffs/ILGH24XB.FNT", ""); // 12x24Dot Gothic
+    InitFontx(large_font, "/spiffs/ILGH32XB.FNT", ""); // 16x32Dot Gothic
+    //InitFontx(fx32L, "/spiffs/LATIN32B.FNT", ""); // 16x32Dot Latinc
+
+    uint8_t buffer[FontxGlyphBufSize];
+    GetFontx(small_font, 0, buffer, nullptr, &small_textheight);
+    printf("small_textheight %d\n", small_textheight);
+    GetFontx(medium_font, 0, buffer, nullptr, &medium_textheight);
+    GetFontx(large_font, 0, buffer, nullptr, &large_textheight);
+    lcdSetFontDirection(tft, DIRECTION90);
     clear();
 }
 
@@ -62,35 +49,44 @@ void Display::clear()
     lcdFillScreen(tft, BLACK);
 }
 
+int text_width(FontxFile* fx, const std::string& s)
+{
+    int w = 0;
+    for (char c : s)
+    {
+        uint8_t buffer[FontxGlyphBufSize];
+        uint8_t char_width;
+        GetFontx(fx, (uint8_t) c, buffer, &char_width, nullptr);
+        w += char_width;
+    }
+    return w;
+}
+
 void Display::add_progress(const std::string& status)
 {
-    /*
-    const auto w = tft.textWidth(status.c_str(), GFXFF);
-    if (w > TFT_HEIGHT)
+    const auto w = text_width(small_font, status);
+    if (w > CONFIG_WIDTH)
         printf("String '%s' is too wide\n", status.c_str());
-    const auto x = TFT_HEIGHT/2 - w/2;
-    */
-    int x = 0; //!!
-    lcdDrawString(tft, small_font, x, row * small_textheight,
+    const auto x = CONFIG_WIDTH/2 - w/2;
+    lcdDrawString(tft, small_font, CONFIG_HEIGHT - row * small_textheight, x,
                   reinterpret_cast<const uint8_t*>(status.c_str()), WHITE);
     lines.push_back(status);
     ++row;
-    /*
-    if (row * small_textheight < TFT_WIDTH)
+    if (row * small_textheight < CONFIG_HEIGHT)
         return; // still room for more
     // Out of room, scroll up
     lines.erase(lines.begin());
     --row;
-    tft.fillScreen(BLACK);
+    clear();
     printf("scrollin'");
     for (int i = 0; i < lines.size(); ++i)
     {
-        const auto w = tft.textWidth(status.c_str(), GFXFF);
-        const auto x = TFT_HEIGHT/2 - w/2;
+        const auto w = text_width(small_font, status);
+        const auto x = CONFIG_WIDTH/2 - w/2;
         printf("At %d, %d: %s\n", x, i * small_textheight, lines[i].c_str());
-        tft.drawString(lines[i].c_str(), x, i * small_textheight, GFXFF);
+        lcdDrawString(tft, small_font, CONFIG_HEIGHT - i * small_textheight, x,
+                      reinterpret_cast<const uint8_t*>(lines[i].c_str()), WHITE);
     }
-    */
 }
 
 void Display::set_status(const std::string& status, uint16_t colour,
@@ -109,7 +105,7 @@ void Display::set_status(const std::string& status, uint16_t colour,
 
 void Display::clear_status_area()
 {
-    //tft.fillRect(0, STATUS_HEIGHT, TFT_HEIGHT, TFT_WIDTH - STATUS_HEIGHT - TIME_HEIGHT, BLACK);
+    //tft.fillRect(0, STATUS_HEIGHT, CONFIG_WIDTH, CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT, BLACK);
 }
 
 static std::vector<std::string> split(const std::string& s)
@@ -141,13 +137,13 @@ void Display::show_text(const std::string& status, uint16_t colour,
     const auto h = large ? large_textheight : medium_textheight;
     
     const auto lines = split(status);
-    auto y = STATUS_HEIGHT + (TFT_WIDTH - STATUS_HEIGHT - TIME_HEIGHT)/2 - lines.size()/2*h - h/2;
+    auto y = STATUS_HEIGHT + (CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT)/2 - lines.size()/2*h - h/2;
     for (const auto& line : lines)
     {
         const auto w = tft.textWidth(line.c_str(), GFXFF);
-        if (w > TFT_HEIGHT)
+        if (w > CONFIG_WIDTH)
             printf("String '%s' is too wide\n", line.c_str());
-        const auto x = TFT_HEIGHT/2 - w/2;
+        const auto x = CONFIG_WIDTH/2 - w/2;
         tft.drawString(line.c_str(), x, y, GFXFF);
         printf("At %d, %d: %s\n", x, y, line.c_str());
         y += h;
@@ -180,15 +176,15 @@ void Display::update()
         // Update time
         char stamp[Logger::TIMESTAMP_SIZE];
         last_clock = Logger::make_timestamp(stamp);
-        tft.fillRect(0, TFT_WIDTH - TIME_HEIGHT, TFT_HEIGHT, TIME_HEIGHT, BLACK);
+        tft.fillRect(0, CONFIG_HEIGHT - TIME_HEIGHT, CONFIG_WIDTH, TIME_HEIGHT, BLACK);
         tft.setTextColor(Gateway::instance().get_allow_open() ? CYAN : YELLOW);
         tft.setFreeFont(time_font);
         if (clock_x == 0)
         {
             const auto w = tft.textWidth(stamp, GFXFF);
-            clock_x = TFT_HEIGHT/2 - w/2;
+            clock_x = CONFIG_WIDTH/2 - w/2;
         }
-        tft.drawString(stamp, clock_x, TFT_WIDTH - TIME_HEIGHT, GFXFF);
+        tft.drawString(stamp, clock_x, CONFIG_HEIGHT - TIME_HEIGHT, GFXFF);
         ++uptime;
         if (!(uptime % 64))
         {
@@ -214,7 +210,7 @@ void Display::update()
                                        VERSION, ip_buf,
                                        days, hours, minutes,
                                        mem);
-            tft.fillRect(0, 0, TFT_HEIGHT, STATUS_HEIGHT, BLACK);
+            tft.fillRect(0, 0, CONFIG_WIDTH, STATUS_HEIGHT, BLACK);
             tft.setTextColor(OLIVE);
             tft.setFreeFont(status_font);
             tft.drawString(status.c_str(), 0, 0, GFXFF);

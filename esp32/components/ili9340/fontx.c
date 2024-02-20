@@ -82,7 +82,7 @@ void CloseFontx(FontxFile *fx)
 }
 
 // フォント構造体の表示
-void DumpFontx(FontxFile *fxs)
+void DumpFontx(const FontxFile *fxs)
 {
 	for(int i=0;i<2;i++) {
 		printf("fxs[%d]->path=%s\n",i,fxs[i].path);
@@ -97,12 +97,12 @@ void DumpFontx(FontxFile *fxs)
 	}
 }
 
-uint8_t getFortWidth(FontxFile *fx) {
+uint8_t GetFontWidth(const FontxFile *fx) {
 	printf("fx->w=%d\n",fx->w);
 	return(fx->w);
 }
 
-uint8_t getFortHeight(FontxFile *fx) {
+uint8_t GetFontHeight(const FontxFile *fx) {
 	printf("fx->h=%d\n",fx->h);
 	return(fx->h);
 }
@@ -207,7 +207,7 @@ bool GetFontx(FontxFile *fxs, uint8_t ascii , uint8_t *pGlyph, uint8_t *pw, uint
 	for(i=0; i<2; i++){
 	//for(i=0; i<1; i++){
 		if(!OpenFontx(&fxs[i])) continue;
-		if(FontxDebug)printf("[GetFontx]openFontxFile[%d] ok\n",i);
+		if(FontxDebug)printf("[GetFontx]openconst FontxFile[%d] ok\n",i);
 	
 		//if(ascii < 0xFF){
 			if(fxs[i].is_ank){
@@ -406,7 +406,7 @@ void UnderlineBitmap(uint8_t *line, uint8_t w, uint8_t h) {
 }
 
 // ビットマップを反転
-void ReversBitmap(uint8_t *line, uint8_t w, uint8_t h) {
+void ReverseBitmap(uint8_t *line, uint8_t w, uint8_t h) {
 	int x,y;
 	uint8_t wk;
 	for(y=0; y<(h/8); y++){

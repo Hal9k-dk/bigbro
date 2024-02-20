@@ -37,9 +37,9 @@ private:
     void show_text(const std::string& status, uint16_t colour, bool large);
 
     TFT_t* tft = nullptr;
-    int small_textheight = 0;
-    int medium_textheight = 0;
-    int large_textheight = 0;
+    uint8_t small_textheight = 0;
+    uint8_t medium_textheight = 0;
+    uint8_t large_textheight = 0;
     // Used by add_progress()
     int row = 0;
     std::vector<std::string> lines;
