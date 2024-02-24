@@ -37,9 +37,6 @@ void app_main()
     display.add_progress(format("BigBro v %s", VERSION));
 
     display.add_progress("NVS init");
-    display.add_progress("AAAAAAA");
-    display.add_progress("BBBBBBB");
-    display.add_progress("CCCCCCC");
 
     init_nvs();
 

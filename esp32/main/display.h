@@ -23,7 +23,7 @@ public:
 
     /// Set the persistent status.
     void set_status(const std::string& status,
-                    uint16_t colour = WHITE, bool large = false);
+                    uint16_t colour = WHITE);
 
     /// Add progress message (used during boot).
     void add_progress(const std::string& status);
@@ -34,19 +34,17 @@ public:
 private:
     void clear_status_area();
     
-    void show_text(const std::string& status, uint16_t colour, bool large);
+    void show_text(const std::string& status, uint16_t colour);
 
     TFT_t* tft = nullptr;
     uint8_t small_textheight = 0;
     uint8_t medium_textheight = 0;
-    uint8_t large_textheight = 0;
     // Used by add_progress()
     int row = 0;
     std::vector<std::string> lines;
     // Used by set_status()
     std::string last_status;
     uint16_t last_status_colour = 0;
-    bool last_status_large = false;
     // Used by show_message()
     util::time_point last_message = util::invalid_time_point();
     uint64_t uptime = 0;

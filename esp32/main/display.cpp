@@ -8,11 +8,7 @@
 
 static FontxFile small_font[2];
 static FontxFile medium_font[2];
-static FontxFile large_font[2];
-/*
-static constexpr const auto time_font = &FreeMonoBold12pt7b;
-static constexpr const auto status_font = &FreeSans9pt7b;
-*/
+
 static constexpr const auto MESSAGE_DURATION = std::chrono::seconds(10);
 
 // Top part of screen
@@ -32,14 +28,10 @@ Display::Display(TFT_t* tft)
             CONFIG_OFFSETX, CONFIG_OFFSETY);
     InitFontx(small_font, "/spiffs/ILGH16XB.FNT", ""); // 8x16Dot Gothic
     InitFontx(medium_font, "/spiffs/ILGH24XB.FNT", ""); // 12x24Dot Gothic
-    InitFontx(large_font, "/spiffs/ILGH32XB.FNT", ""); // 16x32Dot Gothic
-    //InitFontx(fx32L, "/spiffs/LATIN32B.FNT", ""); // 16x32Dot Latinc
 
     uint8_t buffer[FontxGlyphBufSize];
     GetFontx(small_font, 0, buffer, nullptr, &small_textheight);
-    printf("small_textheight %d\n", small_textheight);
     GetFontx(medium_font, 0, buffer, nullptr, &medium_textheight);
-    GetFontx(large_font, 0, buffer, nullptr, &large_textheight);
     lcdSetFontDirection(tft, DIRECTION90);
     clear();
 }
@@ -49,7 +41,7 @@ void Display::clear()
     lcdFillScreen(tft, BLACK);
 }
 
-int text_width(FontxFile* fx, const std::string& s)
+static int text_width(FontxFile* fx, const std::string& s)
 {
     int w = 0;
     for (char c : s)
@@ -72,25 +64,22 @@ void Display::add_progress(const std::string& status)
                   reinterpret_cast<const uint8_t*>(status.c_str()), WHITE);
     lines.push_back(status);
     ++row;
-    if (row * small_textheight < CONFIG_HEIGHT)
+    if (row * small_textheight <= CONFIG_HEIGHT)
         return; // still room for more
     // Out of room, scroll up
     lines.erase(lines.begin());
     --row;
     clear();
-    printf("scrollin'");
     for (int i = 0; i < lines.size(); ++i)
     {
         const auto w = text_width(small_font, status);
         const auto x = CONFIG_WIDTH/2 - w/2;
-        printf("At %d, %d: %s\n", x, i * small_textheight, lines[i].c_str());
         lcdDrawString(tft, small_font, CONFIG_HEIGHT - i * small_textheight, x,
                       reinterpret_cast<const uint8_t*>(lines[i].c_str()), WHITE);
     }
 }
 
-void Display::set_status(const std::string& status, uint16_t colour,
-                         bool large)
+void Display::set_status(const std::string& status, uint16_t colour)
 {
     if (status != last_status)
     {
@@ -98,14 +87,15 @@ void Display::set_status(const std::string& status, uint16_t colour,
         clear_status_area();
         last_status = status;
         last_status_colour = colour;
-        last_status_large = large;
-        show_text(status, colour, large);
+        show_text(status, colour);
     }
 }
 
 void Display::clear_status_area()
 {
-    //tft.fillRect(0, STATUS_HEIGHT, CONFIG_WIDTH, CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT, BLACK);
+    lcdDrawFillRect(tft, CONFIG_WIDTH, 0,
+                    CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT, STATUS_HEIGHT,
+                    RED);
 }
 
 static std::vector<std::string> split(const std::string& s)
@@ -128,34 +118,31 @@ static std::vector<std::string> split(const std::string& s)
     return v;
 }
 
-void Display::show_text(const std::string& status, uint16_t colour,
-                        bool large)
+void Display::show_text(const std::string& status, uint16_t colour)
 {
-    /*
-    tft.setTextColor(colour);
-    tft.setFreeFont(large ? large_font : medium_font);
-    const auto h = large ? large_textheight : medium_textheight;
-    
     const auto lines = split(status);
-    auto y = STATUS_HEIGHT + (CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT)/2 - lines.size()/2*h - h/2;
+    auto y = CONFIG_HEIGHT -
+        (STATUS_HEIGHT
+         + (CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT)/2
+         - lines.size()/2*medium_textheight
+         - medium_textheight/2);
     for (const auto& line : lines)
     {
-        const auto w = tft.textWidth(line.c_str(), GFXFF);
+        const auto w = text_width(medium_font, line);
         if (w > CONFIG_WIDTH)
             printf("String '%s' is too wide\n", line.c_str());
         const auto x = CONFIG_WIDTH/2 - w/2;
-        tft.drawString(line.c_str(), x, y, GFXFF);
-        printf("At %d, %d: %s\n", x, y, line.c_str());
-        y += h;
+        lcdDrawString(tft, medium_font, y, x,
+                      reinterpret_cast<const uint8_t*>(line.c_str()), colour);
+        y -= medium_textheight;
     }
-    */
 }
 
 void Display::show_message(const std::string& message, uint16_t colour)
 {
     last_message = util::now();
     clear_status_area();
-    show_text(message, colour, false);
+    show_text(message, colour);
 }
 
 void Display::update()
@@ -166,7 +153,7 @@ void Display::update()
         // Clear message, show last status
         last_message = util::invalid_time_point();
         clear_status_area();
-        show_text(last_status, last_status_colour, last_status_large);
+        show_text(last_status, last_status_colour);
     }
     /*
     time_t current = 0;

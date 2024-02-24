@@ -238,7 +238,16 @@ static int test_display(int, char**)
     set_backlight(255);
 
     display->clear();
-    display->show_message("My name is Inigo Montoya", RED);
+    for (int i = 0; i < 10; ++i)
+    {
+        display->add_progress(format("Progress line %d", i));
+        vTaskDelay(500/portTICK_PERIOD_MS);
+    }
+
+    vTaskDelay(2000/portTICK_PERIOD_MS);
+
+    display->clear();
+    display->show_message("My name is\nInigo\nMontoya", RED);
     
     return 0;
 }
