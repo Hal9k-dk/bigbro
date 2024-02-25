@@ -39,6 +39,7 @@ Display::Display(TFT_t* tft)
 void Display::clear()
 {
     lcdFillScreen(tft, BLACK);
+    lines.clear();
 }
 
 static int text_width(FontxFile* fx, const std::string& s)
@@ -60,7 +61,7 @@ void Display::add_progress(const std::string& status)
     if (w > CONFIG_WIDTH)
         printf("String '%s' is too wide\n", status.c_str());
     const auto x = CONFIG_WIDTH/2 - w/2;
-    lcdDrawString(tft, small_font, CONFIG_HEIGHT - row * small_textheight, x,
+    lcdDrawString(tft, small_font, CONFIG_HEIGHT - (row + 1) * small_textheight, x,
                   reinterpret_cast<const uint8_t*>(status.c_str()), WHITE);
     lines.push_back(status);
     ++row;
@@ -74,7 +75,7 @@ void Display::add_progress(const std::string& status)
     {
         const auto w = text_width(small_font, status);
         const auto x = CONFIG_WIDTH/2 - w/2;
-        lcdDrawString(tft, small_font, CONFIG_HEIGHT - i * small_textheight, x,
+        lcdDrawString(tft, small_font, CONFIG_HEIGHT - (i + 1) * small_textheight, x,
                       reinterpret_cast<const uint8_t*>(lines[i].c_str()), WHITE);
     }
 }
