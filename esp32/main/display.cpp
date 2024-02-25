@@ -40,6 +40,7 @@ void Display::clear()
 {
     lcdFillScreen(tft, BLACK);
     lines.clear();
+    row = 0;
 }
 
 static int text_width(FontxFile* fx, const std::string& s)
@@ -156,55 +157,23 @@ void Display::update()
         clear_status_area();
         show_text(last_status, last_status_colour);
     }
-    /*
     time_t current = 0;
     time(&current);
-    if (current != last_clock)
+    if (current == last_clock)
+        return;
+
+    // Update time
+    char stamp[Logger::TIMESTAMP_SIZE];
+    last_clock = Logger::make_timestamp(stamp);
+    lcdDrawFillRect(tft, 0, 0,
+                    STATUS_HEIGHT, CONFIG_HEIGHT, YELLOW);
+    if (clock_x == 0)
     {
-        // Update time
-        char stamp[Logger::TIMESTAMP_SIZE];
-        last_clock = Logger::make_timestamp(stamp);
-        tft.fillRect(0, CONFIG_HEIGHT - TIME_HEIGHT, CONFIG_WIDTH, TIME_HEIGHT, BLACK);
-        tft.setTextColor(Gateway::instance().get_allow_open() ? CYAN : YELLOW);
-        tft.setFreeFont(time_font);
-        if (clock_x == 0)
-        {
-            const auto w = tft.textWidth(stamp, GFXFF);
-            clock_x = CONFIG_WIDTH/2 - w/2;
-        }
-        tft.drawString(stamp, clock_x, CONFIG_HEIGHT - TIME_HEIGHT, GFXFF);
-        ++uptime;
-        if (!(uptime % 64))
-        {
-            // Dump mem use
-            ESP_LOGI(TAG, "Uptime %" PRIu64 " memory %zu",
-                     uptime,
-                     heap_caps_get_free_size(MALLOC_CAP_8BIT));
-        }
-        ++seconds_since_status_update;
-        if (seconds_since_status_update >= 60)
-        {
-            // Update status bar
-            seconds_since_status_update = 0;
-            const uint64_t days = uptime/(24*60*60);
-            int minutes = (uptime - days*24*60*60)/60;
-            const int hours = minutes/60;
-            minutes -= hours*60;
-            const auto ip = get_ip_address();
-            char ip_buf[4*(3+1)+1];
-            esp_ip4addr_ntoa(&ip, ip_buf, sizeof(ip_buf));
-            const int mem = heap_caps_get_free_size(MALLOC_CAP_8BIT)/1024;
-            const auto status = format("V%s - %s - %" PRIu64 "d%0d:%02d - M%d",
-                                       VERSION, ip_buf,
-                                       days, hours, minutes,
-                                       mem);
-            tft.fillRect(0, 0, CONFIG_WIDTH, STATUS_HEIGHT, BLACK);
-            tft.setTextColor(OLIVE);
-            tft.setFreeFont(status_font);
-            tft.drawString(status.c_str(), 0, 0, GFXFF);
-        }
+        const auto w = text_width(small_font, stamp);
+        clock_x = CONFIG_WIDTH/2 - w/2;
     }
-    */
+    lcdDrawString(tft, small_font, clock_x, small_textheight,
+                  reinterpret_cast<const uint8_t*>(stamp), CYAN);
 }
 
 // Local Variables:

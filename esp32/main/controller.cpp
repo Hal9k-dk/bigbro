@@ -79,15 +79,6 @@ void Controller::run()
 
         if (state != old_state)
             printf("STATE: %d\n", static_cast<int>(state));
-        /*
-        if (util::is_valid(timeout_dur))
-        {
-            Logger::instance().log(format("Set timeout of %d s",
-                                          std::chrono::duration_cast<std::chrono::seconds>(timeout_dur).count()));
-            timeout = util::now() + timeout_dur;
-            timeout_dur = util::invalid_duration();
-        }
-        */
 #ifdef DEBUG_HEAP
         ++loops;
         if (loops > 10000)
@@ -110,16 +101,21 @@ void Controller::handle_no_access()
     if (switch_closed)
     {
         check_card();
+        if (state != State::no_access)
+            return;
     }
+    //!! display
 }
 
 void Controller::handle_allowed()
 {
-    set_relay(true);
     if (!switch_closed)
     {
         state = State::no_access;
+        return;
     }
+    set_relay(true);
+    //!! display
 }
 
 void Controller::check_card()

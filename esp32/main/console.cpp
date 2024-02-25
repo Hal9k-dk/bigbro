@@ -238,7 +238,7 @@ static int test_display(int, char**)
     set_backlight(255);
 
     display->clear();
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 15; ++i)
     {
         display->add_progress(format("Progress line %d", i));
         vTaskDelay(500/portTICK_PERIOD_MS);
@@ -248,6 +248,12 @@ static int test_display(int, char**)
 
     display->clear();
     display->show_message("My name is\nInigo\nMontoya", RED);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        display->update();
+        vTaskDelay(500/portTICK_PERIOD_MS);
+    }
     
     return 0;
 }
