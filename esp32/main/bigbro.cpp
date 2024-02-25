@@ -33,6 +33,7 @@ void app_main()
     
     TFT_t tft;
     Display display(&tft);
+    set_backlight(255);
     
     display.add_progress(format("BigBro v %s", VERSION));
 
@@ -100,7 +101,7 @@ void app_main()
     if (debug)
         run_console(display);        // never returns
 
-    Slack_writer::instance().send_message(format(":panopticon: BigBro frontend %s (%s)",
+    Slack_writer::instance().send_message(format(":panopticon: BigBro %s (%s)",
                                                  VERSION, get_identifier().c_str()));
 
     display.add_progress("Connect to WiFi");
