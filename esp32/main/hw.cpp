@@ -20,14 +20,11 @@ void init_hardware()
     io_conf.mode = GPIO_MODE_OUTPUT;
     // bit mask of the pins that you want to set
     io_conf.pin_bit_mask = (1ULL << PIN_RELAY) |
-        //(1ULL << CONFIG_MIPI_DISPLAY_PIN_CS) |
        (1ULL << PIN_BACKLIGHT);
     io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
     set_relay(false);
-    // Activate display CS
-    //ESP_ERROR_CHECK(gpio_set_level((gpio_num_t) CONFIG_MIPI_DISPLAY_PIN_CS, false));
 
     // Prepare and then apply the LEDC PWM timer configuration
     ledc_timer_config_t ledc_timer = {

@@ -1,7 +1,7 @@
 (kicad_sch
 	(version 20231120)
 	(generator "eeschema")
-	(generator_version "7.99")
+	(generator_version "8.99")
 	(uuid "212a0d71-cc7b-49f8-b4ca-a935e5355dca")
 	(paper "A3")
 	(lib_symbols
@@ -8968,7 +8968,7 @@
 		)
 		(uuid "9e22fcf6-2578-4777-8e9f-7797bd175098")
 	)
-	(text "This will only turn the relay on if a \ncard is physically present and the MCU triggers the relay.\nAt the same time, the relay won't turn off before both the card\nis removed and the MCU tries turning it off."
+	(text "This will only turn the relay on if a card is physically present and\nthe MCU triggers the relay.\nAt the same time, the relay won't turn off before both the card is\nremoved and the MCU tries turning it off."
 		(exclude_from_sim no)
 		(at 16.51 116.84 0)
 		(effects
