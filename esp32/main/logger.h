@@ -45,7 +45,7 @@ public:
     void log_unknown_card(Card_id card_id);
 
     /// Make a timestamp string. Buffer must be TIMESTAMP_SIZE bytes.
-    static time_t make_timestamp(char* stamp);
+    static time_t make_timestamp(char* stamp, bool include_date = true);
 
     /// Log synchronously to gateway.
     void log_sync(const char* stamp, const char* text);

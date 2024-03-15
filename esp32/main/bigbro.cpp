@@ -72,8 +72,6 @@ void app_main()
 
             initialize_sntp();
             
-            display.add_progress("Connected");
-
             Logger::instance().set_api_token(get_acs_token());
             Logger::instance().set_gateway_token(get_gateway_token());
             Slack_writer::instance().set_token(get_slack_token());

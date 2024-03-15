@@ -34,13 +34,15 @@ void Logger::set_gateway_token(const std::string& token)
     gw_token = token;
 }
 
-time_t Logger::make_timestamp(char* stamp)
+time_t Logger::make_timestamp(char* stamp, bool include_date)
 {
     time_t current = 0;
     time(&current);
     struct tm timeinfo;
     gmtime_r(&current, &timeinfo);
-    strftime(stamp, TIMESTAMP_SIZE, "%Y-%m-%d %H:%M:%S", &timeinfo);
+    strftime(stamp, TIMESTAMP_SIZE,
+             include_date ? "%Y-%m-%d %H:%M:%S" : "%H:%M:%S",
+             &timeinfo);
     return current;
 }
 

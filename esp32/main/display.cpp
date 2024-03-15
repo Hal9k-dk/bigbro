@@ -164,15 +164,15 @@ void Display::update()
 
     // Update time
     char stamp[Logger::TIMESTAMP_SIZE];
-    last_clock = Logger::make_timestamp(stamp);
+    last_clock = Logger::make_timestamp(stamp, false);
     lcdDrawFillRect(tft, 0, 0,
-                    STATUS_HEIGHT, CONFIG_HEIGHT, YELLOW);
+                    STATUS_HEIGHT, CONFIG_HEIGHT, BLACK);
     if (clock_x == 0)
     {
         const auto w = text_width(small_font, stamp);
         clock_x = CONFIG_WIDTH/2 - w/2;
     }
-    lcdDrawString(tft, small_font, clock_x, small_textheight,
+    lcdDrawString(tft, small_font, 0, clock_x,
                   reinterpret_cast<const uint8_t*>(stamp), CYAN);
 }
 
