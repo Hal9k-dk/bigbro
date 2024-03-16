@@ -265,6 +265,9 @@ static int test_display(int, char**)
     vTaskDelay(1000/portTICK_PERIOD_MS);
     display->set_status("Line1\nLine2\nLine3");
     vTaskDelay(1000/portTICK_PERIOD_MS);
+    display->set_status(format("Medium\n%sSmall 1\nSmall 2", Display::SMALL_FONT_ESC));
+    vTaskDelay(1000/portTICK_PERIOD_MS);
+    display->set_status(format("Medium\n%sSmall but very long line", Display::SMALL_FONT_ESC));
     
     return 0;
 }

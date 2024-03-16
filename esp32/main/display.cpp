@@ -18,6 +18,8 @@ static constexpr const int TIME_HEIGHT = 16;
 
 static constexpr const int STATUS_HEIGHT = CONFIG_WIDTH - TIME_HEIGHT;
 
+const char* Display::SMALL_FONT_ESC = "\001";
+
 Display::Display(TFT_t* tft)
     : tft(tft)
 {
@@ -100,9 +102,20 @@ void Display::clear_status_area()
                     BLACK);
 }
 
-static std::vector<std::string> split(const std::string& s)
+void Display::check_escapes(std::string& line, int& height)
 {
-    std::vector<std::string> v;
+    const auto esc_pos = line.find(SMALL_FONT_ESC);
+    if (esc_pos != 0)
+        return;
+    line = line.substr(1);
+    height = small_textheight;
+}
+
+// Returns list of (line, pixel height)
+std::vector<std::pair<std::string, int>> Display::split(const std::string& s)
+{
+    std::vector<std::pair<std::string, int>> v;
+    int height = medium_textheight;
     std::string::size_type curpos = 0;
     while (curpos < s.size())
     {
@@ -110,11 +123,14 @@ static std::vector<std::string> split(const std::string& s)
         if (end == std::string::npos)
         {
             // Last line
-            v.push_back(s.substr(curpos));
+            std::string line = s.substr(curpos);
+            check_escapes(line, height);
+            v.push_back(std::make_pair(line, height));
             return v;
         }
-        const auto line = s.substr(curpos, end - curpos);
-        v.push_back(line);
+        auto line = s.substr(curpos, end - curpos);
+        check_escapes(line, height);
+        v.push_back(std::make_pair(line, height));
         curpos = end + 1;
     }
     return v;
@@ -124,15 +140,27 @@ void Display::show_text(const std::string& status, uint16_t colour)
 {
     const auto lines = split(status);
     auto y = CONFIG_HEIGHT/2 + (lines.size() - 1)*medium_textheight/2;
-    for (const auto& line : lines)
+    for (const auto& e : lines)
     {
-        const auto w = text_width(medium_font, line);
+        auto line = e.first;
+        const auto font = e.second == medium_textheight ? medium_font : small_font;
+        int w = text_width(font, line);
         if (w > CONFIG_WIDTH)
+        {
             printf("String '%s' is too wide\n", line.c_str());
+            auto orig_line = line;
+            while (w > CONFIG_WIDTH)
+            {
+                orig_line = orig_line.substr(0, orig_line.size() - 1);
+                line = orig_line + "...";
+                w = text_width(font, line);
+            }
+            printf("Using %s\n", line.c_str());
+        }
         const auto x = CONFIG_WIDTH/2 - w/2;
-        lcdDrawString(tft, medium_font, y, x,
+        lcdDrawString(tft, font, y, x,
                       reinterpret_cast<const uint8_t*>(line.c_str()), colour);
-        y -= medium_textheight;
+        y -= e.second;
     }
 }
 

@@ -31,13 +31,15 @@ private:
         idle,
         /// Last card was invalid
         not_allowed,
+        /// Last card was unknown
+        unknown,
         /// Valid card present
         allowed,
     };
 
     void handle_initial();
     void handle_idle();
-    void handle_not_allowed();
+    void handle_not_allowed_unknown();
     void handle_allowed();
 
     void check_card();

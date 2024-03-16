@@ -22,7 +22,7 @@ static heap_trace_record_t trace_record[NUM_RECORDS]; // This buffer must be in 
 
 #endif // DEBUG_HEAP
 
-const auto constexpr BACKLIGHT_FADE_PERIOD = std::chrono::milliseconds(5000);
+const auto constexpr BACKLIGHT_FADE_PERIOD = std::chrono::milliseconds(2500);
 const auto constexpr BACKLIGHT_FADE_MIN = 32;
 const auto constexpr BACKLIGHT_FADE_MAX = 255;
 
@@ -52,7 +52,8 @@ void Controller::run()
     std::map<State, std::function<void(Controller*)>> state_map;
     state_map[State::initial] = &Controller::handle_initial;
     state_map[State::idle] = &Controller::handle_idle;
-    state_map[State::not_allowed] = &Controller::handle_not_allowed;
+    state_map[State::not_allowed] = &Controller::handle_not_allowed_unknown;
+    state_map[State::unknown] = &Controller::handle_not_allowed_unknown;
     state_map[State::allowed] = &Controller::handle_allowed;
 
     display.clear();
@@ -105,20 +106,24 @@ void Controller::run()
             break;
 
         case State::not_allowed:
-            // TODO: Use smaller font for user name
-            status_msg = format("Blocked:\n%s", user_name.c_str());
+            status_msg = format("Blocked\n%s%s", Display::SMALL_FONT_ESC, user_name.c_str());
+            status_colour = RED;
+            break;
+
+        case State::unknown:
+            status_msg = format("Unknown\n" CARD_ID_FORMAT, card_id);
             status_colour = RED;
             break;
 
         case State::allowed:
-            // TODO: Use smaller font for user name
-            status_msg = format("Allowed:\n%s", user_name.c_str());
+            status_msg = format("Allowed\n%s%s", Display::SMALL_FONT_ESC, user_name.c_str());
             status_colour = GREEN;
             break;
 
         default:
             ESP_ERROR_CHECK(0);
         }
+        printf("Set status: %s\n", status_msg.c_str());
         display.set_status(status_msg, status_colour);
 
 
@@ -146,11 +151,13 @@ void Controller::handle_idle()
         check_card();
 }
 
-void Controller::handle_not_allowed()
+void Controller::handle_not_allowed_unknown()
 {
     set_relay(false);
     if (switch_closed)
         check_card();
+    else
+        state = State::idle;
 }
 
 void Controller::handle_allowed()
@@ -165,6 +172,8 @@ void Controller::handle_allowed()
 
 void Controller::check_card()
 {
+    if (!card_id)
+        return;
     const auto result = Card_cache::instance().has_access(card_id);
     switch (result.access)
     {
@@ -177,18 +186,24 @@ void Controller::check_card()
         break;
             
     case Card_cache::Access::Forbidden:
-        Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card inserted",
-                                                     get_identifier().c_str()));
-        Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
+        if (state != State::not_allowed)
+        {
+            Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card inserted",
+                                                         get_identifier().c_str()));
+            Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
+        }
         state = State::not_allowed;
         user_name = result.user_name;
         break;
             
     case Card_cache::Access::Unknown:
-        Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " inserted",
-                                                     get_identifier().c_str(), card_id));
-        Logger::instance().log_unknown_card(card_id);
-        state = State::not_allowed;
+        if (state != State::unknown)
+        {
+            Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " inserted",
+                                                         get_identifier().c_str(), card_id));
+            Logger::instance().log_unknown_card(card_id);
+        }
+        state = State::unknown;
         user_name.clear();
         break;
                

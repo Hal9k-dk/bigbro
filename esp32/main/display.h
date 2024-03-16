@@ -10,6 +10,8 @@
 class Display
 {
 public:
+    static const char* SMALL_FONT_ESC;
+
     Display(TFT_t* tft);
 
     TFT_t& get_tft()
@@ -35,6 +37,10 @@ private:
     void clear_status_area();
     
     void show_text(const std::string& status, uint16_t colour);
+
+    void check_escapes(std::string& line, int& height);
+
+    std::vector<std::pair<std::string, int>> split(const std::string& s);
 
     TFT_t* tft = nullptr;
     uint8_t small_textheight = 0;
