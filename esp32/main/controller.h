@@ -27,14 +27,17 @@ private:
 
     enum class State {
         initial,
-        /// Power off
-        no_access,
+        /// No card present
+        idle,
+        /// Last card was invalid
+        not_allowed,
         /// Valid card present
         allowed,
     };
 
     void handle_initial();
-    void handle_no_access();
+    void handle_idle();
+    void handle_not_allowed();
     void handle_allowed();
 
     void check_card();
@@ -44,7 +47,7 @@ private:
     State state = State::initial;
     Card_id card_id = 0;
     bool switch_closed = false;
-    //std::string who;
+    std::string user_name;
 };
 
 // Local Variables:

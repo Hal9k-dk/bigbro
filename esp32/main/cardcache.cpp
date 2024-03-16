@@ -216,10 +216,18 @@ void Card_cache::thread_body()
                 Logger::instance().log("Error: Item from /v2/permissions has no int_id");
                 continue;
             }
+            auto name_node = cJSON_GetObjectItem(it, "name");
+            if (!cJSON_IsString(name_node))
+            {
+                ESP_LOGE(TAG, "Error: Item from /v2/permissions has no name");
+                Logger::instance().log("Error: Item from /v2/permissions has no name");
+                continue;
+            }
             const auto card_id = get_id_from_string(card_id_node->valuestring);
             const auto id = id_node->valueint;
             const auto int_id = int_id_node->valueint;
-            new_cache[card_id] = { id, int_id, util::now() };
+            const std::string user_name = name_node->valuestring;
+            new_cache[card_id] = { id, int_id, user_name, util::now() };
         }
         // Store
         const auto size = new_cache.size();
@@ -251,15 +259,18 @@ Card_cache::Result Card_cache::get_result(esp_http_client_handle_t client, const
     if (!allowed || !cJSON_IsNumber(allowed))
         return Result(Access::Error, -1, "bad JSON");
 
+    const std::string user_name = cJSON_GetObjectItem(root, "name")->valuestring;
     int user_int_id = -1;
     if (allowed->valueint)
     {
         const int user_id = cJSON_GetObjectItem(root, "id")->valueint;
         user_int_id = cJSON_GetObjectItem(root, "int_id")->valueint;
-        cache[id] = { user_id, user_int_id, util::now() };
+        cache[id] = { user_id, user_int_id, user_name, util::now() };
         Logger::instance().log_backend(user_id, "Granted entry");
     }
-    return Result(allowed->valueint ? Access::Allowed : Access::Forbidden, user_int_id);
+    return Result(allowed->valueint ? Access::Allowed : Access::Forbidden,
+                  user_int_id,
+                  user_name);
 }
 
 void card_cache_task(void*)

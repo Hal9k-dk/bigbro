@@ -31,6 +31,7 @@ public:
     {
         Access access;
         int user_id; // internal ID
+        std::string user_name;
         std::string error_msg;
     };
 
@@ -54,6 +55,7 @@ private:
     {
         int user_id = 0;
         int user_int_id = 0;
+        std::string user_name;
         util::time_point last_update;
     };
     using Cache = std::map<Card_id, User_info>;

@@ -47,7 +47,8 @@ void Controller::run()
 {
     std::map<State, std::function<void(Controller*)>> state_map;
     state_map[State::initial] = &Controller::handle_initial;
-    state_map[State::no_access] = &Controller::handle_no_access;
+    state_map[State::idle] = &Controller::handle_idle;
+    state_map[State::not_allowed] = &Controller::handle_not_allowed;
     state_map[State::allowed] = &Controller::handle_allowed;
 
     display.clear();
@@ -79,6 +80,29 @@ void Controller::run()
 
         if (state != old_state)
             printf("STATE: %d\n", static_cast<int>(state));
+
+        std::string status_msg;
+        uint16_t status_colour = WHITE;
+        switch (state)
+        {
+        case State::idle:
+            status_msg = "Insert\ncard";
+            break;
+
+        case State::not_allowed:
+            status_msg = format("Unauthorized:\n%s", user_name.c_str());
+            break;
+
+        case State::allowed:
+            status_msg = format("Access allowed:\n%s", user_name.c_str());
+            break;
+
+        default:
+            ESP_ERROR_CHECK(0);
+        }
+        display.set_status(status_msg, status_colour);
+
+
 #ifdef DEBUG_HEAP
         ++loops;
         if (loops > 10000)
@@ -92,30 +116,32 @@ void Controller::run()
 
 void Controller::handle_initial()
 {
-    state = State::no_access;
+    state = State::idle;
 }
 
-void Controller::handle_no_access()
+void Controller::handle_idle()
+{
+    user_name.clear();
+    set_relay(false);
+    if (switch_closed)
+        check_card();
+}
+
+void Controller::handle_not_allowed()
 {
     set_relay(false);
     if (switch_closed)
-    {
         check_card();
-        if (state != State::no_access)
-            return;
-    }
-    //!! display
 }
 
 void Controller::handle_allowed()
 {
     if (!switch_closed)
     {
-        state = State::no_access;
+        state = State::idle;
         return;
     }
     set_relay(true);
-    //!! display
 }
 
 void Controller::check_card()
@@ -129,6 +155,7 @@ void Controller::check_card()
                                                      get_identifier().c_str(), card_id));
         Logger::instance().log(format("Valid card " CARD_ID_FORMAT " present", card_id));
         state = State::allowed;
+        user_name = result.user_name;
         break;
             
     case Card_cache::Access::Forbidden:
@@ -136,7 +163,8 @@ void Controller::check_card()
         Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card inserted",
                                                      get_identifier().c_str()));
         Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
-        state = State::no_access;
+        state = State::not_allowed;
+        user_name = result.user_name;
         break;
             
     case Card_cache::Access::Unknown:
@@ -144,14 +172,16 @@ void Controller::check_card()
         Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " inserted",
                                                      get_identifier().c_str(), card_id));
         Logger::instance().log_unknown_card(card_id);
-        state = State::no_access;
+        state = State::not_allowed;
+        user_name.clear();
         break;
                
     case Card_cache::Access::Error:
         display.show_message("Internal error checking card", RED);
         Slack_writer::instance().send_message(format(":computer_rage: (%s) Internal error checking card: %s",
                                                      get_identifier().c_str(), result.error_msg.c_str()));
-        state = State::no_access;
+        state = State::not_allowed;
+        user_name = "[error]";
         break;
     }
 }
