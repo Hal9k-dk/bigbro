@@ -22,6 +22,10 @@ static heap_trace_record_t trace_record[NUM_RECORDS]; // This buffer must be in 
 
 #endif // DEBUG_HEAP
 
+const auto constexpr BACKLIGHT_FADE_PERIOD = std::chrono::milliseconds(5000);
+const auto constexpr BACKLIGHT_FADE_MIN = 32;
+const auto constexpr BACKLIGHT_FADE_MAX = 255;
+
 Controller* Controller::the_instance = nullptr;
 
 Controller::Controller(Display& d)
@@ -57,12 +61,21 @@ void Controller::run()
     ESP_ERROR_CHECK(heap_trace_start(HEAP_TRACE_LEAKS));
     int loops = 0;
 #endif
-    
+
+    auto last_fade_update = util::now();
+    int fade_to = BACKLIGHT_FADE_MIN;
+    fade_backlight(fade_to, BACKLIGHT_FADE_PERIOD);
     while (1)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
         display.update();
+        if (util::now() - last_fade_update >= BACKLIGHT_FADE_PERIOD)
+        {
+            last_fade_update = util::now();
+            fade_to = fade_to == BACKLIGHT_FADE_MIN ? BACKLIGHT_FADE_MAX : BACKLIGHT_FADE_MIN;
+            fade_backlight(fade_to, BACKLIGHT_FADE_PERIOD);
+        }
 
         const auto old_card_id = card_id;
         card_id = get_and_clear_last_cardid();
@@ -90,11 +103,11 @@ void Controller::run()
             break;
 
         case State::not_allowed:
-            status_msg = format("Unauthorized:\n%s", user_name.c_str());
+            status_msg = format("Blocked:\n%s", user_name.c_str());
             break;
 
         case State::allowed:
-            status_msg = format("Access allowed:\n%s", user_name.c_str());
+            status_msg = format("Allowed:\n%s", user_name.c_str());
             break;
 
         default:
@@ -146,11 +159,13 @@ void Controller::handle_allowed()
 
 void Controller::check_card()
 {
+    //printf("Check card\n"); vTaskDelay(2000 / portTICK_PERIOD_MS);
     const auto result = Card_cache::instance().has_access(card_id);
+    //printf("Got result\n"); vTaskDelay(2000 / portTICK_PERIOD_MS);
     switch (result.access)
     {
     case Card_cache::Access::Allowed:
-        display.show_message("Valid card present");
+        //printf("allowed\n"); vTaskDelay(2000 / portTICK_PERIOD_MS);
         Slack_writer::instance().send_message(format(":key: (%s) Valid card " CARD_ID_FORMAT " present, access allowed",
                                                      get_identifier().c_str(), card_id));
         Logger::instance().log(format("Valid card " CARD_ID_FORMAT " present", card_id));
@@ -159,7 +174,7 @@ void Controller::check_card()
         break;
             
     case Card_cache::Access::Forbidden:
-        display.show_message("Blocked card inserted", RED);
+        //printf("forbidden\n"); vTaskDelay(2000 / portTICK_PERIOD_MS);
         Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card inserted",
                                                      get_identifier().c_str()));
         Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
@@ -168,7 +183,7 @@ void Controller::check_card()
         break;
             
     case Card_cache::Access::Unknown:
-        display.show_message(format("Unknown card\n" CARD_ID_FORMAT "\ninserted", card_id), YELLOW);
+        //printf("unknown\n"); vTaskDelay(2000 / portTICK_PERIOD_MS);
         Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " inserted",
                                                      get_identifier().c_str(), card_id));
         Logger::instance().log_unknown_card(card_id);
@@ -177,7 +192,7 @@ void Controller::check_card()
         break;
                
     case Card_cache::Access::Error:
-        display.show_message("Internal error checking card", RED);
+        //printf("error\n"); vTaskDelay(2000 / portTICK_PERIOD_MS);
         Slack_writer::instance().send_message(format(":computer_rage: (%s) Internal error checking card: %s",
                                                      get_identifier().c_str(), result.error_msg.c_str()));
         state = State::not_allowed;

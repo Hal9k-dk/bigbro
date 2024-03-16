@@ -70,6 +70,11 @@ void set_backlight(int backlight)
     ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
 }
 
+void fade_backlight(int backlight, util::duration dur)
+{
+    fade_backlight(backlight, std::chrono::duration_cast<std::chrono::milliseconds>(dur).count());
+}
+
 void fade_backlight(int backlight, int ms)
 {
     ledc_set_fade_with_time(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, backlight, ms);

@@ -11,12 +11,12 @@ static FontxFile medium_font[2];
 
 static constexpr const auto MESSAGE_DURATION = std::chrono::seconds(10);
 
+// Bottom part of screen
+static constexpr const int TIME_HEIGHT = 16;
+
 // Top part of screen
 
-static constexpr const int STATUS_HEIGHT = 20;
-
-// Bottom part of screen
-static constexpr const int TIME_HEIGHT = 20;
+static constexpr const int STATUS_HEIGHT = CONFIG_WIDTH - TIME_HEIGHT;
 
 Display::Display(TFT_t* tft)
     : tft(tft)
@@ -95,9 +95,9 @@ void Display::set_status(const std::string& status, uint16_t colour)
 
 void Display::clear_status_area()
 {
-    lcdDrawFillRect(tft, CONFIG_WIDTH, 0,
-                    CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT, STATUS_HEIGHT,
-                    RED);
+    lcdDrawFillRect(tft, TIME_HEIGHT, 0,
+                    CONFIG_WIDTH, CONFIG_HEIGHT,
+                    BLACK);
 }
 
 static std::vector<std::string> split(const std::string& s)
@@ -123,11 +123,7 @@ static std::vector<std::string> split(const std::string& s)
 void Display::show_text(const std::string& status, uint16_t colour)
 {
     const auto lines = split(status);
-    auto y = CONFIG_HEIGHT -
-        (STATUS_HEIGHT
-         + (CONFIG_HEIGHT - STATUS_HEIGHT - TIME_HEIGHT)/2
-         - lines.size()/2*medium_textheight
-         - medium_textheight/2);
+    auto y = CONFIG_HEIGHT/2 + (lines.size() - 1)*medium_textheight/2;
     for (const auto& line : lines)
     {
         const auto w = text_width(medium_font, line);
@@ -166,7 +162,7 @@ void Display::update()
     char stamp[Logger::TIMESTAMP_SIZE];
     last_clock = Logger::make_timestamp(stamp, false);
     lcdDrawFillRect(tft, 0, 0,
-                    STATUS_HEIGHT, CONFIG_HEIGHT, BLACK);
+                    TIME_HEIGHT, CONFIG_HEIGHT, BLACK);
     if (clock_x == 0)
     {
         const auto w = text_width(small_font, stamp);

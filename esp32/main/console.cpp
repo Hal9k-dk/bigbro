@@ -237,6 +237,7 @@ static int test_display(int, char**)
     printf("Running display test\n");
     set_backlight(255);
 
+#if 0
     display->clear();
     for (int i = 0; i < 15; ++i)
     {
@@ -245,7 +246,9 @@ static int test_display(int, char**)
     }
 
     vTaskDelay(2000/portTICK_PERIOD_MS);
+#endif
 
+#if 0
     display->clear();
     display->show_message("My name is\nInigo\nMontoya", RED);
 
@@ -254,6 +257,14 @@ static int test_display(int, char**)
         display->update();
         vTaskDelay(500/portTICK_PERIOD_MS);
     }
+#endif
+    
+    display->set_status("Status");
+    vTaskDelay(1000/portTICK_PERIOD_MS);
+    display->set_status("Status1\nStatus2");
+    vTaskDelay(1000/portTICK_PERIOD_MS);
+    display->set_status("Line1\nLine2\nLine3");
+    vTaskDelay(1000/portTICK_PERIOD_MS);
     
     return 0;
 }
