@@ -31,8 +31,8 @@ public:
     {
         Access access;
         int user_id; // internal ID
-        std::string user_name;
         std::string error_msg;
+        std::string user_name;
     };
 
     static Card_cache& instance();
@@ -48,8 +48,6 @@ private:
 
     /// Updates cache in background
     void thread_body();
-
-    Result get_result(esp_http_client_handle_t client, const char* buffer, int id);
 
     struct User_info
     {

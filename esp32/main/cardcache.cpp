@@ -47,13 +47,13 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
         {
             Logger::instance().log(format(CARD_ID_FORMAT " cached", id));
             Logger::instance().log_backend(ui.user_id, "Granted entry");
-            return Result(Access::Allowed, ui.user_int_id);
+            return Result(Access::Allowed, ui.user_int_id, "", ui.user_name);
         }
         Logger::instance().log(format(CARD_ID_FORMAT ": stale", id));
         // Cache entry is outdated
-        return Result(Access::Error);
+        return Result(Access::Error, 0, "", "");
     }
-    return Result(Access::Unknown);
+    return Result(Access::Unknown, 0, "", "");
 }
 
 Card_cache::Card_id Card_cache::get_id_from_string(const std::string& s)
@@ -187,38 +187,6 @@ void Card_cache::thread_body()
 
         vTaskDelay(60000 / portTICK_PERIOD_MS);
     }
-}
-
-Card_cache::Result Card_cache::get_result(esp_http_client_handle_t client, const char* buffer, int id)
-{
-    const auto code = esp_http_client_get_status_code(client);
-    ESP_LOGI(TAG, "Card backend status = %d", code);
-    if (code != 200)
-    {
-        if (code == 404)
-            return Result(Access::Unknown, -1);
-        return Result(Access::Error, -1, format("HTTP %d", code));
-    }
-    auto root = cJSON_Parse(buffer);
-    cJSON_wrapper jw(root);
-    if (!root)
-        return Result(Access::Error, -1, "no JSON");
-    auto allowed = cJSON_GetObjectItem(root, "allowed");
-    if (!allowed || !cJSON_IsNumber(allowed))
-        return Result(Access::Error, -1, "bad JSON");
-
-    const std::string user_name = cJSON_GetObjectItem(root, "name")->valuestring;
-    int user_int_id = -1;
-    if (allowed->valueint)
-    {
-        const int user_id = cJSON_GetObjectItem(root, "id")->valueint;
-        user_int_id = cJSON_GetObjectItem(root, "int_id")->valueint;
-        cache[id] = { user_id, user_int_id, user_name, util::now() };
-        Logger::instance().log_backend(user_id, "Granted entry");
-    }
-    return Result(allowed->valueint ? Access::Allowed : Access::Forbidden,
-                  user_int_id,
-                  user_name);
 }
 
 void card_cache_task(void*)
