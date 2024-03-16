@@ -51,61 +51,9 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
         }
         Logger::instance().log(format(CARD_ID_FORMAT ": stale", id));
         // Cache entry is outdated
+        return Result(Access::Error);
     }
-
-    if (api_token.empty())
-    {
-        ESP_LOGE(TAG, "Card_cache: no API token");
-        return Result(Access::Error, -1, "no API token");
-    }
-
-    constexpr int HTTP_MAX_OUTPUT = 255;
-    auto buffer = std::make_unique<char[]>(HTTP_MAX_OUTPUT+1);
-    Http_data http_data;
-    http_data.buffer = buffer.get();
-    http_data.max_output = HTTP_MAX_OUTPUT;
-    esp_http_client_config_t config {
-        .host = "panopticon.hal9k.dk",
-        .path = "/api/v1/permissions",
-        .cert_pem = howsmyssl_com_root_cert_pem_start,
-        .event_handler = http_event_handler,
-        .transport_type = HTTP_TRANSPORT_OVER_SSL,
-        .user_data = &http_data,
-    };
-    esp_http_client_handle_t client = esp_http_client_init(&config);
-    Http_client_wrapper w(client);
-
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    auto payload = cJSON_CreateObject();
-    cJSON_wrapper jw(payload);
-    auto jtoken = cJSON_CreateString(api_token.c_str());
-    cJSON_AddItemToObject(payload, "api_token", jtoken);
-    auto card_id = cJSON_CreateString(format(CARD_ID_FORMAT, id).c_str());
-    cJSON_AddItemToObject(payload, "card_id", card_id);
-
-    char* data = cJSON_Print(payload);
-    if (!data)
-    {
-        ESP_LOGE(TAG, "Card_cache: cJSON_Print() returned nullptr");
-        return Result(Access::Error, -1, "null JSON");
-    }
-    cJSON_Print_wrapper pw(data);
-    esp_http_client_set_post_field(client, data, strlen(data));
-
-    const char* content_type = "application/json";
-    esp_http_client_set_header(client, "Accept", content_type);
-    esp_http_client_set_header(client, "Content-Type", content_type);
-    esp_err_t err = esp_http_client_perform(client);
-
-    Result res(Access::Error);
-    if (err == ESP_OK)
-        res = get_result(client, buffer.get(), id);
-    else
-    {
-        res.error_msg = esp_err_to_name(err);
-        ESP_LOGE(TAG, "permissions: error %s", res.error_msg.c_str());
-    }
-    return res;
+    return Result(Access::Unknown);
 }
 
 Card_cache::Card_id Card_cache::get_id_from_string(const std::string& s)
