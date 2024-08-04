@@ -15,9 +15,6 @@
 
 #include <string.h>
 
-extern const char howsmyssl_com_root_cert_pem_start[] asm("_binary_howsmyssl_com_root_cert_pem_start");
-extern const char howsmyssl_com_root_cert_pem_end[]   asm("_binary_howsmyssl_com_root_cert_pem_end");
-
 Logger& Logger::instance()
 {
     static Logger the_instance;
@@ -114,10 +111,11 @@ void Logger::log_sync(const char* stamp, const char* text)
     esp_http_client_config_t config {
         .host = "acsgateway.hal9k.dk",
         .path = "/acslog",
-        .cert_pem = howsmyssl_com_root_cert_pem_start,
         .event_handler = http_event_handler,
         .transport_type = HTTP_TRANSPORT_OVER_SSL,
+        .crt_bundle_attach = esp_crt_bundle_attach,
     };
+    std::lock_guard<std::mutex> g(http_mutex);
     esp_http_client_handle_t client = esp_http_client_init(&config);
     Http_client_wrapper w(client);
 
@@ -181,10 +179,11 @@ void Logger::thread_body()
                 esp_http_client_config_t config {
                     .host = "panopticon.hal9k.dk",
                     .path = "/api/v1/logs",
-                    .cert_pem = howsmyssl_com_root_cert_pem_start,
                     .event_handler = http_event_handler,
                     .transport_type = HTTP_TRANSPORT_OVER_SSL,
+                    .crt_bundle_attach = esp_crt_bundle_attach,
                 };
+                std::lock_guard<std::mutex> g(http_mutex);
                 esp_http_client_handle_t client = esp_http_client_init(&config);
                 Http_client_wrapper w(client);
 
@@ -228,10 +227,11 @@ void Logger::thread_body()
                 esp_http_client_config_t config {
                     .host = "panopticon.hal9k.dk",
                     .path = "/api/v1/unknown_cards",
-                    .cert_pem = howsmyssl_com_root_cert_pem_start,
                     .event_handler = http_event_handler,
                     .transport_type = HTTP_TRANSPORT_OVER_SSL,
+                    .crt_bundle_attach = esp_crt_bundle_attach,
                 };
+                std::lock_guard<std::mutex> g(http_mutex);
                 esp_http_client_handle_t client = esp_http_client_init(&config);
                 Http_client_wrapper w(client);
 

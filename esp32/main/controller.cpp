@@ -82,7 +82,7 @@ void Controller::run()
 
         const auto old_card_id = card_id;
         card_id = get_and_clear_last_cardid();
-        if (card_id != old_card_id)
+        if (card_id && card_id != old_card_id)
             Logger::instance().log(format("Card " CARD_ID_FORMAT " inserted", card_id));
 
         switch_closed = read_switch();

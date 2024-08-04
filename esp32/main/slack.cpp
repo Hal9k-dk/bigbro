@@ -80,10 +80,11 @@ void Slack_writer::thread_body()
         esp_http_client_config_t config {
             .host = "slack.com",
             .path = "/api/chat.postMessage",
-            .cert_pem = howsmyssl_com_root_cert_pem_start,
             .event_handler = http_event_handler,
             .transport_type = HTTP_TRANSPORT_OVER_SSL,
+            .crt_bundle_attach = esp_crt_bundle_attach,
         };
+        std::lock_guard<std::mutex> g(http_mutex);
         esp_http_client_handle_t client = esp_http_client_init(&config);
         Http_client_wrapper w(client);
 

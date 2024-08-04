@@ -10,9 +10,9 @@ idf_component_register(SRCS
                        hw.cpp
                        logger.cpp
                        nvs.cpp
+                       otafwu.cpp
                        reader.cpp
                        slack.cpp
                        sntp.cpp
                        util.cpp
-                       EMBED_TXTFILES howsmyssl_com_root_cert.pem
                        INCLUDE_DIRS ".")

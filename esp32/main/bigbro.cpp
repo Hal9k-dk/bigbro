@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include <esp_app_desc.h>
 #include <esp_event.h>
 #include <esp_log.h>
 #include <esp_wifi.h>
@@ -17,6 +18,7 @@
 #include "hw.h"
 #include "logger.h"
 #include "nvs.h"
+#include "otafwu.h"
 #include "reader.h"
 #include "slack.h"
 #include "sntp.h"
@@ -26,16 +28,17 @@ void app_main()
 {
     init_hardware();
 
-    printf("BigBro v %s\n", VERSION);
+    const auto app_desc = esp_app_get_description();
+    printf("BigBro v %s\n", app_desc->version);
 
-    mount_spiffs("/spiffs", "storage0", 10);
+    mount_spiffs("/spiffs", "font", 10);
     list_spiffs("/spiffs/");
     
     TFT_t tft;
     Display display(&tft);
     set_backlight(255);
     
-    display.add_progress(format("BigBro v %s", VERSION));
+    display.add_progress(format("BigBro v %s", app_desc->version));
 
     display.add_progress("NVS init");
 
@@ -80,6 +83,9 @@ void app_main()
             xTaskCreate(logger_task, "logger_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
+            display.add_progress("OTA check");
+            if (!check_ota_update(display))
+                display.add_progress("FAILED!");
         }
     }
     
@@ -100,13 +106,16 @@ void app_main()
         run_console(display);        // never returns
 
     Slack_writer::instance().send_message(format(":panopticon: BigBro %s (%s)",
-                                                 VERSION, get_identifier().c_str()));
+                                                 app_desc->version,
+                                                 get_identifier().c_str()));
 
     display.add_progress("Connect to WiFi");
 
     display.add_progress("Starting");
     Logger::instance().set_log_to_gateway(true);
-    Logger::instance().log(format("ACS frontend %s (%s)", VERSION, get_identifier().c_str()));
+    Logger::instance().log(format("ACS frontend %s (%s)",
+                                  app_desc->version,
+                                  get_identifier().c_str()));
 
     Controller controller(display);
     display.clear();
