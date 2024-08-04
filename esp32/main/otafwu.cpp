@@ -126,7 +126,6 @@ bool check_ota_update(class Display& display)
     bool image_header_was_checked = false;
     // update handle : set by esp_ota_begin(), must be freed via esp_ota_end()
     esp_ota_handle_t update_handle = 0;
-    display.add_progress("Downloading");
     while (1)
     {
         char ota_write_data[BUFFSIZE + 1] = { 0 };
@@ -190,6 +189,7 @@ bool check_ota_update(class Display& display)
                         return false;
                     }
                     ESP_LOGI(TAG, "esp_ota_begin succeeded");
+                    display.add_progress("Downloading");
                 }
                 else
                 {

@@ -152,7 +152,7 @@ void Display::show_text(const std::string& status, uint16_t colour)
             while (w > CONFIG_WIDTH)
             {
                 orig_line = orig_line.substr(0, orig_line.size() - 1);
-                line = orig_line + "...";
+                line = orig_line + "..";
                 w = text_width(font, line);
             }
             printf("Using %s\n", line.c_str());

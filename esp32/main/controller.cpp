@@ -123,7 +123,6 @@ void Controller::run()
         default:
             ESP_ERROR_CHECK(0);
         }
-        printf("Set status: %s\n", status_msg.c_str());
         display.set_status(status_msg, status_colour);
 
 
