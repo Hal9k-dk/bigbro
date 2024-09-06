@@ -26,8 +26,8 @@ res = (cq.Workplane("XY")
 res = (res
        # pocket
        .faces(">Z").workplane()#.workplaneFromTagged("o")
-       .transformed(offset=(switch_y_offset, switch_x_offset, 0))
-       .rect(5*sw_w1, 2*sw_l2)
+       .transformed(offset=(switch_y_offset, 0, 0))
+       .rect(50, 60)
        .cutBlind(-mid_th_extra)
        # long hole
        .workplaneFromTagged("o")
@@ -41,20 +41,20 @@ res = (res
        .cutBlind(mid_th)
        # right block
        .workplaneFromTagged("o")
-       .transformed(offset=(switch_y_offset - sw_w1*1.5, switch_x_offset, mid_th))
-       .box(sw_w1, sw_l2, sw_h2, centered=noCenter)
+       .transformed(offset=(switch_y_offset - sw_w2*1.5, switch_x_offset, mid_th))
+       .box(sw_w2, sw_l2, sw_h2, centered=noCenter)
        # left block
        .workplaneFromTagged("o")
-       .transformed(offset=(switch_y_offset + sw_w1/2, switch_x_offset, mid_th))
-       .box(sw_w1, sw_l2, sw_h2, centered=noCenter)
+       .transformed(offset=(switch_y_offset + sw_w2/2, switch_x_offset, mid_th))
+       .box(sw_w2, sw_l2, sw_h2, centered=noCenter)
        # right ridge
        .workplaneFromTagged("o")
-       .transformed(offset=(switch_y_offset - sw_w1/2, switch_x_offset + sw_l2/2, mid_th+sw_h2-1),
+       .transformed(offset=(switch_y_offset - sw_w2/2 - 0.5, switch_x_offset + sw_l2/2, mid_th+sw_h2-1),
                     rotate=(90, 0, 0))
        .circle(1).extrude(sw_l2)
        # left ridge
        .workplaneFromTagged("o")
-       .transformed(offset=(switch_y_offset + sw_w1/2, switch_x_offset + sw_l2/2, mid_th+sw_h2-1),
+       .transformed(offset=(switch_y_offset + sw_w2/2 + 0.5, switch_x_offset + sw_l2/2, mid_th+sw_h2-1),
                     rotate=(90, 0, 0))
        .circle(1).extrude(sw_l2)
 )
