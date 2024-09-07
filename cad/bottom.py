@@ -4,6 +4,8 @@ from defs import *
 
 centerXY = (True, True, False)
 
+horizontal = True
+
 # Screwpost for corners of a box
 def square_screwpost_body(d, h, r):
     return (cq.Workplane()
@@ -30,8 +32,6 @@ res = (cq.Workplane("XY")
        .edges("<Z or |Z")
        .fillet(fillet_r)
       )
-
-#show_object(res)
 
 res = (res
        .workplaneFromTagged("o")
@@ -67,13 +67,22 @@ res = (res
       .cutThruAll()
       )
 
+wf_x = 0
+wf_y = o_height/2 - 10
+wf_xm = 2
+wf_ym = 1
+if horizontal:
+    wf_x = o_width/2 - 10
+    wf_y = 0
+    wf_xm = 1
+    wf_ym = 2
+
 # holes for wall fitting
 res = (res
-       #.workplaneFromTagged("bottom")
-          .transformed(offset=(0, o_height/2 - 10, 0))
-          .rarray(wh_dist, 1, 2, 1)
-          .circle(3.5/2).cutThruAll()
-          )
+       .transformed(offset=(wf_x, wf_y, 0))
+       .rarray(wh_dist, wh_dist, wf_xm, wf_ym)
+       .circle(3.5/2).cutThruAll()
+       )
 
 # PCB standoffs
 standoff_h = 5
