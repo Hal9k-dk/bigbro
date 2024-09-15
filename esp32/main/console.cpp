@@ -224,8 +224,10 @@ static int toggle_relay(int, char**)
     for (int n = 0; n < 10; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
+        printf("on\n");
         set_relay(true);
         vTaskDelay(500/portTICK_PERIOD_MS);
+        printf("off\n");
         set_relay(false);
     }
     printf("done\n");
