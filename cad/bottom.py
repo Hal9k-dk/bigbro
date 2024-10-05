@@ -33,14 +33,6 @@ res = (cq.Workplane("XY")
        .fillet(fillet_r)
       )
 
-res = (res
-       .workplaneFromTagged("o")
-       .transformed(offset=(0, 0, gland_z),
-                    rotate=(90, 0, 0))
-       .rarray(gland_cc, 1, 2, 1)
-       .circle(gland_r).cutBlind(o_height)
-      )
-
 # screw posts
 screwpost_d = 2.5*fillet_r
 screwpost = square_screwpost_body(screwpost_d, bottom_th-sh_th, fillet_r)
@@ -55,6 +47,7 @@ screwposts = (res
 res = res.union(screwposts)
 
 # screw holes
+#mh_inset = 1
 res = (res
       .workplaneFromTagged("o")
       .rect(o_width - 2*mh_inset, o_height - 2*mh_inset, forConstruction=True)
@@ -112,6 +105,14 @@ standoff4 = (res
              .eachpoint(lambda loc: standoff.val().moved(loc), True))
 
 res = res.union(standoff1).union(standoff2).union(standoff3).union(standoff4)
+
+res = (res
+        .workplaneFromTagged("o")
+        .transformed(offset=(0, 0, gland_z),
+                     rotate=(90, 0, 0))
+        .rarray(gland_cc, 1, 2, 1)
+        .circle(gland_r).cutBlind(o_height)
+       )
 
 show_object(res)
 
