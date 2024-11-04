@@ -81,12 +81,12 @@ void app_main()
             Slack_writer::instance().set_token(get_slack_token());
             Slack_writer::instance().set_params(false); // testing
             Card_cache::instance().set_api_token(get_acs_token());
-            xTaskCreate(logger_task, "logger_task", 4*1024, NULL, 1, NULL);
-            xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
-            xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
             display.add_progress("OTA check");
             if (!check_ota_update(display))
                 display.add_progress("FAILED!");
+            xTaskCreate(logger_task, "logger_task", 4*1024, NULL, 1, NULL);
+            xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
+            xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
         }
     }
     
