@@ -40,6 +40,7 @@ void app_main()
     
     display.add_progress(format("BigBro v %s", app_desc->version));
 
+    display.add_progress(get_identifier());
     display.add_progress("NVS init");
 
     init_nvs();
