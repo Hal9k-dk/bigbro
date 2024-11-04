@@ -22,6 +22,7 @@ void clear_wifi_credentials()
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, WIFI_KEY, ""));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
     wifi_creds.clear();
 }
@@ -37,6 +38,7 @@ void add_wifi_credentials(const char* ssid, const char* password)
         creds = std::string(buf);
     creds += std::string(ssid) + std::string(":") + std::string(password) + std::string(":");
     ESP_ERROR_CHECK(nvs_set_str(my_handle, WIFI_KEY, creds.c_str()));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
 }
 
@@ -45,6 +47,7 @@ void set_identifier(const char* identifier_arg)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, IDENTIFIER_KEY, identifier_arg));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
     strcpy(identifier, identifier_arg);
 }
@@ -54,6 +57,7 @@ void set_acs_token(const char* token)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, ACS_TOKEN_KEY, token));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
 }
 
@@ -62,6 +66,7 @@ void set_gateway_token(const char* token)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, GATEWAY_TOKEN_KEY, token));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
 }
 
@@ -70,6 +75,7 @@ void set_slack_token(const char* token)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, SLACK_TOKEN_KEY, token));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
 }
 
@@ -124,7 +130,7 @@ std::string get_identifier()
 {
     if (identifier[0])
         return identifier;
-    return "[device identifier not set]";
+    return "[not set]";
 }
 
 std::string get_slack_token()
