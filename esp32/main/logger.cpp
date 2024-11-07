@@ -35,12 +35,17 @@ time_t Logger::make_timestamp(char* stamp, bool include_date)
 {
     time_t current = 0;
     time(&current);
+    make_timestamp(current, stamp, include_date);
+    return current;
+}
+
+void Logger::make_timestamp(time_t t, char* stamp, bool include_date)
+{
     struct tm timeinfo;
-    gmtime_r(&current, &timeinfo);
+    gmtime_r(&t, &timeinfo);
     strftime(stamp, TIMESTAMP_SIZE,
              include_date ? "%Y-%m-%d %H:%M:%S" : "%H:%M:%S",
              &timeinfo);
-    return current;
 }
 
 void Logger::log(const std::string& s)
@@ -48,11 +53,6 @@ void Logger::log(const std::string& s)
     char stamp[Logger::TIMESTAMP_SIZE];
     make_timestamp(stamp);
 
-    if (!log_to_gateway)
-    {
-        printf("%s %s\n", stamp, s.c_str());
-        return;
-    }
     Item item{ Item::Type::Debug };
     strncpy(item.stamp, stamp, std::min<size_t>(Item::STAMP_SIZE, strlen(stamp)));
     strncpy(item.text, s.c_str(), std::min<size_t>(Item::MAX_SIZE, s.size()));
@@ -62,6 +62,7 @@ void Logger::log(const std::string& s)
         ESP_LOGE(TAG, "Logger: Queue overflow");
         return;
     }
+    //ESP_LOGI(TAG, "Push log item");
     q.push_front(item);
 }
 
@@ -76,11 +77,6 @@ void Logger::log_backend(int user_id, const std::string& s)
     char stamp[Logger::TIMESTAMP_SIZE];
     make_timestamp(stamp);
 
-    if (!log_to_gateway)
-    {
-        printf("%s %s\n", stamp, s.c_str());
-        return;
-    }
     Item item{ Item::Type::Backend, user_id };
     strncpy(item.stamp, stamp, std::min<size_t>(Item::STAMP_SIZE, strlen(stamp)));
     strncpy(item.text, s.c_str(), std::min<size_t>(Item::MAX_SIZE, s.size()));
@@ -108,6 +104,7 @@ void Logger::log_unknown_card(Card_id card_id)
 
 void Logger::log_sync(const char* stamp, const char* text)
 {
+    //ESP_LOGI(TAG, "log_sync begin");
     esp_http_client_config_t config {
         .host = "acsgateway.hal9k.dk",
         .path = "/acslog",
@@ -158,10 +155,19 @@ void Logger::thread_body()
     {
         vTaskDelay(10 / portTICK_PERIOD_MS);
 
+        /*
+        static int count = 0;
+        if (++count > 1000)
+        {
+            count = 0;
+            ESP_LOGI(TAG, "Logger thread running");
+        }
+        */
         if (q.empty())
             continue;
         item = q.back();
         q.pop_back();
+        // ESP_LOGI(TAG, "Got log item");
 
         switch (item.type)
         {
@@ -183,6 +189,7 @@ void Logger::thread_body()
                     .transport_type = HTTP_TRANSPORT_OVER_SSL,
                     .crt_bundle_attach = esp_crt_bundle_attach,
                 };
+                //ESP_LOGI(TAG, "Backend get mutex");
                 std::lock_guard<std::mutex> g(http_mutex);
                 esp_http_client_handle_t client = esp_http_client_init(&config);
                 Http_client_wrapper w(client);
@@ -231,6 +238,7 @@ void Logger::thread_body()
                     .transport_type = HTTP_TRANSPORT_OVER_SSL,
                     .crt_bundle_attach = esp_crt_bundle_attach,
                 };
+                //ESP_LOGI(TAG, "unknown_cards get mutex");
                 std::lock_guard<std::mutex> g(http_mutex);
                 esp_http_client_handle_t client = esp_http_client_init(&config);
                 Http_client_wrapper w(client);

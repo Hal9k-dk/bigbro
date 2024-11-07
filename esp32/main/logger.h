@@ -27,11 +27,6 @@ public:
         verbose = on;
     }
 
-    void set_log_to_gateway(bool on)
-    {
-        log_to_gateway = on;
-    }
-
     /// Log to console and gateway.
     void log(const std::string&);
 
@@ -46,6 +41,10 @@ public:
 
     /// Make a timestamp string. Buffer must be TIMESTAMP_SIZE bytes.
     static time_t make_timestamp(char* stamp, bool include_date = true);
+
+    static void make_timestamp(time_t t,
+                               char* stamp,
+                               bool include_date = true);
 
     /// Log synchronously to gateway.
     void log_sync(const char* stamp, const char* text);
@@ -75,7 +74,6 @@ private:
     std::string gw_token;
     std::string api_token;
     bool verbose = false;
-    bool log_to_gateway = false;
 
     friend void logger_task(void*);
 };
