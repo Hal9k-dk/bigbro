@@ -112,9 +112,10 @@ void app_main()
                                                  get_identifier().c_str()));
 
     display.add_progress("Connect to WiFi");
+    esp_log_level_set("esp_wifi", ESP_LOG_ERROR);
+    esp_log_level_set("wifi", ESP_LOG_ERROR);
 
     display.add_progress("Starting");
-    Logger::instance().set_log_to_gateway(true);
     Logger::instance().log(format("ACS frontend %s (%s)",
                                   app_desc->version,
                                   get_identifier().c_str()));
