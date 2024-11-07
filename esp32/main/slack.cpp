@@ -70,6 +70,7 @@ void Slack_writer::thread_body()
             continue;
         item = q.back();
         q.pop_back();
+        //ESP_LOGI(TAG, "Slack thread got an item");
 
         if (api_token.empty())
         {
@@ -84,6 +85,7 @@ void Slack_writer::thread_body()
             .transport_type = HTTP_TRANSPORT_OVER_SSL,
             .crt_bundle_attach = esp_crt_bundle_attach,
         };
+        //ESP_LOGI(TAG, "Slack get mutex");
         std::lock_guard<std::mutex> g(http_mutex);
         esp_http_client_handle_t client = esp_http_client_init(&config);
         Http_client_wrapper w(client);
@@ -124,6 +126,7 @@ void Slack_writer::thread_body()
 
 void slack_task(void*)
 {
+    ESP_LOGI(TAG, "Slack thread started");
     Slack_writer::instance().thread_body();
 }
 
