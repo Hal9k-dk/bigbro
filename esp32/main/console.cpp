@@ -274,11 +274,21 @@ static int test_display(int, char**)
     return 0;
 }
 
-static int test_logger(int, char**)
+static int test_logger(int argc, char**)
 {
     printf("Running logger test\n");
 
-    Logger::instance().set_log_to_gateway(true);
+    if (argc > 1)
+    {
+        int count = 0;
+        while (1)
+        {
+            Logger::instance().log(format("BigBro test log: %d", count));
+            ++count;
+            vTaskDelay(60*1000/portTICK_PERIOD_MS);
+        }
+    }
+    
     Logger::instance().log("BigBro test log: normal");
     Logger::instance().log_verbose("BigBro test log: verbose");
     Logger::instance().log_backend(42, "BigBro test log: backend");
