@@ -13,3 +13,5 @@ esp_err_t disconnect();
 
 esp_ip4_addr_t get_ip_address();
 
+bool is_wifi_connected();
+

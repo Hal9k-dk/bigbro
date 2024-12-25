@@ -198,6 +198,13 @@ void Display::update()
     }
     lcdDrawString(tft, small_font, 0, clock_x,
                   reinterpret_cast<const uint8_t*>(stamp), CYAN);
+    // WiFi indicator
+    if (is_wifi_connected())
+        lcdDrawString(tft, small_font, 0, 0,
+                      reinterpret_cast<const uint8_t*>("W"), CYAN);
+    else
+        lcdDrawString(tft, small_font, 0, 0,
+                      reinterpret_cast<const uint8_t*>("-"), RED);
 }
 
 // Local Variables:

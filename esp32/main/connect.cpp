@@ -106,9 +106,24 @@ esp_err_t disconnect()
     return ESP_OK;
 }
 
+static bool wifi_connected = false;
+
+bool is_wifi_connected()
+{
+    return wifi_connected;
+}
+
+static void on_wifi_connect(void*, esp_event_base_t,
+                            int32_t event_id, void*)
+{
+    ESP_LOGI(TAG, "on_wifi_connect: %d", (int) event_id);
+    wifi_connected = true;
+}
+
 static void on_wifi_disconnect(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
+    wifi_connected = false;
     ESP_LOGI(TAG, "on_wifi_disconnect: %d", (int) event_id);
     ESP_LOGI(TAG, "Wi-Fi disconnected, trying to reconnect...");
     esp_err_t err = esp_wifi_connect();
@@ -133,6 +148,7 @@ static esp_netif_t* wifi_start(const std::string& ssid, const std::string& passw
     free(desc);
     esp_wifi_set_default_wifi_sta_handlers();
 
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_CONNECTED, &on_wifi_connect, NULL));
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &on_wifi_disconnect, NULL));
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &on_got_ip, NULL));
 
