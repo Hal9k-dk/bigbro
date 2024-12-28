@@ -572,7 +572,7 @@ void run_console(Display& display_arg)
         /* Since the terminal doesn't support escape sequences,
          * don't use color codes in the prompt.
          */
-        prompt = "esp32> ";
+        prompt = "bigbro> ";
 #endif //CONFIG_LOG_COLORS
     }
 

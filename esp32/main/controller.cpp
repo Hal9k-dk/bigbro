@@ -111,8 +111,11 @@ void Controller::run()
             break;
 
         case State::unknown:
-            status_msg = format("Unknown\n" CARD_ID_FORMAT, card_id);
-            status_colour = RED;
+            if (card_id)
+            {
+                status_msg = format("Unknown\n" CARD_ID_FORMAT, card_id);
+                status_colour = RED;
+            }
             break;
 
         case State::allowed:

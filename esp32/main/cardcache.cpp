@@ -93,7 +93,7 @@ void Card_cache::thread_body()
             .user_data = &http_data,
             .crt_bundle_attach = esp_crt_bundle_attach,
         };
-        //ESP_LOGI(TAG, "cardcache update begin");
+        ESP_LOGI(TAG, "cardcache update begin");
         size_t size = 0;
         {
             std::lock_guard<std::mutex> g(http_mutex);
@@ -185,7 +185,7 @@ void Card_cache::thread_body()
                 std::lock_guard<std::mutex> g(cache_mutex);
                 cache.swap(new_cache);
             }
-            //ESP_LOGI(TAG, "cardcache update end");
+            ESP_LOGI(TAG, "cardcache update end");
         }
         Logger::instance().log(format("Card cache updated: %d cards", static_cast<int>(size)));
 
