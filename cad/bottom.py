@@ -4,7 +4,7 @@ from defs import *
 
 centerXY = (True, True, False)
 
-horizontal = True
+horizontal = False
 
 # Screwpost for corners of a box
 def square_screwpost_body(d, h, r):

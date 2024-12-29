@@ -6,7 +6,7 @@ o_width, o_height = o_height, o_width
 
 card_offset = 33
 mid_th = 2
-mid_th_extra = 8
+mid_th_extra = 18
 switch_y_offset = -card_offset
 switch_x_offset = 25 - 11
 disp_x_center = 35
