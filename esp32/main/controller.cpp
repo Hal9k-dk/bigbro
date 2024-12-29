@@ -106,7 +106,7 @@ void Controller::run()
             break;
 
         case State::not_allowed:
-            status_msg = format("Blocked\n%s%s", Display::SMALL_FONT_ESC, user_name.c_str());
+            status_msg = format("Denied\n%s%s", Display::SMALL_FONT_ESC, user_name.c_str());
             status_colour = RED;
             break;
 
@@ -190,8 +190,9 @@ void Controller::check_card()
     case Card_cache::Access::Forbidden:
         if (state != State::not_allowed)
         {
-            Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card inserted",
-                                                         get_identifier().c_str()));
+            Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card " CARD_ID_FORMAT " inserted",
+                                                         get_identifier().c_str(),
+                                                         card_id));
             Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
         }
         state = State::not_allowed;

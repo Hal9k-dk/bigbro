@@ -219,6 +219,16 @@ static int read_rfid(int, char**)
     return 0;
 }
 
+static int read_current(int, char**)
+{
+    for (int n = 0; n < 100; ++n)
+    {
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        printf("Current %f\n", read_current_sensor());
+    }
+    return 0;
+}
+
 static int toggle_relay(int, char**)
 {
     for (int n = 0; n < 10; ++n)
@@ -531,6 +541,15 @@ void run_console(Display& display_arg)
         .argtable = nullptr
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&read_rfid_cmd));
+
+    const esp_console_cmd_t read_current_cmd = {
+        .command = "current",
+        .help = "Read current sensor",
+        .hint = nullptr,
+        .func = &read_current,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&read_current_cmd));
 
     const esp_console_cmd_t toggle_relay_cmd = {
         .command = "relay",
