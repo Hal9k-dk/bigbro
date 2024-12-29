@@ -1,4 +1,4 @@
-4223853512467081
+4227393784626809
 Button_Switch_SMD
 Nidec_Copal_SH-7010A
 4-bit rotary coded switch, J-hook, https://www.nidec-copal-electronics.com/e/catalog/switch/sh-7000.pdf
@@ -16167,14 +16167,28 @@ ESP32-WROOM-32
 Single 2.4 GHz Wi-Fi and Bluetooth combo chip https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf
 Single 2.4 GHz Wi-Fi and Bluetooth combo  chip
 0
+60
 39
+RF_Module
+ESP32-WROOM-32D
+2.4 GHz Wi-Fi and Bluetooth module, https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32d_esp32-wroom-32u_datasheet_en.pdf
+2.4 GHz Wi-Fi and Bluetooth module ESP32-D0WD Espressif ESP32-WROOM-32E
+0
+60
 39
 RF_Module
 ESP32-WROOM-32U
 Single 2.4 GHz Wi-Fi and Bluetooth combo chip with U.FL connector, https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32d_esp32-wroom-32u_datasheet_en.pdf
 Single 2.4 GHz Wi-Fi and Bluetooth combo  chip
 0
+60
 39
+RF_Module
+ESP32-WROOM-32UE
+2.4 GHz Wi-Fi and Bluetooth module, https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf
+2.4 GHz Wi-Fi and Bluetooth module
+0
+60
 39
 RF_Module
 Garmin_M8-35_9.8x14.0mm_Layout6x6_P1.5mm

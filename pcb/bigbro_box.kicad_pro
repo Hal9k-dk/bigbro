@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 1.3,
-          "height": 2.3,
-          "width": 2.3
+          "drill": 0.3,
+          "height": 0.6,
+          "width": 0.6
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -60,6 +60,10 @@
         }
       ],
       "drc_exclusions": [
+        [
+          "items_not_allowed|161000000|66034000|a8342540-40f5-4745-8fe3-2d1aa7594185|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
         [
           "items_not_allowed|161037188|62985894|a0ac3e1e-8bbb-47ba-bae5-835bdd2e4f8e|00000000-0000-0000-0000-000000000000",
           ""
@@ -134,9 +138,11 @@
         "lib_footprint_mismatch": "ignore",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
+        "mirrored_text_on_front_layer": "warning",
         "missing_courtyard": "ignore",
         "missing_footprint": "warning",
         "net_conflict": "warning",
+        "nonmirrored_text_on_back_layer": "warning",
         "npth_inside_courtyard": "ignore",
         "padstack": "error",
         "pth_inside_courtyard": "ignore",
