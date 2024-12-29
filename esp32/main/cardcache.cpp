@@ -43,8 +43,15 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
         if (util::now() - ui.last_update < MAX_CACHE_AGE)
         {
             Logger::instance().log(format(CARD_ID_FORMAT " cached", id));
-            Logger::instance().log_backend(ui.user_id, "Granted entry");
-            return Result(Access::Allowed, ui.user_int_id, "", ui.user_name);
+            if (ui.allowed)
+            {
+                Logger::instance().log_backend(ui.user_id, "Granted access");
+                return Result(Access::Allowed, ui.user_int_id, "",
+                              ui.user_name);
+            }
+            Logger::instance().log_backend(ui.user_id, "Denied access");
+            return Result(Access::Forbidden, ui.user_int_id, "",
+                          ui.user_name);
         }
         Logger::instance().log(format(CARD_ID_FORMAT ": stale", id));
         // Cache entry is outdated
@@ -87,7 +94,7 @@ void Card_cache::thread_body()
         http_data.max_output = HTTP_MAX_OUTPUT;
         esp_http_client_config_t config {
             .host = "panopticon.hal9k.dk",
-            .path = "/api/v2/permissions/",
+            .path = "/api/v3/permissions/",
             .event_handler = http_event_handler,
             .transport_type = HTTP_TRANSPORT_OVER_SSL,
             .user_data = &http_data,
@@ -110,28 +117,28 @@ void Card_cache::thread_body()
             esp_err_t err = esp_http_client_perform(client);
             if (err != ESP_OK)
             {
-                ESP_LOGE(TAG, "/v2/permissions: error %s", esp_err_to_name(err));
+                ESP_LOGE(TAG, "/v3/permissions: error %s", esp_err_to_name(err));
                 continue;
             }
             const auto code = esp_http_client_get_status_code(client);
             if (code != 200)
             {
-                ESP_LOGE(TAG, "Error: Unexpected response from /v2/permissions: %d", code);
-                Logger::instance().log(format("Error: Unexpected response from /v2/permissions: %d", code));
+                ESP_LOGE(TAG, "Error: Unexpected response from /v3/permissions: %d", code);
+                Logger::instance().log(format("Error: Unexpected response from /v3/permissions: %d", code));
                 continue;
             }
             auto root = cJSON_Parse(buffer.get());
             cJSON_wrapper jw(root);
             if (!root)
             {
-                ESP_LOGE(TAG, "Error: Bad JSON from /v2/permissions: %s", buffer.get());
-                Logger::instance().log(format("Error: Bad JSON from /v2/permissions"));
+                ESP_LOGE(TAG, "Error: Bad JSON from /v3/permissions: %s", buffer.get());
+                Logger::instance().log(format("Error: Bad JSON from /v3/permissions"));
                 continue;
             }
             if (!cJSON_IsArray(root))
             {
-                ESP_LOGE(TAG, "Error: Response from /v2/permissions is not an array");
-                Logger::instance().log("Error: Response from /v2/permissions is not an array");
+                ESP_LOGE(TAG, "Error: Response from /v3/permissions is not an array");
+                Logger::instance().log("Error: Response from /v3/permissions is not an array");
                 continue;
             }
             // Create new cache
@@ -141,43 +148,52 @@ void Card_cache::thread_body()
             {
                 if (!cJSON_IsObject(it))
                 {
-                    ESP_LOGE(TAG, "Error: Item from /v2/permissions is not an object");
-                    Logger::instance().log("Error: Item from /v2/permissions is not an object");
+                    ESP_LOGE(TAG, "Error: Item from /v3/permissions is not an object");
+                    Logger::instance().log("Error: Item from /v3/permissions is not an object");
                     continue;
                 }
                 auto card_id_node = cJSON_GetObjectItem(it, "card_id");
                 if (!cJSON_IsString(card_id_node))
                 {
-                    ESP_LOGE(TAG, "Error: Item from /v2/permissions has no card_id");
-                    Logger::instance().log("Error: Item from /v2/permissions has no card_id");
+                    ESP_LOGE(TAG, "Error: Item from /v3/permissions has no card_id");
+                    Logger::instance().log("Error: Item from /v3/permissions has no card_id");
                     continue;
                 }
                 auto id_node = cJSON_GetObjectItem(it, "id");
                 if (!cJSON_IsNumber(id_node))
                 {
-                    ESP_LOGE(TAG, "Error: Item from /v2/permissions has no id");
-                    Logger::instance().log("Error: Item from /v2/permissions has no id");
+                    ESP_LOGE(TAG, "Error: Item from /v3/permissions has no id");
+                    Logger::instance().log("Error: Item from /v3/permissions has no id");
                     continue;
                 }
                 auto int_id_node = cJSON_GetObjectItem(it, "int_id");
                 if (!cJSON_IsNumber(int_id_node))
                 {
-                    ESP_LOGE(TAG, "Error: Item from /v2/permissions has no int_id");
-                    Logger::instance().log("Error: Item from /v2/permissions has no int_id");
+                    ESP_LOGE(TAG, "Error: Item from /v3/permissions has no int_id");
+                    Logger::instance().log("Error: Item from /v3/permissions has no int_id");
                     continue;
                 }
                 auto name_node = cJSON_GetObjectItem(it, "name");
                 if (!cJSON_IsString(name_node))
                 {
-                    ESP_LOGE(TAG, "Error: Item from /v2/permissions has no name");
-                    Logger::instance().log("Error: Item from /v2/permissions has no name");
+                    ESP_LOGE(TAG, "Error: Item from /v3/permissions has no name");
+                    Logger::instance().log("Error: Item from /v3/permissions has no name");
+                    continue;
+                }
+                auto allowed_node = cJSON_GetObjectItem(it, "allowed");
+                if (!cJSON_IsBool(allowed_node))
+                {
+                    ESP_LOGE(TAG, "Error: Item from /v3/permissions has no allowed");
+                    Logger::instance().log("Error: Item from /v3/permissions has no allowed");
                     continue;
                 }
                 const auto card_id = get_id_from_string(card_id_node->valuestring);
                 const auto id = id_node->valueint;
                 const auto int_id = int_id_node->valueint;
                 const std::string user_name = name_node->valuestring;
-                new_cache[card_id] = { id, int_id, user_name, util::now() };
+                const bool allowed = cJSON_IsTrue(allowed_node);
+                new_cache[card_id] = { id, int_id, user_name,
+                                       allowed, util::now() };
             }
             // Store
             size = new_cache.size();

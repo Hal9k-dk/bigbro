@@ -14,6 +14,7 @@ constexpr const char* SLACK_TOKEN_KEY = "slt";
 
 constexpr const auto UART_PORT_NUM = (uart_port_t) 1;
 constexpr const auto PIN_CARD_SW = (gpio_num_t) 25;
+constexpr const auto PIN_CURR_SENSE = (gpio_num_t) 39;
 constexpr const auto PIN_RELAY = (gpio_num_t) 16;
 
 constexpr const auto PIN_RFID_RXD = (gpio_num_t) 17;

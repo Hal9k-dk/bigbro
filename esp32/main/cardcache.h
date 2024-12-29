@@ -54,6 +54,7 @@ private:
         int user_id = 0;
         int user_int_id = 0;
         std::string user_name;
+        bool allowed = false;
         util::time_point last_update;
     };
     using Cache = std::map<Card_id, User_info>;
