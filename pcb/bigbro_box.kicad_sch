@@ -13311,7 +13311,7 @@
 				)
 			)
 		)
-		(property "Footprint" "modules:Fuseholder5x20_horiz_SemiClosed_Casing10x25mm"
+		(property "Footprint" "Fuse:Fuse_Littelfuse_395Series"
 			(at 330.2 39.37 0)
 			(effects
 				(font

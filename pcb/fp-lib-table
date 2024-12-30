@@ -19,4 +19,5 @@
   (lib (name "Package_SO")(type "KiCad")(uri "${KIPRJMOD}/pretty/Package_SO.pretty")(options "")(descr ""))
   (lib (name "Button_Switch_SMD")(type "KiCad")(uri "${KIPRJMOD}/pretty/Button_Switch_SMD.pretty")(options "")(descr ""))
   (lib (name "Connector_PinSocket_2.54mm")(type "KiCad")(uri "${KIPRJMOD}/pretty/Connector_PinSocket_2.54mm.pretty")(options "")(descr ""))
+  (lib (name "Fuse")(type "KiCad")(uri "${KIPRJMOD}/pretty/Fuse.pretty")(options "")(descr ""))
 )
