@@ -1,7 +1,7 @@
 (kicad_sch
-	(version 20241004)
+	(version 20241209)
 	(generator "eeschema")
-	(generator_version "8.99")
+	(generator_version "9.0")
 	(uuid "212a0d71-cc7b-49f8-b4ca-a935e5355dca")
 	(paper "A3")
 	(lib_symbols
@@ -3578,30 +3578,6 @@
 				)
 				(polyline
 					(pts
-						(xy 2.54 -1.778) (xy 2.54 -2.54)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 -1.778) (xy 2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
 						(xy 2.54 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 2.54 1.778)
 					)
 					(stroke
@@ -3621,6 +3597,30 @@
 					)
 					(fill
 						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -1.778) (xy 2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -1.778) (xy 2.54 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
 					)
 				)
 				(polyline
@@ -5309,10 +5309,10 @@
 				)
 				(polyline
 					(pts
-						(xy 5.08 -2.54) (xy 3.175 3.81)
+						(xy 5.08 -2.54) (xy 5.08 -5.08)
 					)
 					(stroke
-						(width 0.508)
+						(width 0)
 						(type default)
 					)
 					(fill
@@ -5321,10 +5321,10 @@
 				)
 				(polyline
 					(pts
-						(xy 5.08 -2.54) (xy 5.08 -5.08)
+						(xy 5.08 -2.54) (xy 3.175 3.81)
 					)
 					(stroke
-						(width 0)
+						(width 0.508)
 						(type default)
 					)
 					(fill
@@ -9432,7 +9432,6 @@
 	)
 	(label "NO"
 		(at 354.33 69.85 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9443,7 +9442,6 @@
 	)
 	(label "COM"
 		(at 351.79 96.52 90)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9454,7 +9452,6 @@
 	)
 	(label "Relay_trig"
 		(at 109.22 124.46 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9465,7 +9462,6 @@
 	)
 	(label "Relay_reset"
 		(at 109.22 144.78 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9476,7 +9472,6 @@
 	)
 	(label "~{card_switch}"
 		(at 78.74 147.32 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9487,7 +9482,6 @@
 	)
 	(label "NC"
 		(at 349.25 69.85 270)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9498,7 +9492,6 @@
 	)
 	(label "NO"
 		(at 369.57 86.36 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9509,7 +9502,6 @@
 	)
 	(label "COM"
 		(at 369.57 83.82 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9520,7 +9512,6 @@
 	)
 	(label "~{relay_gpio}"
 		(at 78.74 142.24 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9531,7 +9522,6 @@
 	)
 	(label "NC"
 		(at 369.57 81.28 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10093,7 +10083,6 @@
 	(hierarchical_label "relay"
 		(shape input)
 		(at 322.58 101.6 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10105,7 +10094,6 @@
 	(hierarchical_label "relay_gpio"
 		(shape input)
 		(at 29.21 127 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10117,7 +10105,6 @@
 	(hierarchical_label "~{DTR}"
 		(shape output)
 		(at 181.61 81.28 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10129,7 +10116,6 @@
 	(hierarchical_label "MCU_TX0"
 		(shape output)
 		(at 91.44 31.75 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10141,7 +10127,6 @@
 	(hierarchical_label "card_switch"
 		(shape output)
 		(at 130.81 95.25 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10153,7 +10138,6 @@
 	(hierarchical_label "~{RESET}"
 		(shape output)
 		(at 38.1 87.63 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10165,7 +10149,6 @@
 	(hierarchical_label "relay_gpio"
 		(shape output)
 		(at 93.98 54.61 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10177,7 +10160,6 @@
 	(hierarchical_label "card_switch"
 		(shape input)
 		(at 29.21 121.92 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10189,7 +10171,6 @@
 	(hierarchical_label "CurrentSense"
 		(shape output)
 		(at 123.19 35.56 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10202,7 +10183,6 @@
 	(hierarchical_label "~{RESET}"
 		(shape input)
 		(at 55.88 29.21 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10214,7 +10194,6 @@
 	(hierarchical_label "~{DTR}"
 		(shape input)
 		(at 24.13 81.28 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10226,7 +10205,6 @@
 	(hierarchical_label "CurrentSense"
 		(shape input)
 		(at 55.88 36.83 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10239,7 +10217,6 @@
 	(hierarchical_label "MCU_TX0"
 		(shape input)
 		(at 181.61 83.82 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10251,7 +10228,6 @@
 	(hierarchical_label "~{BOOT}"
 		(shape output)
 		(at 38.1 60.96 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10263,7 +10239,6 @@
 	(hierarchical_label "MCU_RX0"
 		(shape output)
 		(at 163.83 88.9 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10275,7 +10250,6 @@
 	(hierarchical_label "~{BOOT}"
 		(shape input)
 		(at 115.57 212.09 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10287,7 +10261,6 @@
 	(hierarchical_label "relay"
 		(shape output)
 		(at 129.54 127 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10299,7 +10272,6 @@
 	(hierarchical_label "card_switch"
 		(shape output)
 		(at 171.45 163.83 180)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10311,7 +10283,6 @@
 	(hierarchical_label "~{BOOT}"
 		(shape input)
 		(at 91.44 29.21 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10323,7 +10294,6 @@
 	(hierarchical_label "MCU_RX0"
 		(shape input)
 		(at 91.44 36.83 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10335,7 +10305,6 @@
 	(hierarchical_label "~{RESET}"
 		(shape input)
 		(at 134.62 212.09 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10347,7 +10316,6 @@
 	(hierarchical_label "card_switch"
 		(shape input)
 		(at 91.44 72.39 0)
-		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)

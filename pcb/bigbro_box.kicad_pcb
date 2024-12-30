@@ -1,7 +1,7 @@
 (kicad_pcb
-	(version 20241030)
+	(version 20241129)
 	(generator "pcbnew")
-	(generator_version "8.99")
+	(generator_version "9.0")
 	(general
 		(thickness 1.6)
 		(legacy_teardrops yes)
@@ -212,12 +212,11 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 180)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "0af6d210-639f-4715-b8b4-c2a7ba85a225")
+			(uuid "619f40bf-0b84-4a3d-8cbc-6b024e0299f6")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -448,12 +447,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "77f7023c-5233-4c2b-a356-5c5c1d2f998f")
+			(uuid "523523d1-85d7-4d57-95ae-6e33d4f70828")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -710,12 +708,11 @@
 				)
 			)
 		)
-		(property "Footprint" "modules:Fuseholder5x20_horiz_SemiClosed_Casing10x25mm"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "c67e47bf-8a0d-48ba-b7ec-8d7c094ed821")
+			(uuid "dfe738ba-1626-4bea-83a4-9c771a3087e9")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1195,12 +1192,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "5c7e7a13-41bf-40f7-99b3-5f618184d50f")
+			(uuid "31242daa-3921-41b5-b27a-5d3b02d3e55a")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1409,12 +1405,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "db89a929-dc86-4093-b819-3ce5c24e237f")
+			(uuid "63cfd598-5669-406c-af55-b22c56233357")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1625,12 +1620,11 @@
 				)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "446ff759-9bb0-41b7-901f-4dc26e1173d7")
+			(uuid "13fa3d39-d584-41d1-ad80-3576a4f2ac0c")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1676,7 +1670,7 @@
 				(width 0.15)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "Cmts.User")
 			(uuid "0a68e2a4-7497-47ba-8df3-4b723821ee33")
 		)
@@ -1687,7 +1681,7 @@
 				(width 0.05)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "F.CrtYd")
 			(uuid "4596e048-8991-4a5b-aeb1-202ee972c699")
 		)
@@ -1739,12 +1733,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "43690914-ea79-4b68-b25b-bbcb031bf7ed")
+			(uuid "0e850463-10c3-45ad-8453-3fa93054e434")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1953,12 +1946,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "28297c33-445c-47c4-bd36-2644a3b190aa")
+			(uuid "bc3f6927-ec72-4a65-9a7c-51ab2781a9db")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2254,12 +2246,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "7015a049-cd88-4890-ba82-b9e9f915d52d")
+			(uuid "8e8ba550-327d-4067-ad54-8a999bac51b1")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2507,12 +2498,11 @@
 				)
 			)
 		)
-		(property "Footprint" "RF_Module:ESP32-WROOM-32"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "c3d9968a-4851-4244-b364-ba49f4d8cda8")
+			(uuid "d4240438-64c4-4548-a5d0-a196f84768ce")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3186,7 +3176,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "e1246760-a6ea-4e64-bdf3-b1c414cd2321")
 		)
 		(pad "39" smd rect
 			(at -2.205 -0.91 270)
@@ -3195,7 +3185,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "3c573f6c-df77-442f-90f5-bdd8595688f4")
 		)
 		(pad "39" thru_hole circle
 			(at -2.205 -0.1475 270)
@@ -3207,7 +3197,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "5a68b10b-b298-4904-9db6-94e34b78b490")
 		)
 		(pad "39" smd rect
 			(at -2.205 0.615 270)
@@ -3216,7 +3206,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "8c3883d1-db4a-4676-88b9-d66e8aa7bcf3")
 		)
 		(pad "39" thru_hole circle
 			(at -1.4425 -2.435 270)
@@ -3228,7 +3218,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "bf57bc31-1b65-4a5f-b4cf-debd8ade5c07")
 		)
 		(pad "39" thru_hole circle
 			(at -1.4425 -0.91 270)
@@ -3240,7 +3230,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "0c6ad4df-d039-4b25-b0ab-b7d4d4094c06")
 		)
 		(pad "39" thru_hole circle
 			(at -1.4425 0.615 270)
@@ -3252,7 +3242,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "f2591edc-ebe1-412f-b71d-78c55e5082e0")
 		)
 		(pad "39" smd rect
 			(at -0.68 -2.435 270)
@@ -3261,7 +3251,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "33b4b61c-04f0-4b04-b382-b69ad95f068f")
 		)
 		(pad "39" thru_hole circle
 			(at -0.68 -1.6725 270)
@@ -3273,7 +3263,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "2ef39393-9422-416f-aed1-6e20a68be9c4")
 		)
 		(pad "39" smd rect
 			(at -0.68 -0.91 270)
@@ -3282,7 +3272,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "0770b839-ec91-484c-888c-0b85332c526c")
 		)
 		(pad "39" smd rect
 			(at -0.68 -0.91 270)
@@ -3291,7 +3281,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "94859931-0a7c-4cce-a5a6-c85b4096079e")
 		)
 		(pad "39" thru_hole circle
 			(at -0.68 -0.1475 270)
@@ -3303,7 +3293,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "28e64fe3-5b58-40a4-888a-36d5be494919")
 		)
 		(pad "39" smd rect
 			(at -0.68 0.615 270)
@@ -3312,7 +3302,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "b89c8ea9-6edb-44ce-b41d-327032bcde0a")
 		)
 		(pad "39" thru_hole circle
 			(at 0.0825 -2.435 270)
@@ -3324,7 +3314,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "537316b5-1c74-43bf-b7ee-f000ee22e217")
 		)
 		(pad "39" thru_hole circle
 			(at 0.0825 -0.91 270)
@@ -3336,7 +3326,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "d3999c90-4826-47dc-8836-2a4fdd1a195e")
 		)
 		(pad "39" thru_hole circle
 			(at 0.0825 0.615 270)
@@ -3348,7 +3338,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "a3c2118c-b099-49f8-b6b6-e429fcd97603")
 		)
 		(pad "39" smd rect
 			(at 0.845 -2.435 270)
@@ -3357,7 +3347,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "2135b898-4eda-45c0-ac08-c7f73a0c39ef")
 		)
 		(pad "39" thru_hole circle
 			(at 0.845 -1.6725 270)
@@ -3369,7 +3359,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "198df1cd-c0e0-40cc-ac31-9e010b380beb")
 		)
 		(pad "39" smd rect
 			(at 0.845 -0.91 270)
@@ -3378,7 +3368,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "086d80d0-4976-4567-9828-22e97d6f1e8d")
 		)
 		(pad "39" thru_hole circle
 			(at 0.845 -0.1475 270)
@@ -3390,7 +3380,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "a02a0474-cde1-4dde-85a0-59a7dada0de6")
 		)
 		(pad "39" smd rect
 			(at 0.845 0.615 270)
@@ -3399,7 +3389,7 @@
 			(net 2 "GND")
 			(pinfunction "GND")
 			(pintype "passive")
-			(uuid "501353cf-a0d7-4f56-9fd5-324742a11587")
+			(uuid "1d1e477a-b713-4d9b-99ac-9331a3c48e19")
 		)
 		(zone
 			(net 0)
@@ -3474,12 +3464,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 180)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "c637c205-013f-4c1d-a4ed-820e06e3d0f4")
+			(uuid "c0f3f940-a1cc-4fab-944f-8405aa487fda")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3690,10 +3679,9 @@
 		)
 		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "65d95562-4e41-4cce-9a58-9cd4b3c07341")
+			(uuid "45150746-68c4-4955-a2d7-ab639896fae2")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3754,7 +3742,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.Mask")
 			(uuid "1be07296-8417-4923-9a29-11648c4ba1b6")
 		)
@@ -3787,7 +3775,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.Mask")
 			(uuid "aad29859-fefe-43fb-bc05-9b439d9fe320")
 		)
@@ -3828,7 +3816,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.Mask")
 			(uuid "b327c4e3-0b49-4942-9545-9d58d49ef240")
 		)
@@ -3847,7 +3835,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "1bdd23d7-04de-4bad-be70-d89ae75468f8")
 		)
@@ -3872,7 +3860,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "2cbb89c5-5d8c-4bd6-97a7-31f2a0f89a3d")
 		)
@@ -3897,7 +3885,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "03466092-9e74-459f-9466-12851a7540c2")
 		)
@@ -3922,7 +3910,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "f867ba6e-9c87-4cf6-8f0c-22d7d5faa5f6")
 		)
@@ -3952,7 +3940,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "d43de20c-6727-4f04-8780-ec13067ad96f")
 		)
@@ -3983,7 +3971,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "58e7196d-e471-472d-b9fb-33dc7ea5f781")
 		)
@@ -4017,7 +4005,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "37ec462f-e67b-44a8-8a6b-7c5fa5845af5")
 		)
@@ -4050,7 +4038,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "3225e493-96eb-42fc-bb8a-b48197f9794b")
 		)
@@ -4087,7 +4075,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "3b9843f2-b7bd-43d6-803a-29b05379b5cf")
 		)
@@ -4123,7 +4111,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "032f540b-450d-493e-87db-71932c34f947")
 		)
@@ -4161,7 +4149,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "29032a3f-18f3-46fe-b53a-d36b27551468")
 		)
@@ -4203,7 +4191,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "F.SilkS")
 			(uuid "22c9b884-e862-4546-bbb6-f156c91aa3eb")
 		)
@@ -4237,12 +4225,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "89c24bfe-5a77-4015-bcc1-5755d19515c3")
+			(uuid "20efb1f2-f61c-4280-b185-fe898521bb2d")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4451,12 +4438,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "8f3500f0-ba61-46e7-8395-dda3358d828e")
+			(uuid "90190e4a-9179-4db8-b382-8e522b0f717d")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4921,12 +4907,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Converter_ACDC:Converter_ACDC_HiLink_HLK-PMxx"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "991c25f4-6eef-438f-9ba8-23910011efd2")
+			(uuid "0a060338-5bc3-4a56-831d-05a3eeae5ceb")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5221,12 +5206,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "2caf97d1-ec5d-4082-b03d-0f8bfdb39331")
+			(uuid "b2fccad4-0cc0-4a05-a139-f28b6d7fd072")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5474,12 +5458,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "29ff0f6d-8b07-4191-8243-c65ed0b19ec0")
+			(uuid "eeff2b36-de66-4a34-90e4-89ac9cb6b4aa")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5829,12 +5812,11 @@
 				)
 			)
 		)
-		(property "Footprint" "TestPoint:TestPoint_Keystone_5000-5004_Miniature"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "86339506-28f6-413e-b07e-1493400358a7")
+			(uuid "c137cffc-8e36-47f6-a50e-089041411c9e")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5880,7 +5862,7 @@
 				(width 0.15)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "F.SilkS")
 			(uuid "277c853a-cec2-4ebc-9a1b-bffe93172cfb")
 		)
@@ -5891,7 +5873,7 @@
 				(width 0.05)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "F.CrtYd")
 			(uuid "655c590e-e81b-4a43-a6ac-97027eeb3856")
 		)
@@ -5942,7 +5924,7 @@
 				(width 0.15)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "F.Fab")
 			(uuid "91e7ea55-da85-4337-b066-b59f370dfb50")
 		)
@@ -6009,12 +5991,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_CK_RS282G05A3"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "cbdc54e3-d74c-434d-a6ed-4300173c89aa")
+			(uuid "ecb914b6-2e95-40d0-b28d-42a3bf7ad4b0")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6323,12 +6304,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "3cf30890-d67c-4514-bb29-088772e21c2a")
+			(uuid "9d246bdf-443a-411f-bd34-24cc7159a6a0")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6537,12 +6517,11 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 180)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "789bfc4d-607f-4c06-ab93-10165af79cad")
+			(uuid "4b255392-80ee-41a8-9fa9-4bf819100b07")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6773,12 +6752,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "2486b7ee-ca0e-41b5-8d5a-e341e9a815b8")
+			(uuid "31ba71cf-69c1-4b1d-a3c6-efd26ee18fe3")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6987,12 +6965,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SOD-123"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "de9e404c-e21d-4571-a124-3d9e7bd3d6c8")
+			(uuid "095f3313-5116-426d-b9b4-3552b5b24fa8")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7279,12 +7256,11 @@
 				)
 			)
 		)
-		(property "Footprint" "modules:RDM6300_B38.5x18.2mm"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "378ee8e9-4d4a-4ff0-8d1b-3d3ea756e73f")
+			(uuid "4fe0f872-8dce-4737-a4bb-88702a848e7c")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7513,12 +7489,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "f540f934-71e4-4a9f-950c-418fcbe0d825")
+			(uuid "cfcbc2bf-9886-47f2-b0de-c2130fe4ac16")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7727,12 +7702,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "4a61e976-5465-4a10-9c9b-b435adf6ec1d")
+			(uuid "a1fd48ab-a974-48f6-919e-6de74d23d5b0")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7980,12 +7954,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "78221749-e171-4af8-99ee-47a19a0a7f59")
+			(uuid "5e2d39c6-24a0-4520-9394-d6609a6b50fa")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8439,12 +8412,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "ed6d5e81-3731-4ac9-a978-ccddf501829a")
+			(uuid "56fdebb4-e1ab-4f8e-b2c8-70cafefd3ad2")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8654,12 +8626,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "33e58d8a-cc52-4fb4-88d1-2e5417513a07")
+			(uuid "7dfcdecb-a870-4a64-aecf-c3ced3dce4a9")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9147,12 +9118,11 @@
 				)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "3c82d334-4ac8-403a-b060-b3a4017e49f7")
+			(uuid "e2d8654e-68a7-43c6-bf49-8872f7142517")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9198,7 +9168,7 @@
 				(width 0.15)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "Cmts.User")
 			(uuid "dce55a7a-6910-4c7b-8c7f-233d9eb2defe")
 		)
@@ -9209,7 +9179,7 @@
 				(width 0.05)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "F.CrtYd")
 			(uuid "869ec20d-ced6-4f65-a9d3-6e2f7f6f7964")
 		)
@@ -9261,12 +9231,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Relay_THT:Relay_SPDT_Omron-G5LE-1"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "18fb0c39-4ade-4986-ac99-77b9da3bb82d")
+			(uuid "f12a3091-5c77-4da8-acaa-6cc13afbf0cc")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9647,12 +9616,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 180)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "e482f801-69fd-4d33-89a9-742fe5c15bc7")
+			(uuid "18486bd1-0fcc-4e96-a6da-56458ec71498")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9861,12 +9829,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "7399ce73-cfe3-461f-a850-fe5103f00a32")
+			(uuid "c619c850-d868-4aba-8543-89812aec7c71")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10077,12 +10044,11 @@
 				)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "e4cd8218-9c8c-4648-a867-5f25e5dcbb24")
+			(uuid "053b6d41-db54-4f72-9228-5938eb22b309")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10128,7 +10094,7 @@
 				(width 0.15)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "Cmts.User")
 			(uuid "9852abbc-65de-4a1a-9cb9-5ad75fce8a4d")
 		)
@@ -10139,7 +10105,7 @@
 				(width 0.05)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "F.CrtYd")
 			(uuid "90df2d9a-aa0c-4869-bc7d-9ce36a0e9b20")
 		)
@@ -10191,12 +10157,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "884904bc-3085-411e-8dae-13fd09cf2449")
+			(uuid "c1393079-8c5f-4efe-9cb4-97aeefea3a13")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10443,11 +10408,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 0 0 0)
+		(property "Footprint" ""
+			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "0326567e-c56f-43c6-ba6f-ad951b03bc07")
+			(uuid "d640c90a-164f-4110-b651-5653156aa40a")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10656,12 +10621,11 @@
 				)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "09c277b3-93e0-4306-ab71-14bd8750491d")
+			(uuid "087dc524-0226-43d9-bbe0-b02efb1e7c59")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10707,7 +10671,7 @@
 				(width 0.15)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "Cmts.User")
 			(uuid "12cb62bb-5be8-48d2-bb75-e5e6ce830c7b")
 		)
@@ -10718,7 +10682,7 @@
 				(width 0.05)
 				(type solid)
 			)
-			(fill none)
+			(fill no)
 			(layer "F.CrtYd")
 			(uuid "99edd6a1-ccb2-4de7-9787-3c3e517a6374")
 		)
@@ -10770,12 +10734,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "87ce1525-9626-40b9-970e-a780f4e4d98f")
+			(uuid "63a6206b-176e-4974-a9df-95cb69e89fe6")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11104,12 +11067,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 -90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "192a6fe4-ff0c-4d31-b5f9-dc115405930f")
+			(uuid "ecd8cdd3-d42d-476c-87d4-dc859d036605")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11318,12 +11280,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_CK_RS282G05A3"
+		(property "Footprint" ""
 			(at 0 0 180)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "5c3e56fb-58a8-4966-90dc-67ec8f2dc3ec")
+			(uuid "485814ac-8beb-4d1a-86d8-2ab37a5c6206")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11632,12 +11593,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_3-G-5,08_1x03_P5.08mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "1442cebe-55fe-41c3-9b26-0dc754683df0")
+			(uuid "24a92880-6cb8-4fb2-848b-6e66d96acef2")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12205,11 +12165,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "01e0c577-47e3-47c2-a1b3-6780fb550b00")
+			(uuid "1edd77f9-3609-4354-a692-208d49265512")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12416,12 +12376,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "1af721fa-4a01-4a84-9fd7-696a3c2af0b1")
+			(uuid "32c382e2-dd65-45d4-a63c-b76bf08d54cd")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12771,12 +12730,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "8c72cfee-a586-4b7e-a72d-563fcffeed55")
+			(uuid "ee98fe68-caee-4bc6-a4cf-b7b58e64156f")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13083,12 +13041,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "6ddc94d0-c49d-427c-ad38-c9c824ba8806")
+			(uuid "c714e028-be4f-41f5-be5d-7d7ae4fcc473")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13297,12 +13254,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "bfebdbbe-ea30-42cb-8314-de60f3ec8890")
+			(uuid "72b1329c-f81a-45c6-889c-c4f64621e7ee")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13511,12 +13467,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "e213dc0e-4e53-4af9-a29f-5d9e67c97fa5")
+			(uuid "9bb8c45d-493f-4203-bcc1-baac6efcd5d4")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13725,12 +13680,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" ""
 			(at 0 0 90)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "3a9362ea-dddf-4251-8485-09685fef7874")
+			(uuid "d1bb4b8e-2716-44c9-bb53-2f3662556e68")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13939,12 +13893,11 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+		(property "Footprint" ""
 			(at 0 0 0)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "a4494b1b-017c-4c4b-81bf-fde8b588c99f")
+			(uuid "636de044-6f30-47a3-8040-1805331ec8f9")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14412,10 +14365,9 @@
 		)
 		(property "Footprint" ""
 			(at 0 0 180)
-			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "d2f88378-0fe8-49e3-b6e6-1efcebecfc99")
+			(uuid "7aaebaf6-88e1-41a1-8d5d-1cf9320f170c")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14476,7 +14428,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.Mask")
 			(uuid "6eaa6019-d13f-483a-9376-0d5f4baac179")
 		)
@@ -14508,7 +14460,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.Mask")
 			(uuid "6c087cee-bb99-457f-ab94-c6e17694d78a")
 		)
@@ -14548,7 +14500,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.Mask")
 			(uuid "4796ba58-057c-4140-ba9b-46596f14965b")
 		)
@@ -14568,7 +14520,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "2e62382e-49aa-4af1-ad68-9b3625e811bd")
 		)
@@ -14594,7 +14546,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "bb333bec-ec4c-41d0-8b52-658a087d38d2")
 		)
@@ -14622,7 +14574,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "7f0a9673-1b94-4bc9-ab59-0a05f0cdcda2")
 		)
@@ -14649,7 +14601,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "e047cee9-1945-4cdc-af04-a5cb09d5b0bf")
 		)
@@ -14680,7 +14632,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "a8c3599f-8d63-4be1-8c96-43537d892b15")
 		)
@@ -14712,7 +14664,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "b5c5a5c8-a42c-4d23-9673-de4c86a920df")
 		)
@@ -14749,7 +14701,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "395b00b6-4c07-43ca-aafe-ef216e7f2919")
 		)
@@ -14784,7 +14736,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "9e42d7e2-7947-4189-8de3-a1a8be86b3fe")
 		)
@@ -14824,7 +14776,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "59784a5e-130a-44c2-8f9d-8e3032e3ff97")
 		)
@@ -14862,7 +14814,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "61a547a2-6791-4ecb-9ad0-cd74186a4e64")
 		)
@@ -14905,7 +14857,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "7d186d3b-24b8-4b12-92c8-819ea7e6d0d1")
 		)
@@ -14951,7 +14903,7 @@
 				(width 0)
 				(type solid)
 			)
-			(fill solid)
+			(fill yes)
 			(layer "B.SilkS")
 			(uuid "9469861f-e585-4e9d-9e4d-2362810b29bf")
 		)
@@ -14966,7 +14918,7 @@
 			(width 0.15)
 			(type solid)
 		)
-		(fill solid)
+		(fill yes)
 		(layer "B.Mask")
 		(uuid "2e820dd7-8ed0-4d34-b8e5-70b44ff446ef")
 	)
