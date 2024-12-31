@@ -37,8 +37,7 @@ result = (result
           .faces(">Z")
           .transformed(offset=(0, 2*th1+th2, wh_height), rotate=(90, 180, 0))
           .rarray(wh_dist, 1, 2, 1)
-          #.circle(2).extrude(50)
-          .cskHole(4.5, 8, 82)
+          .cskHole(4.5, 9, 82)
           )
 
 
