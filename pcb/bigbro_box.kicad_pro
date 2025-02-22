@@ -280,7 +280,16 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "power_pin_not_driven|3352800|393700|d3f1aea2-14de-4313-bed1-b574231ef622|00000000-0000-0000-0000-000000000000|/212a0d71-cc7b-49f8-b4ca-a935e5355dca|/212a0d71-cc7b-49f8-b4ca-a935e5355dca|",
+        ""
+      ],
+      [
+        "power_pin_not_driven|3352800|444500|81f8e943-50c8-4be4-a5d9-070cca31d344|00000000-0000-0000-0000-000000000000|/212a0d71-cc7b-49f8-b4ca-a935e5355dca|/212a0d71-cc7b-49f8-b4ca-a935e5355dca|",
+        ""
+      ]
+    ],
     "meta": {
       "version": 0
     },
@@ -492,7 +501,7 @@
       "similar_labels": "warning",
       "similar_power": "warning",
       "simulation_model_issue": "ignore",
-      "single_global_label": "ignore",
+      "single_global_label": "error",
       "unannotated": "error",
       "unconnected_wire_endpoint": "warning",
       "unit_value_mismatch": "error",
@@ -506,7 +515,7 @@
   },
   "meta": {
     "filename": "bigbro_box.kicad_pro",
-    "version": 2
+    "version": 3
   },
   "net_settings": {
     "classes": [
