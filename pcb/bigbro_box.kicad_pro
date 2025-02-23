@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.3,
-          "height": 0.6,
-          "width": 0.6
+          "drill": 3.2,
+          "height": 3.2,
+          "width": 3.2
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -61,19 +61,31 @@
       ],
       "drc_exclusions": [
         [
-          "items_not_allowed|161000000|66034000|a8342540-40f5-4745-8fe3-2d1aa7594185|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
-          "items_not_allowed|161037188|62985894|a0ac3e1e-8bbb-47ba-bae5-835bdd2e4f8e|00000000-0000-0000-0000-000000000000",
-          ""
-        ],
-        [
           "items_not_allowed|161080540|103970506|9440969e-044d-45be-a799-3debf8518c63|00000000-0000-0000-0000-000000000000",
           ""
         ],
         [
-          "starved_thermal|128778000|60452000|4c72261a-b790-400c-b915-c9a892d2fe8a|52552b1e-8eeb-4f41-9ed5-b7bc89752b52|F.Cu",
+          "silk_edge_clearance|100877500|82650000|35723627-79eb-463c-bca8-a37a62aeb334|89ed973c-fd28-4cfe-b55d-d1ca5e805ce1",
+          ""
+        ],
+        [
+          "silk_edge_clearance|90700000|77800000|2185d067-b24e-48ab-b890-4b81b586aa7b|5af5aba0-9275-4fba-a76e-1541ec7a07f9",
+          ""
+        ],
+        [
+          "silk_edge_clearance|90700000|78900000|2185d067-b24e-48ab-b890-4b81b586aa7b|1aca5a93-e128-405c-a7e8-d9a6a812ae78",
+          ""
+        ],
+        [
+          "silk_edge_clearance|96027500|85000000|2b223e45-0abb-44aa-9ad8-2831368b52c5|525fe207-c881-45b3-af93-0db18c828ac9",
+          ""
+        ],
+        [
+          "silk_edge_clearance|96027500|89500000|15d18116-6ee7-47f2-913b-d25163209ed8|3dc9d9f0-4c5b-4037-8edf-4257fe6bb0bc",
+          ""
+        ],
+        [
+          "starved_thermal|115061293|72390707|4c72261a-b790-400c-b915-c9a892d2fe8a|424cd866-19e7-4650-b843-b2170e46afa7|B.Cu",
           ""
         ]
       ],
@@ -115,9 +127,9 @@
         "missing_footprint": "warning",
         "net_conflict": "warning",
         "nonmirrored_text_on_back_layer": "warning",
-        "npth_inside_courtyard": "ignore",
+        "npth_inside_courtyard": "error",
         "padstack": "error",
-        "pth_inside_courtyard": "ignore",
+        "pth_inside_courtyard": "error",
         "shorting_items": "error",
         "silk_edge_clearance": "warning",
         "silk_over_copper": "warning",
