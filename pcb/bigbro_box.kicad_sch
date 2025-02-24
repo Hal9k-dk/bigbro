@@ -7375,6 +7375,16 @@
 	)
 	(wire
 		(pts
+			(xy 36.83 24.13) (xy 36.83 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1bda7489-4692-4c98-8481-d92e6ad91726")
+	)
+	(wire
+		(pts
 			(xy 181.61 29.21) (xy 181.61 25.4)
 		)
 		(stroke
@@ -9505,6 +9515,16 @@
 	)
 	(wire
 		(pts
+			(xy 36.83 34.29) (xy 36.83 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fab9f8db-fe35-4698-b671-788fccf17347")
+	)
+	(wire
+		(pts
 			(xy 351.79 91.44) (xy 351.79 96.52)
 		)
 		(stroke
@@ -10835,6 +10855,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C14676"
+			(at 232.41 146.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8b0acc78-eff5-4914-8357-387fe5b9ee12")
 		)
@@ -11102,6 +11131,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C96446"
+			(at 387.35 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9fe09bb2-d1da-44df-a0d9-27650ba89ee8")
 		)
@@ -11112,6 +11150,72 @@
 			(project "bigbro_box"
 				(path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
 					(reference "C2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 36.83 24.13 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0e1e4814-52f0-43fd-b61d-c4a6088c453b")
+		(property "Reference" "#PWR015"
+			(at 36.83 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 36.83 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 36.83 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 36.83 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power flag, +3.3V"
+			(at 36.83 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "dfda8fc9-4f03-4c65-b775-0cce7dffe72d")
+		)
+		(instances
+			(project ""
+				(path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+					(reference "#PWR015")
 					(unit 1)
 				)
 			)
@@ -11486,6 +11590,24 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C15401"
+			(at 325.12 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Field6" ""
+			(at 325.12 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "dcef671d-38d6-4ff0-a431-7fca639a6863")
 		)
@@ -11509,7 +11631,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "1dc3c3b7-1265-43e2-ab7c-46f81747b011")
 		(property "Reference" "J7"
@@ -11840,6 +11962,24 @@
 			)
 		)
 		(property "Description" ""
+			(at 76.2 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C14676"
+			(at 76.2 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Field6" ""
 			(at 76.2 167.64 0)
 			(effects
 				(font
@@ -12213,6 +12353,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 260.35 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22765"
 			(at 260.35 120.65 0)
 			(effects
 				(font
@@ -12957,6 +13106,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C23162"
+			(at 68.58 175.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f8a24745-d15b-4c36-ba1d-55166b1cb688")
 		)
@@ -13215,6 +13373,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 130.81 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C144394"
 			(at 130.81 35.56 0)
 			(effects
 				(font
@@ -13576,6 +13743,24 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C37208"
+			(at 284.48 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Field6" ""
+			(at 284.48 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "54d9ad28-c881-4366-95cc-4b4e2cebce52")
 		)
@@ -13852,6 +14037,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 232.41 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C14676"
+			(at 232.41 132.08 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14409,6 +14603,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C14663"
+			(at 182.88 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "68c1aceb-d8bc-4284-bf35-13a23c646817")
 		)
@@ -14468,6 +14671,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 73.66 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C95209"
 			(at 73.66 59.69 0)
 			(effects
 				(font
@@ -14718,6 +14930,15 @@
 		)
 		(property "Description" ""
 			(at 328.93 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C14676"
+			(at 328.93 101.6 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15068,6 +15289,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 35.56 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15401"
 			(at 35.56 130.81 0)
 			(effects
 				(font
@@ -15543,6 +15773,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 232.41 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C14676"
+			(at 232.41 116.84 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16184,6 +16423,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C5362360"
+			(at 260.35 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "7ba3f9c1-1daa-44d7-811d-d0b2edfbd648")
 		)
@@ -16431,6 +16679,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 36.83 36.83 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e5a67aea-8c33-403c-b016-edcdc8153f92")
+		(property "Reference" "#PWR016"
+			(at 36.83 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 36.83 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 36.83 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 36.83 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power flag, ground"
+			(at 36.83 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2c1b22b1-49d2-4843-a266-2637f085bb77")
+		)
+		(instances
+			(project ""
+				(path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+					(reference "#PWR016")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Transistor_BJT:MMBT3904")
 		(at 223.52 132.08 0)
 		(mirror y)
@@ -16508,6 +16822,85 @@
 	)
 	(symbol
 		(lib_id "Device:C")
+		(at 36.83 30.48 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ed0d2c4d-d9f6-4c31-966f-e9c156aa2f5c")
+		(property "Reference" "C6"
+			(at 40.64 29.845 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100n"
+			(at 40.64 32.385 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "PCM_Capacitor_SMD_AKL:C_0603_1608Metric"
+			(at 37.7952 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 36.83 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 36.83 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C14663"
+			(at 36.83 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "75add1b4-c8f0-44b6-8fd4-d081e7dcaaea")
+		)
+		(pin "2"
+			(uuid "7a5bcf46-cd9c-4b69-9195-cf3dbca2cf84")
+		)
+		(instances
+			(project "bigbro_box"
+				(path "/212a0d71-cc7b-49f8-b4ca-a935e5355dca"
+					(reference "C6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
 		(at 140.97 134.62 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -16552,6 +16945,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 140.97 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C14663"
 			(at 140.97 134.62 0)
 			(effects
 				(font
@@ -16687,6 +17089,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 323.85 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22843"
 			(at 323.85 88.9 0)
 			(effects
 				(font
@@ -17262,6 +17673,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 367.03 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15849"
 			(at 367.03 43.18 0)
 			(effects
 				(font
