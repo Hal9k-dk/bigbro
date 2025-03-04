@@ -211,8 +211,8 @@ void Controller::check_card()
         break;
                
     case Card_cache::Access::Error:
-        Slack_writer::instance().send_message(format(":computer_rage: (%s) Internal error checking card: %s",
-                                                     get_identifier().c_str(), result.error_msg.c_str()));
+        Slack_writer::instance().send_message(format(":computer_rage: (%s) Internal error checking card",
+                                                     get_identifier().c_str()));
         state = State::not_allowed;
         user_name = "[error]";
         break;

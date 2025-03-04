@@ -46,18 +46,18 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
             if (ui.allowed)
             {
                 Logger::instance().log_backend(ui.user_id, "Granted access");
-                return Result(Access::Allowed, ui.user_int_id, "",
-                              ui.user_name);
+                return Result(Access::Allowed, ui.user_int_id, ui.user_name);
             }
             Logger::instance().log_backend(ui.user_id, "Denied access");
-            return Result(Access::Forbidden, ui.user_int_id, "",
-                          ui.user_name);
+            return Result(Access::Forbidden, ui.user_int_id, ui.user_name);
         }
-        Logger::instance().log(format(CARD_ID_FORMAT ": stale", id));
+        const auto last_update_s = std::chrono::time_point_cast<std::chrono::seconds>(ui.last_update);
+        const auto last_update_v = std::chrono::duration_cast<std::chrono::seconds>(last_update_s.time_since_epoch());
+        Logger::instance().log(format(CARD_ID_FORMAT ": stale %ld", id, (long) last_update_v.count()));
         // Cache entry is outdated
-        return Result(Access::Error, 0, "", "");
+        return Result(Access::Error, 0, "");
     }
-    return Result(Access::Unknown, 0, "", "");
+    return Result(Access::Unknown, 0, "");
 }
 
 Card_cache::Card_id Card_cache::get_id_from_string(const std::string& s)

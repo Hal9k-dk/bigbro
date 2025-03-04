@@ -31,7 +31,6 @@ public:
     {
         Access access;
         int user_id; // internal ID
-        std::string error_msg;
         std::string user_name;
     };
 
