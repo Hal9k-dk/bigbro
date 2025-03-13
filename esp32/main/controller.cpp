@@ -58,6 +58,8 @@ void Controller::run()
 
     display.clear();
 
+    const auto start_time = util::now();
+
 #ifdef DEBUG_HEAP
     ESP_ERROR_CHECK(heap_trace_start(HEAP_TRACE_LEAKS));
     int loops = 0;
@@ -70,14 +72,31 @@ void Controller::run()
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
+        const auto now = util::now();
+
         display.update();
         if (state != State::idle)
             set_backlight(255);
-        else if (util::now() - last_fade_update >= BACKLIGHT_FADE_PERIOD)
+        else if (now - last_fade_update >= BACKLIGHT_FADE_PERIOD)
         {
-            last_fade_update = util::now();
+            last_fade_update = now;
             fade_to = fade_to == BACKLIGHT_FADE_MIN ? BACKLIGHT_FADE_MAX : BACKLIGHT_FADE_MIN;
             fade_backlight(fade_to, BACKLIGHT_FADE_PERIOD);
+
+            const auto since_start = now - start_time;
+            if (since_start > std::chrono::minutes(15))
+            {
+                const auto tse = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch());
+                const auto hms = std::chrono::hh_mm_ss<std::chrono::seconds>(tse);
+                if (hms.hours() == std::chrono::hours(4) &&
+                    hms.minutes() == std::chrono::minutes(44))
+                {
+                    Logger::instance().log("Scheduled reboot");
+                    display.set_status("Rebooting", RED);
+                    display.update();
+                    vTaskDelay(60000 / portTICK_PERIOD_MS);
+                }
+            }
         }
 
         const auto old_card_id = card_id;
