@@ -5,7 +5,7 @@
    height="210.007200mm"
    viewBox="0.000000 0.000000 297.002200 210.007200"
    id="svg146"
-   sodipodi:docname="bigbro_box-F_Paste.svg"
+   sodipodi:docname="stencil.svg"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -23,13 +23,13 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="28.248251"
-     inkscape:cx="429.14162"
-     inkscape:cy="411.0166"
-     inkscape:window-width="2560"
-     inkscape:window-height="1382"
+     inkscape:zoom="12.401945"
+     inkscape:cx="468.59584"
+     inkscape:cy="302.69445"
+     inkscape:window-width="1920"
+     inkscape:window-height="1029"
      inkscape:window-x="0"
-     inkscape:window-y="480"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg146" />
   <title
@@ -321,25 +321,25 @@
      d="m 104.8821,107.2949 -0.0762,-0.0152 -0.0646,-0.0432 -0.0432,-0.0646 -0.0152,-0.0762 v -0.3984 l 0.0152,-0.0762 0.0432,-0.0646 0.0646,-0.0432 0.0762,-0.0152 h 0.5478 l 0.0762,0.0152 0.0646,0.0432 0.0432,0.0646 0.0152,0.0762 v 0.3984 l -0.0152,0.0762 -0.0432,0.0646 -0.0646,0.0432 -0.0762,0.0152 z"
      id="path146" />
   <rect
-     style="fill:none;stroke:#000000;stroke-width:0.1;stroke-dasharray:none"
+     style="fill:none;stroke:#000000;stroke-width:0.116442;stroke-dasharray:none"
      id="rect146"
      width="17.320562"
-     height="0.56199998"
+     height="0.76200002"
      x="124.80317"
-     y="71.083481" />
+     y="71" />
   <rect
-     style="fill:none;stroke:#000000;stroke-width:0.1;stroke-dasharray:none"
+     style="fill:none;stroke:#000000;stroke-width:0.116442;stroke-dasharray:none"
      id="rect147"
      width="17.320562"
-     height="0.56199998"
+     height="0.76200002"
      x="124.80317"
-     y="88.603973" />
+     y="88.5" />
   <rect
-     style="fill:none;stroke:#000000;stroke-width:0.1;stroke-dasharray:none"
+     style="fill:none;stroke:#000000;stroke-width:0.109975;stroke-dasharray:none"
      id="rect148"
-     width="0.66145831"
+     width="0.80000001"
      height="12.270052"
-     x="123.65964"
+     x="123.56"
      y="73.951042" />
   <rect
      style="fill:none;stroke:#000000;stroke-width:0.1;stroke-dasharray:none"
