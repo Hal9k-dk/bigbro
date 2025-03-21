@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.16)
 add_compile_options(-Wno-missing-field-initializers)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(bigbro)
+project(bigbro2)
 
 # Create a SPIFFS image from the contents of the 'font' directory
 # that fits the partition named 'font'. FLASH_IN_PROJECT indicates that
