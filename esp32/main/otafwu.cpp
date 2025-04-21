@@ -172,9 +172,16 @@ bool check_ota_update(class Display& display)
                     }
                     if (memcmp(new_app_info.version, running_app_info.version, sizeof(new_app_info.version)) == 0)
                     {
-                        ESP_LOGW(TAG, "Current running version is the same as a new. We will not continue the update.");
-                        display.add_progress("No new version");
-                        return true;
+                        if (gpio_get_level((gpio_num_t) 0))
+                        {
+                            ESP_LOGW(TAG, "Current running version is the same as a new. We will not continue the update.");
+                            display.add_progress("No new version");
+                            return true;
+                        }
+                        else
+                        {
+                            ESP_LOGI(TAG, "Forcing update");
+                        }
                     }
 
                     image_header_was_checked = true;
