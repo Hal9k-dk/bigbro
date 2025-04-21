@@ -16,6 +16,7 @@ static char acs_token[80];
 static char gateway_token[80];
 static char slack_token[80];
 static wifi_creds_t wifi_creds;
+static bool current_sense_enabled;
 
 void clear_wifi_credentials()
 {
@@ -75,6 +76,15 @@ void set_slack_token(const char* token)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, SLACK_TOKEN_KEY, token));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
+    nvs_close(my_handle);
+}
+
+void set_current_sense_enabled(bool enabled)
+{
+    nvs_handle my_handle;
+    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
+    ESP_ERROR_CHECK(nvs_set_u8(my_handle, CUR_SENSE_KEY, static_cast<uint8_t>(enabled)));
     ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
 }
@@ -143,6 +153,11 @@ wifi_creds_t get_wifi_creds()
     return wifi_creds;
 }
 
+bool get_current_sense_enabled()
+{
+    return current_sense_enabled;
+}
+
 void init_nvs()
 {
     esp_err_t ret = nvs_flash_init();
@@ -166,6 +181,15 @@ void init_nvs()
         gateway_token[0] = 0;
     if (!get_nvs_string(my_handle, SLACK_TOKEN_KEY, slack_token, sizeof(slack_token)))
         slack_token[0] = 0;
+    uint8_t value = 0;
+    if (nvs_get_u8(my_handle, CUR_SENSE_KEY, &value) != ESP_OK)
+    {
+        ESP_LOGW(TAG, "NVS value %s not found", CUR_SENSE_KEY);
+        current_sense_enabled = false;
+    }
+    else
+        current_sense_enabled = value;
+    ESP_LOGI(TAG, "Current sense: %d", current_sense_enabled);
     nvs_close(my_handle);
 }
 

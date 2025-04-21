@@ -190,6 +190,31 @@ int set_slack_credentials(int argc, char** argv)
     return 0;
 }
 
+struct
+{
+    struct arg_int* enabled;
+    struct arg_end* end;
+} set_current_sense_args;
+
+static int set_current_sense(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_current_sense_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_current_sense_args.end, argv[0]);
+        return 1;
+    }
+    const auto enabled = set_current_sense_args.enabled->ival[0];
+    if (enabled < 0 || enabled > 1)
+    {
+        printf("ERROR: Invalid value for 'enabled'\n");
+        return 1;
+    }
+    set_current_sense_enabled(enabled);
+    printf("OK: Current sense enabled set to %d\n", enabled);
+    return 0;
+}
+
 static int reboot(int, char**)
 {
     printf("Reboot...\n");
@@ -221,10 +246,10 @@ static int read_rfid(int, char**)
 
 static int read_current(int, char**)
 {
-    for (int n = 0; n < 100; ++n)
+    for (int n = 0; n < 10; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
-        printf("Current %f\n", read_current_sensor());
+        printf("Current %d\n", read_current_sensor());
     }
     return 0;
 }
@@ -346,17 +371,17 @@ int test_backlight(int, char**)
 
 void initialize_console()
 {
-    /* Disable buffering on stdin */
+    // Disable buffering on stdin
     setvbuf(stdin, NULL, _IONBF, 0);
 
-    /* Minicom, screen, idf_monitor send CR when ENTER key is pressed */
+    // Minicom, screen, idf_monitor send CR when ENTER key is pressed
     uart_vfs_dev_port_set_rx_line_endings(0, ESP_LINE_ENDINGS_CR);
-    /* Move the caret to the beginning of the next line on '\n' */
+    // Move the caret to the beginning of the next line on '\n'
     uart_vfs_dev_port_set_tx_line_endings(0, ESP_LINE_ENDINGS_CRLF);
 
-    /* Configure UART. Note that REF_TICK is used so that the baud rate remains
-     * correct while APB frequency is changing in light sleep mode.
-     */
+    // Configure UART. Note that REF_TICK is used so that the baud rate remains
+    // correct while APB frequency is changing in light sleep mode.
+    
     uart_config_t uart_config;
     memset(&uart_config, 0, sizeof(uart_config));
     uart_config.baud_rate = CONFIG_ESP_CONSOLE_UART_BAUDRATE;
@@ -366,14 +391,14 @@ void initialize_console()
     uart_config.source_clk = UART_SCLK_REF_TICK;
     ESP_ERROR_CHECK(uart_param_config((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM, &uart_config));
 
-    /* Install UART driver for interrupt-driven reads and writes */
+    // Install UART driver for interrupt-driven reads and writes
     ESP_ERROR_CHECK(uart_driver_install((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM,
                                          256, 0, 0, NULL, 0));
 
-    /* Tell VFS to use UART driver */
+    // Tell VFS to use UART driver
     uart_vfs_dev_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
 
-    /* Initialize the console */
+    // Initialize the console
     esp_console_config_t console_config;
     memset(&console_config, 0, sizeof(console_config));
     console_config.max_cmdline_args = 8;
@@ -383,17 +408,14 @@ void initialize_console()
 #endif
     ESP_ERROR_CHECK(esp_console_init(&console_config));
 
-    /* Configure linenoise line completion library */
-    /* Enable multiline editing. If not set, long commands will scroll within
-     * single line.
-     */
+    // Enable multiline editing    
     linenoiseSetMultiLine(1);
 
-    /* Tell linenoise where to get command completions and hints */
+    // Tell linenoise where to get command completions and hints
     linenoiseSetCompletionCallback(&esp_console_get_completion);
     linenoiseSetHintsCallback((linenoiseHintsCallback*) &esp_console_get_hint);
 
-    /* Set command history size */
+    // Set command history size
     linenoiseHistorySetMaxLen(100);
 }
 
@@ -543,7 +565,7 @@ void run_console(Display& display_arg)
     ESP_ERROR_CHECK(esp_console_cmd_register(&read_rfid_cmd));
 
     const esp_console_cmd_t read_current_cmd = {
-        .command = "current",
+        .command = "test_current",
         .help = "Read current sensor",
         .hint = nullptr,
         .func = &read_current,
@@ -578,6 +600,17 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_backlight_cmd));
 
+    set_current_sense_args.enabled = arg_int1(NULL, NULL, "<enabled>", "Enabled (0-1)");
+    set_current_sense_args.end = arg_end(2);
+    const esp_console_cmd_t set_current_sense_enabled_cmd = {
+        .command = "current_sense",
+        .help = "Set current sense enabled",
+        .hint = nullptr,
+        .func = &set_current_sense,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_current_sense_enabled_cmd));
+
     const char* prompt = LOG_COLOR_I "bigbro> " LOG_RESET_COLOR;
     int probe_status = linenoiseProbe();
     if (probe_status)
@@ -588,9 +621,6 @@ void run_console(Display& display_arg)
                "On Windows, try using Putty instead.\n");
         linenoiseSetDumbMode(1);
 #if CONFIG_LOG_COLORS
-        /* Since the terminal doesn't support escape sequences,
-         * don't use color codes in the prompt.
-         */
         prompt = "bigbro> ";
 #endif //CONFIG_LOG_COLORS
     }

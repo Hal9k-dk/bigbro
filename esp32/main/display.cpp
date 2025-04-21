@@ -2,7 +2,9 @@
 #include "defs.h"
 #include "display.h"
 #include "format.h"
+#include "hw.h"
 #include "logger.h"
+#include "nvs.h"
 
 #include <esp_heap_caps.h>
 
@@ -15,7 +17,6 @@ static constexpr const auto MESSAGE_DURATION = std::chrono::seconds(10);
 static constexpr const int TIME_HEIGHT = 16;
 
 // Top part of screen
-
 static constexpr const int STATUS_HEIGHT = CONFIG_WIDTH - TIME_HEIGHT;
 
 const char* Display::SMALL_FONT_ESC = "\001";
@@ -189,12 +190,13 @@ void Display::update()
     // Update time
     char stamp[Logger::TIMESTAMP_SIZE];
     last_clock = Logger::make_timestamp(stamp, false);
-    lcdDrawFillRect(tft, 0, 0,
-                    TIME_HEIGHT, CONFIG_HEIGHT, BLACK);
+    lcdDrawFillRect(tft, 0, clock_x,
+                    TIME_HEIGHT, CONFIG_HEIGHT - clock_x, BLACK);
     if (clock_x == 0)
     {
         const auto w = text_width(small_font, stamp);
         clock_x = CONFIG_WIDTH/2 - w/2;
+        cur_sense_x = text_width(small_font, "W") + 3;
     }
     lcdDrawString(tft, small_font, 0, clock_x,
                   reinterpret_cast<const uint8_t*>(stamp), CYAN);
@@ -205,6 +207,16 @@ void Display::update()
     else
         lcdDrawString(tft, small_font, 0, 0,
                       reinterpret_cast<const uint8_t*>("-"), RED);
+    // Current sense indicator
+    if (get_current_sense_enabled())
+    {
+        if (read_current_sensor())
+            lcdDrawString(tft, small_font, 0, cur_sense_x,
+                          reinterpret_cast<const uint8_t*>("C"), BLUE);
+        else
+            lcdDrawString(tft, small_font, 0, cur_sense_x,
+                          reinterpret_cast<const uint8_t*>("-"), WHITE);
+    }
 }
 
 // Local Variables:
