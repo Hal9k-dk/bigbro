@@ -5,6 +5,13 @@
 #include <driver/ledc.h>
 #include <esp_log.h>
 
+int edge_count = 0;
+
+static void IRAM_ATTR gpio_isr_handler(void*)
+{
+    ++edge_count;
+}
+
 void init_hardware()
 {
     // Inputs
@@ -12,13 +19,19 @@ void init_hardware()
     io_conf.intr_type = GPIO_INTR_DISABLE;
     io_conf.mode = GPIO_MODE_INPUT;
     // bit mask of the pins that you want to set
-    io_conf.pin_bit_mask =
-        (1ULL << PIN_CARD_SW) |
-        (1ULL << PIN_CURR_SENSE);
-    io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
+    io_conf.pin_bit_mask = 1ULL << PIN_CARD_SW;
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
+    io_conf.pin_bit_mask = 1ULL << PIN_CURR_SENSE;
+    io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE; // testing
+    io_conf.intr_type = GPIO_INTR_NEGEDGE;
+    ESP_ERROR_CHECK(gpio_config(&io_conf));
+
+    gpio_install_isr_service(0);
+    gpio_isr_handler_add(PIN_CURR_SENSE, gpio_isr_handler, (void*) 0);
+    
     // Outputs
     io_conf.mode = GPIO_MODE_OUTPUT;
     // bit mask of the pins that you want to set
@@ -95,21 +108,11 @@ void cursense_task(void*)
 {
     ESP_LOGI(TAG, "Current sense thread started");
 
-    int count = 0;
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
     while (1)
     {
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-        if (gpio_get_level(PIN_CURR_SENSE))
-        {
-            // No current sense input
-            ++count;
-            if (count > 50)
-                current_sensor_active = false;
-        }
-        else
-        {
-            current_sensor_active = true;
-            count = 0;
-        }
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+        ESP_LOGI(TAG, "Current sense edge count %d", edge_count);
     }
 }

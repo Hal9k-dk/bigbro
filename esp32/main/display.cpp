@@ -190,8 +190,8 @@ void Display::update()
     // Update time
     char stamp[Logger::TIMESTAMP_SIZE];
     last_clock = Logger::make_timestamp(stamp, false);
-    lcdDrawFillRect(tft, 0, clock_x,
-                    TIME_HEIGHT, CONFIG_HEIGHT - clock_x, BLACK);
+    lcdDrawFillRect(tft, 0, 0,
+                    TIME_HEIGHT, CONFIG_HEIGHT, BLACK);
     if (clock_x == 0)
     {
         const auto w = text_width(small_font, stamp);
@@ -201,31 +201,21 @@ void Display::update()
     lcdDrawString(tft, small_font, 0, clock_x,
                   reinterpret_cast<const uint8_t*>(stamp), CYAN);
     // WiFi indicator
-    const bool is_connected = is_wifi_connected();
-    if (is_connected != last_is_wifi_connected)
-        lcdDrawFillRect(tft, 0, 0,
-                        TIME_HEIGHT, cur_sense_x, BLACK);
-    if (is_connected)
+    if (is_wifi_connected())
         lcdDrawString(tft, small_font, 0, 0,
                       reinterpret_cast<const uint8_t*>("W"), CYAN);
     else
         lcdDrawString(tft, small_font, 0, 0,
                       reinterpret_cast<const uint8_t*>("-"), RED);
-    last_is_wifi_connected = is_connected;
     // Current sense indicator
     if (get_current_sense_enabled())
     {
-        const bool is_current_sensor_active = read_current_sensor();
-        if (is_current_sensor_active != last_is_current_sensor_active)
-            lcdDrawFillRect(tft, 0, cur_sense_x,
-                            TIME_HEIGHT, cur_sense_x, BLACK);
-        if (is_current_sensor_active)
+        if (read_current_sensor())
             lcdDrawString(tft, small_font, 0, cur_sense_x,
                           reinterpret_cast<const uint8_t*>("C"), WHITE);
         else
             lcdDrawString(tft, small_font, 0, cur_sense_x,
                           reinterpret_cast<const uint8_t*>("-"), WHITE);
-        last_is_current_sensor_active = is_current_sensor_active;
     }
 }
 
