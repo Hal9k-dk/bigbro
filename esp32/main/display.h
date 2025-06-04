@@ -56,4 +56,6 @@ private:
     time_t last_clock = 0;
     int clock_x = 0;
     int cur_sense_x = 0;
+    bool last_is_wifi_connected = false;
+    bool last_is_current_sensor_active = false;
 };

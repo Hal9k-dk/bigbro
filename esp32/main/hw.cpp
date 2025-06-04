@@ -107,6 +107,9 @@ void cursense_task(void*)
                 current_sensor_active = false;
         }
         else
+        {
             current_sensor_active = true;
+            count = 0;
+        }
     }
 }
