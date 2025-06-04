@@ -3,6 +3,7 @@
 
 #include <freertos/FreeRTOS.h>
 #include <driver/ledc.h>
+#include <esp_log.h>
 
 void init_hardware()
 {
@@ -83,7 +84,29 @@ void fade_backlight(int backlight, int ms)
     ledc_fade_start(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, LEDC_FADE_NO_WAIT);
 }
 
+static bool current_sensor_active = false;
+
 bool read_current_sensor()
 {
-    return gpio_get_level(PIN_CURR_SENSE);
+    return current_sensor_active;
+}
+
+void cursense_task(void*)
+{
+    ESP_LOGI(TAG, "Current sense thread started");
+
+    int count = 0;
+    while (1)
+    {
+        vTaskDelay(10 / portTICK_PERIOD_MS);
+        if (gpio_get_level(PIN_CURR_SENSE))
+        {
+            // No current sense input
+            ++count;
+            if (count > 50)
+                current_sensor_active = false;
+        }
+        else
+            current_sensor_active = true;
+    }
 }

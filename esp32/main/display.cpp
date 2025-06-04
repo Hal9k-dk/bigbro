@@ -212,7 +212,7 @@ void Display::update()
     {
         if (read_current_sensor())
             lcdDrawString(tft, small_font, 0, cur_sense_x,
-                          reinterpret_cast<const uint8_t*>("C"), BLUE);
+                          reinterpret_cast<const uint8_t*>("C"), CYAN);
         else
             lcdDrawString(tft, small_font, 0, cur_sense_x,
                           reinterpret_cast<const uint8_t*>("-"), WHITE);
