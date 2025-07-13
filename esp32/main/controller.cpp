@@ -183,12 +183,44 @@ void Controller::handle_not_allowed_unknown()
 
 void Controller::handle_allowed()
 {
-    if (!switch_closed)
+    if (get_current_sense_enabled())
     {
-        state = State::idle;
-        return;
+        // Do not turn off until no current is used
+        if (read_current_sensor())
+        {
+            last_load_on_time = util::now();
+            return;
+        }
+        // Load seems to be turned off
+        const auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(util::now() - last_load_on_time);
+        if (elapsed > std::chrono::seconds(10))
+        {
+            printf("Load has been off for %d seconds\n", static_cast<int>(elapsed.count()));
+            state = State::powering_off;
+            return;
+        }
+    }
+    else
+    {
+        // Turn off as soon as card is removed
+        if (!switch_closed)
+        {
+            state = State::idle;
+            return;
+        }
     }
     set_relay(true);
+}
+
+void Controller::handle_powering_off()
+{
+    const auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(util::now() - last_load_on_time);
+    display.set_status(format("Power off\nin %d s", POWER_OFF_TIME_S - elapsed.count()), YELLOW);
+    if (elapsed > std::chrono::seconds(POWER_OFF_TIME_S))
+    {
+        printf("Power off\n");
+        state = State::idle;
+    }
 }
 
 void Controller::check_card()
@@ -204,6 +236,7 @@ void Controller::check_card()
         Logger::instance().log(format("Valid card " CARD_ID_FORMAT " present", card_id));
         state = State::allowed;
         user_name = result.user_name;
+        last_load_on_time = util::now();
         break;
             
     case Card_cache::Access::Forbidden:

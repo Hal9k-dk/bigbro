@@ -25,7 +25,6 @@ void init_hardware()
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
     io_conf.pin_bit_mask = 1ULL << PIN_CURR_SENSE;
-    io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE; // testing
     io_conf.intr_type = GPIO_INTR_NEGEDGE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
@@ -110,9 +109,22 @@ void cursense_task(void*)
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
 
+    auto last_edge_count = 0;
+    int off_count = 0;
     while (1)
     {
         vTaskDelay(100 / portTICK_PERIOD_MS);
-        ESP_LOGI(TAG, "Current sense edge count %d", edge_count);
+        if (edge_count != last_edge_count)
+        {
+            current_sensor_active = true;
+            off_count = 0;
+            last_edge_count = edge_count;
+        }
+        else
+        {
+            ++off_count;
+            if (off_count > 50)
+                current_sensor_active = false;
+        }
     }
 }

@@ -22,6 +22,8 @@ constexpr const auto PIN_RFID_RXD = (gpio_num_t) 17;
 
 constexpr const auto PIN_BACKLIGHT = (gpio_num_t) 14;
 
+constexpr const auto POWER_OFF_TIME_S = 60;
+
 extern char config_acs_token[];
 extern char config_instance;
 
