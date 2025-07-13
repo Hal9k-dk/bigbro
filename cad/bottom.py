@@ -84,27 +84,14 @@ standoff_d = 10
 standoff = round_standoff(standoff_d, standoff_h)
 pcb_x = -o_width/2 - 56 + 5
 pcb_y = -o_height/2 - 66 + 23
-standoff1 = (res
-             .workplaneFromTagged("o")
-             .transformed(offset=(pcb_x + 89, pcb_y + 74, sh_th+standoff_h/2))
-             .eachpoint(lambda loc: standoff.val().moved(loc), True))
-
-standoff2 = (res
-             .workplaneFromTagged("o")
-             .transformed(offset=(pcb_x + 63, pcb_y + 99, sh_th+standoff_h/2))
-             .eachpoint(lambda loc: standoff.val().moved(loc), True))
-
-standoff3 = (res
-             .workplaneFromTagged("o")
-             .transformed(offset=(pcb_x + 63, pcb_y + 161, sh_th+standoff_h/2))
-             .eachpoint(lambda loc: standoff.val().moved(loc), True))
-
-standoff4 = (res
-             .workplaneFromTagged("o")
-             .transformed(offset=(pcb_x + 104, pcb_y + 161, sh_th+standoff_h/2))
-             .eachpoint(lambda loc: standoff.val().moved(loc), True))
-
-res = res.union(standoff1).union(standoff2).union(standoff3).union(standoff4)
+for c in pcb_holes:
+    s = res
+    .workplaneFromTagged("o")
+    .transformed(offset=(pcb_x + c[0], pcb_y + c[1],
+                         sh_th+standoff_h/2))
+    .eachpoint(lambda loc: standoff.val().moved(loc), True)))
+    
+    res = res.union(s)
 
 res = (res
         .workplaneFromTagged("o")

@@ -47,3 +47,4 @@ gland_z = 15
 gland_cc = 30
 wh_dist = 40
 wh_height = 15
+pcb_holes = ((89, 74), (63, 99), (63, 161), (104, 161))
