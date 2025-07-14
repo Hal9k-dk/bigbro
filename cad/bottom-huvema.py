@@ -27,6 +27,7 @@ def round_standoff(d, h):
             .circle(insert_sr+.25).cutBlind(-max_d)
             )
 
+# basic shape
 res = (cq.Workplane("XY")
        .tag("o")
        .box(o_width, o_height, bottom_th, centered=(True, True, False))
@@ -62,20 +63,6 @@ res = (res
       .cutThruAll()
       )
 
-# cable hole
-res = (res
-       .workplaneFromTagged("o")
-       .transformed(offset=(0, - 53, 0))
-       .slot2D(40, 17).cutThruAll()
-      )
-
-# magnets
-res = (res
-       .workplaneFromTagged("o")
-       .rarray(50, 80, 2, 2)
-       .circle(10/2).cutBlind(2.2)
-       )
-
 # PCB standoffs
 standoff_h = 5
 standoff_d = 10
@@ -104,5 +91,18 @@ standoff4 = (res
              .eachpoint(lambda loc: standoff.val().moved(loc), True))
 
 res = res.union(standoff1).union(standoff2).union(standoff3).union(standoff4)
+
+# screw terminal hole 1
+res = (res
+       .workplaneFromTagged("o")
+       .transformed(offset=(17-1, -40, 0))
+       .rect(18, 10).cutThruAll()
+      )
+# screw terminal hole 1
+res = (res
+       .workplaneFromTagged("o")
+       .transformed(offset=(-7.5, -40, 0))
+       .rect(13, 10).cutThruAll()
+      )
 
 show_object(res)
