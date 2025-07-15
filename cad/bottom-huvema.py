@@ -95,14 +95,23 @@ res = res.union(standoff1).union(standoff2).union(standoff3).union(standoff4)
 # screw terminal hole 1
 res = (res
        .workplaneFromTagged("o")
-       .transformed(offset=(17-1, -40, 0))
+       .transformed(offset=(16, -40, 0))
        .rect(18, 10).cutThruAll()
+       .workplaneFromTagged("o")
+       .transformed(offset=(16 + 6.5/2, -46, 0))
+       .rect(2, 2).cutThruAll()
+       .workplaneFromTagged("o")
+       .transformed(offset=(16 - 6.5/2, -46, 0))
+       .rect(2, 2).cutThruAll()
       )
 # screw terminal hole 1
 res = (res
        .workplaneFromTagged("o")
        .transformed(offset=(-7.5, -40, 0))
        .rect(13, 10).cutThruAll()
+       .workplaneFromTagged("o")
+       .transformed(offset=(-7.5, -46, 0))
+       .rect(2, 2).cutThruAll()
       )
 
 show_object(res)
