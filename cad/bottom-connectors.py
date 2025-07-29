@@ -56,7 +56,7 @@ res = (res
       .rect(o_width - 2*mh_inset, o_height - 2*mh_inset, forConstruction=True)
       .vertices()
       .circle(screw_head_r)
-      .cutBlind(screw_head_h)
+      .cutBlind(screw_head_h+20)
       .rect(o_width - 2*mh_inset, o_height - 2*mh_inset, forConstruction=True)
       .vertices()
       .circle(screw_hole_r)
