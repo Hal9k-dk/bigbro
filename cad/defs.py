@@ -26,7 +26,7 @@ disp_wth = 3
 rod_d = 1 # clip protusion diameter
 # inserts and screws
 insert_l = 4.5
-insert_r = 4.2/2
+insert_r = 4.1/2
 insert_sr = 1.75
 screw_hole_r = 3.2/2
 screw_head_r = 3
@@ -47,4 +47,4 @@ gland_z = 15
 gland_cc = 30
 wh_dist = 40
 wh_height = 15
-pcb_holes = ((89, 74), (63, 99), (63, 161), (104, 161))
+pcb_holes = ((62, 69.6), (89, 106.6), (62, 161), (104, 161))
