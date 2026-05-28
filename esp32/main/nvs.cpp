@@ -17,6 +17,7 @@ static char gateway_token[80];
 static char slack_token[80];
 static wifi_creds_t wifi_creds;
 static bool current_sense_enabled;
+static char mqtt_address[80];
 
 void clear_wifi_credentials()
 {
@@ -89,6 +90,14 @@ void set_current_sense_enabled(bool enabled)
     nvs_close(my_handle);
 }
 
+void set_mqtt_address(const char* address)
+{
+    nvs_handle my_handle;
+    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
+    ESP_ERROR_CHECK(nvs_set_str(my_handle, MQTT_ADDRESS_KEY, address));
+    nvs_close(my_handle);
+}
+
 bool get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf_size)
 {
     auto err = nvs_get_str(my_handle, key, buf, &buf_size);
@@ -158,6 +167,11 @@ bool get_current_sense_enabled()
     return current_sense_enabled;
 }
 
+std::string get_mqtt_address()
+{
+    return mqtt_address;
+}
+
 void init_nvs()
 {
     esp_err_t ret = nvs_flash_init();
@@ -190,6 +204,8 @@ void init_nvs()
     else
         current_sense_enabled = value;
     ESP_LOGI(TAG, "Current sense: %d", current_sense_enabled);
+    if (!get_nvs_string(my_handle, MQTT_ADDRESS_KEY, mqtt_address, sizeof(mqtt_address)))
+        strcpy(mqtt_address, "imqtt.hal9k.dk");
     nvs_close(my_handle);
 }
 

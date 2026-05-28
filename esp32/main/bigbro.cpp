@@ -17,6 +17,7 @@
 #include "format.h"
 #include "hw.h"
 #include "logger.h"
+#include "mqtt.h"
 #include "nvs.h"
 #include "otafwu.h"
 #include "reader.h"
@@ -89,6 +90,7 @@ void app_main()
             xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(cursense_task, "cursense_task", 2*1024, NULL, 1, NULL);
+            start_mqtt(get_mqtt_address());
         }
     }
     

@@ -7,6 +7,7 @@
 #include "format.h"
 #include "hw.h"
 #include "logger.h"
+#include "mqtt.h"
 #include "nvs.h"
 #include "reader.h"
 #include "slack.h"
@@ -114,8 +115,12 @@ void Controller::run()
         it->second(this);
 
         if (state != old_state)
+        {
             printf("STATE: %d\n", static_cast<int>(state));
-
+            set_mqtt_status(format("acs-%s", get_identifier().c_str()),
+                            state == State::allowed ? "on" : "off");
+        }
+        
         std::string status_msg;
         uint16_t status_colour = WHITE;
         switch (state)
