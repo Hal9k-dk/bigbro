@@ -97,19 +97,23 @@ void app_main()
     xTaskCreate(rfid_task, "rfid_task", 4*1024, NULL, 5, NULL);
 
     printf("\n\nPress a key to enter console\n");
-    int debug = 0;
+    bool debug = false;
+    int keypresses = 0;
     for (int i = 0; i < 20; ++i)
     {
         const int c = getchar();
         if (c != EOF)
         {
             printf("Got: %d\n", c);
-            ++debug;
-            break;
+            if (keypresses > 3)
+            {
+                debug = true;
+                break;
+            }
         }
         vTaskDelay(100/portTICK_PERIOD_MS);
     }
-    if (debug >= 3)
+    if (debug)
         run_console(display);        // never returns
 
     Slack_writer::instance().send_message(format(":panopticon: BigBro %s (%s)",
