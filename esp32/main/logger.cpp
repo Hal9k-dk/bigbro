@@ -110,7 +110,6 @@ void Logger::log_sync(const char* stamp, const char* text)
         .path = "/acslog",
         .event_handler = http_event_handler,
         .transport_type = HTTP_TRANSPORT_OVER_SSL,
-        .crt_bundle_attach = esp_crt_bundle_attach,
     };
     std::lock_guard<std::mutex> g(http_mutex);
     esp_http_client_handle_t client = esp_http_client_init(&config);
@@ -187,7 +186,6 @@ void Logger::thread_body()
                     .path = "/api/v1/logs",
                     .event_handler = http_event_handler,
                     .transport_type = HTTP_TRANSPORT_OVER_SSL,
-                    .crt_bundle_attach = esp_crt_bundle_attach,
                 };
                 //ESP_LOGI(TAG, "Backend get mutex");
                 std::lock_guard<std::mutex> g(http_mutex);
@@ -236,7 +234,6 @@ void Logger::thread_body()
                     .path = "/api/v1/unknown_cards",
                     .event_handler = http_event_handler,
                     .transport_type = HTTP_TRANSPORT_OVER_SSL,
-                    .crt_bundle_attach = esp_crt_bundle_attach,
                 };
                 //ESP_LOGI(TAG, "unknown_cards get mutex");
                 std::lock_guard<std::mutex> g(http_mutex);

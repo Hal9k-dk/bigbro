@@ -90,7 +90,6 @@ bool check_ota_update(class Display& display)
         .timeout_ms = 3000,
         .event_handler = http_event_handler,
         .transport_type = HTTP_TRANSPORT_OVER_SSL,
-        .crt_bundle_attach = esp_crt_bundle_attach,
         .keep_alive_enable = true,
     };
 

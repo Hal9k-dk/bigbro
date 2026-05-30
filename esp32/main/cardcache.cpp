@@ -98,7 +98,6 @@ void Card_cache::thread_body()
             .event_handler = http_event_handler,
             .transport_type = HTTP_TRANSPORT_OVER_SSL,
             .user_data = &http_data,
-            .crt_bundle_attach = esp_crt_bundle_attach,
         };
         ESP_LOGI(TAG, "cardcache update begin");
         size_t size = 0;
