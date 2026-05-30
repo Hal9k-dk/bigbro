@@ -83,9 +83,18 @@ void app_main()
             Slack_writer::instance().set_token(get_slack_token());
             Slack_writer::instance().set_params(false); // testing
             Card_cache::instance().set_api_token(get_acs_token());
-            display.add_progress("OTA check");
-            if (!check_ota_update(display))
-                display.add_progress("FAILED!");
+            bool do_ota_check = gpio_get_level(PIN_EXT_1);
+            if (!do_ota_check)
+            {
+                display.add_progress("OTA disabled");
+                printf("OTA firmware update disabled by EXT1\n");
+            }
+            else
+            {
+                display.add_progress("OTA check");
+                if (!check_ota_update(display))
+                    display.add_progress("FAILED!");
+            }
             xTaskCreate(logger_task, "logger_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
@@ -104,7 +113,8 @@ void app_main()
         const int c = getchar();
         if (c != EOF)
         {
-            printf("Got: %d\n", c);
+            printf("Key: %d\n", c);
+            ++keypresses;
             if (keypresses > 3)
             {
                 debug = true;
