@@ -20,7 +20,6 @@ void set_current_sense_enabled(bool enabled);
 void set_mqtt_address(const char* address);
 
 void mount_spiffs(const char* path, const char* label, size_t max_files);
-void list_spiffs(const char* path);
 
 // Local Variables:
 // compile-command: "(cd ..; idf.py build)"

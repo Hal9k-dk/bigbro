@@ -214,22 +214,6 @@ void mount_spiffs(const char* path, const char* label, size_t max_files)
     ESP_LOGI(TAG, "Partition size: total: %d, used: %d", total, used);
 }
 
-void list_spiffs(const char* path)
-{
-    DIR* dir = opendir(path);
-    assert(dir != NULL);
-    while (true)
-    {
-        struct dirent*pe = readdir(dir);
-        if (!pe)
-            break;
-        ESP_LOGI(__FUNCTION__,
-                 "d_name=%s d_ino=%d d_type=%x", pe->d_name,
-                 pe->d_ino, pe->d_type);
-    }
-    closedir(dir);
-}
-
 // Local Variables:
 // compile-command: "(cd ..; idf.py build)"
 // End:

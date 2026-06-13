@@ -35,7 +35,6 @@ void app_main()
     printf("BigBro v %s\n", app_desc->version);
 
     mount_spiffs("/spiffs", "font", 10);
-    list_spiffs("/spiffs/");
     
     TFT_t tft;
     Display display(&tft);

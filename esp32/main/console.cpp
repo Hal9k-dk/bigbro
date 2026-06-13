@@ -218,6 +218,8 @@ static int reboot(int, char**)
     return 0;
 }
 
+#ifdef HW_TEST
+
 static int read_switch(int, char**)
 {
     for (int n = 0; n < 10; ++n)
@@ -305,6 +307,34 @@ static int test_display(int, char**)
     return 0;
 }
 
+static int test_backlight(int, char**)
+{
+    printf("Running backlight test\n");
+
+    if (0)
+    for (uint16_t i = 1; i < 3; i++)
+        for (int j = 0; j < 8; ++j)
+        {
+            const int backlight = 31 + j * 32;
+            printf("Backlight %d\n", backlight);
+            set_backlight(backlight);
+            vTaskDelay(500/portTICK_PERIOD_MS);
+        }
+
+    printf("Backlight fade from zero\n");
+    set_backlight(0);
+    vTaskDelay(500/portTICK_PERIOD_MS);
+    fade_backlight(255, 5000);
+    vTaskDelay(6000/portTICK_PERIOD_MS);
+    printf("Backlight fade to zero\n");
+    fade_backlight(0, 5000);
+    vTaskDelay(6000/portTICK_PERIOD_MS);
+    
+    return 0;
+}
+
+#endif
+
 static int test_logger(int argc, char**)
 {
     printf("Running logger test\n");
@@ -334,33 +364,6 @@ static int test_slack(int, char**)
     Slack_writer::instance().send_message(format("BigBro (%s) says hi",
                                                  get_identifier().c_str()));
 
-    return 0;
-}
-
-// static
-int test_backlight(int, char**)
-{
-    printf("Running backlight test\n");
-
-    if (0)
-    for (uint16_t i = 1; i < 3; i++)
-        for (int j = 0; j < 8; ++j)
-        {
-            const int backlight = 31 + j * 32;
-            printf("Backlight %d\n", backlight);
-            set_backlight(backlight);
-            vTaskDelay(500/portTICK_PERIOD_MS);
-        }
-
-    printf("Backlight fade from zero\n");
-    set_backlight(0);
-    vTaskDelay(500/portTICK_PERIOD_MS);
-    fade_backlight(255, 5000);
-    vTaskDelay(6000/portTICK_PERIOD_MS);
-    printf("Backlight fade to zero\n");
-    fade_backlight(0, 5000);
-    vTaskDelay(6000/portTICK_PERIOD_MS);
-    
     return 0;
 }
 
@@ -541,6 +544,8 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_slack_cmd));
 
+#ifdef HW_TEST
+    
     const esp_console_cmd_t read_switch_cmd = {
         .command = "switch",
         .help = "Read switch",
@@ -595,6 +600,8 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_backlight_cmd));
 
+#endif
+    
     set_current_sense_args.enabled = arg_int1(NULL, NULL, "<enabled>", "Enabled (0-1)");
     set_current_sense_args.end = arg_end(2);
     const esp_console_cmd_t set_current_sense_enabled_cmd = {
