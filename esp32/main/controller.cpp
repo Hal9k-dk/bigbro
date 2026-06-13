@@ -1,6 +1,7 @@
 #include "controller.h"
 
 #include "cJSON.h"
+#include "esp_app_desc.h"
 
 #include "defs.h"
 #include "display.h"
@@ -13,6 +14,8 @@
 #include "slack.h"
 
 #include <thread>
+
+static constexpr const char* TAG = "ctlr";
 
 #ifdef DEBUG_HEAP
 
@@ -92,7 +95,7 @@ void Controller::run()
                 if (hms.hours() == std::chrono::hours(4) &&
                     hms.minutes() == std::chrono::minutes(44))
                 {
-                    Logger::instance().log("Scheduled reboot");
+                    Mqtt::instance().log("Scheduled reboot");
                     display.set_status("Rebooting", RED);
                     display.update();
                     vTaskDelay(60000 / portTICK_PERIOD_MS);
@@ -103,7 +106,7 @@ void Controller::run()
         const auto old_card_id = card_id;
         card_id = get_and_clear_last_cardid();
         if (card_id && card_id != old_card_id)
-            Logger::instance().log(format("Card " CARD_ID_FORMAT " inserted", card_id));
+            Mqtt::instance().log(format("Card " CARD_ID_FORMAT " inserted", card_id));
 
         switch_closed = read_switch();
 
@@ -117,8 +120,28 @@ void Controller::run()
         if (state != old_state)
         {
             printf("STATE: %d\n", static_cast<int>(state));
-            set_mqtt_status(format("acs-%s", get_identifier().c_str()),
-                            state == State::allowed ? "on" : "off");
+            char timestamp[util::TIMESTAMP_SIZE];
+            util::make_timestamp(timestamp);
+            auto payload = cJSON_CreateObject();
+            cJSON_wrapper jw(payload);
+            auto jtimestamp = cJSON_CreateString(timestamp);
+            cJSON_AddItemToObject(payload, "timestamp", jtimestamp);
+
+            auto status = cJSON_CreateObject();
+            auto on = cJSON_CreateString(state == State::allowed ? "on" : "off");
+            cJSON_AddItemToObject(status, "on", on);
+            auto version = cJSON_CreateString(esp_app_get_description()->version);
+            cJSON_AddItemToObject(status, "version", version);
+            cJSON_AddItemToObject(payload, "data", status);
+            char* data = cJSON_PrintUnformatted(payload);
+            if (!data)
+            {
+                ESP_LOGE(TAG, "cJSON_Print() returned nullptr");
+                return;
+            }
+            cJSON_Print_wrapper pw(data);
+
+            Mqtt::instance().set_status(data);
         }
         
         std::string status_msg;
@@ -238,7 +261,7 @@ void Controller::check_card()
     case Card_cache::Access::Allowed:
         Slack_writer::instance().send_message(format(":key: (%s) Valid card " CARD_ID_FORMAT " present, access allowed",
                                                      get_identifier().c_str(), card_id));
-        Logger::instance().log(format("Valid card " CARD_ID_FORMAT " present", card_id));
+        Mqtt::instance().log(format("Valid card " CARD_ID_FORMAT " present", card_id));
         state = State::allowed;
         user_name = result.user_name;
         last_load_on_time = util::now();
@@ -250,7 +273,7 @@ void Controller::check_card()
             Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card " CARD_ID_FORMAT " inserted",
                                                          get_identifier().c_str(),
                                                          card_id));
-            Logger::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
+            Mqtt::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
         }
         state = State::not_allowed;
         user_name = result.user_name;

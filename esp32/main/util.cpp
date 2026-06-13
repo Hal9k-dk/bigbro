@@ -23,6 +23,21 @@ std::string strip_np(const std::string& s)
     return result;
 }
 
+time_t make_timestamp(char* stamp)
+{
+    time_t current = 0;
+    time(&current);
+    make_timestamp(current, stamp);
+    return current;
+}
+
+void make_timestamp(time_t t, char* stamp)
+{
+    struct tm timeinfo;
+    gmtime_r(&t, &timeinfo);
+    strftime(stamp, TIMESTAMP_SIZE, "%Y-%m-%dT%H:%M:%S", &timeinfo);
+}
+
 } // end namespace
 
 cJSON_wrapper::cJSON_wrapper(cJSON*& json)

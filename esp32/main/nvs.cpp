@@ -11,9 +11,10 @@
 #include <esp_vfs.h>
 #include <nvs_flash.h>
 
+static constexpr const char* TAG = "nvs";
+
 static char identifier[20];
 static char acs_token[80];
-static char gateway_token[80];
 static char slack_token[80];
 static wifi_creds_t wifi_creds;
 static bool current_sense_enabled;
@@ -63,15 +64,6 @@ void set_acs_token(const char* token)
     nvs_close(my_handle);
 }
 
-void set_gateway_token(const char* token)
-{
-    nvs_handle my_handle;
-    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    ESP_ERROR_CHECK(nvs_set_str(my_handle, GATEWAY_TOKEN_KEY, token));
-    ESP_ERROR_CHECK(nvs_commit(my_handle));
-    nvs_close(my_handle);
-}
-
 void set_slack_token(const char* token)
 {
     nvs_handle my_handle;
@@ -96,6 +88,7 @@ void set_mqtt_address(const char* address)
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, MQTT_ADDRESS_KEY, address));
     nvs_close(my_handle);
+    printf("Wrote to %s\n", MQTT_ADDRESS_KEY);
 }
 
 bool get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf_size)
@@ -104,6 +97,7 @@ bool get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf
     switch (err)
     {
     case ESP_OK:
+        printf("%s: found\n", key);
         return true;
     case ESP_ERR_NVS_NOT_FOUND:
         printf("%s: not found\n", key);
@@ -138,11 +132,6 @@ std::vector<std::pair<std::string, std::string>> parse_wifi_credentials(char* bu
 std::string get_acs_token()
 {
     return acs_token;
-}
-
-std::string get_gateway_token()
-{
-    return gateway_token;
 }
 
 std::string get_identifier()
@@ -191,8 +180,6 @@ void init_nvs()
         wifi_creds = parse_wifi_credentials(buf);
     if (!get_nvs_string(my_handle, ACS_TOKEN_KEY, acs_token, sizeof(acs_token)))
         acs_token[0] = 0;
-    if (!get_nvs_string(my_handle, GATEWAY_TOKEN_KEY, gateway_token, sizeof(gateway_token)))
-        gateway_token[0] = 0;
     if (!get_nvs_string(my_handle, SLACK_TOKEN_KEY, slack_token, sizeof(slack_token)))
         slack_token[0] = 0;
     uint8_t value = 0;
@@ -204,8 +191,14 @@ void init_nvs()
     else
         current_sense_enabled = value;
     ESP_LOGI(TAG, "Current sense: %d", current_sense_enabled);
-    if (!get_nvs_string(my_handle, MQTT_ADDRESS_KEY, mqtt_address, sizeof(mqtt_address)))
+    printf("Read from %s\n", MQTT_ADDRESS_KEY);
+    if (get_nvs_string(my_handle, MQTT_ADDRESS_KEY, mqtt_address, sizeof(mqtt_address)))
+        printf("MQTT: %s\n", mqtt_address);
+    else
+    {
+        printf("MQTT: not set\n");
         strcpy(mqtt_address, "imqtt.hal9k.dk");
+    }
     nvs_close(my_handle);
 }
 

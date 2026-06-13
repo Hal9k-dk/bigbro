@@ -24,6 +24,8 @@
 #include "slack.h"
 #include "sntp.h"
 
+static constexpr const char* TAG = "bigbro";
+
 extern "C"
 void app_main()
 {
@@ -79,11 +81,11 @@ void app_main()
             initialize_sntp();
             
             Logger::instance().set_api_token(get_acs_token());
-            Logger::instance().set_gateway_token(get_gateway_token());
             Slack_writer::instance().set_token(get_slack_token());
             Slack_writer::instance().set_params(false); // testing
             Card_cache::instance().set_api_token(get_acs_token());
             bool do_ota_check = gpio_get_level(PIN_EXT_1);
+            printf("EXT1: %d\n", do_ota_check);
             if (!do_ota_check)
             {
                 display.add_progress("OTA disabled");
@@ -99,7 +101,7 @@ void app_main()
             xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
             xTaskCreate(cursense_task, "cursense_task", 2*1024, NULL, 1, NULL);
-            start_mqtt(get_mqtt_address());
+            Mqtt::instance().start(get_mqtt_address());
         }
     }
     
@@ -135,9 +137,9 @@ void app_main()
     esp_log_level_set("wifi", ESP_LOG_ERROR);
 
     display.add_progress("Starting");
-    Logger::instance().log(format("ACS frontend %s (%s)",
-                                  app_desc->version,
-                                  get_identifier().c_str()));
+    Mqtt::instance().log(format("ACS frontend %s (%s)",
+                                app_desc->version,
+                                get_identifier().c_str()));
 
     Controller controller(display);
     display.clear();

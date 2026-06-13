@@ -2,10 +2,39 @@
 
 #include <string>
 
-void start_mqtt(const std::string& mqtt_address);
+#include "util.h"
 
-void log_mqtt(const std::string& msg);
+#include "mqtt_client.h"
 
-// /hal9k/acs/status/<ident>/<subtopic>
-void set_mqtt_status(const std::string& subtopic,
-                     const std::string& msg);
+/// MQTT singleton
+class Mqtt
+{
+public:
+    static Mqtt& instance();
+
+    void start(const std::string& mqtt_address);
+
+    void log(const std::string& msg);
+
+    void set_status(const char* data);
+
+private:
+    Mqtt() = default;
+
+    ~Mqtt() = default;
+
+    static void event_handler(void* handler_args,
+                              esp_event_base_t base,
+                              int32_t event_id,
+                              void* event_data);
+
+    void handle_data(const std::string& topic,
+                     const std::string& data);
+    
+    bool connected = false;
+    esp_mqtt_client_handle_t client = 0;
+};
+
+// Local Variables:
+// compile-command: "cd .. && idf.py build"
+// End:

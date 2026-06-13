@@ -5,6 +5,7 @@
 #include "format.h"
 #include "hw.h"
 #include "logger.h"
+#include "mqtt.h"
 #include "nvs.h"
 #include "reader.h"
 #include "slack.h"
@@ -144,31 +145,6 @@ struct
 {
     struct arg_str* token;
     struct arg_end* end;
-} set_gw_credentials_args;
-
-int set_gw_credentials(int argc, char** argv)
-{
-    int nerrors = arg_parse(argc, argv, (void**) &set_gw_credentials_args);
-    if (nerrors != 0)
-    {
-        arg_print_errors(stderr, set_gw_credentials_args.end, argv[0]);
-        return 1;
-    }
-    const auto token = set_gw_credentials_args.token->sval[0];
-    if (strlen(token) < 32)
-    {
-        printf("ERROR: Invalid token\n");
-        return 1;
-    }
-    set_gateway_token(token);
-    printf("OK: Gateway token set to %s\n", token);
-    return 0;
-}
-
-struct
-{
-    struct arg_str* token;
-    struct arg_end* end;
 } set_slack_credentials_args;
 
 int set_slack_credentials(int argc, char** argv)
@@ -187,6 +163,26 @@ int set_slack_credentials(int argc, char** argv)
     }
     set_slack_token(token);
     printf("OK: Slack token set to %s\n", token);
+    return 0;
+}
+
+struct
+{
+    struct arg_str* address;
+    struct arg_end* end;
+} set_mqtt_params_args;
+
+int set_mqtt_params(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_mqtt_params_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_mqtt_params_args.end, argv[0]);
+        return 1;
+    }
+    const auto address = set_mqtt_params_args.address->sval[0];
+    set_mqtt_address(address);
+    printf("OK: MQTT address set to %s\n", address);
     return 0;
 }
 
@@ -318,14 +314,13 @@ static int test_logger(int argc, char**)
         int count = 0;
         while (1)
         {
-            Logger::instance().log(format("BigBro test log: %d", count));
+            Mqtt::instance().log(format("BigBro test log: %d", count));
             ++count;
             vTaskDelay(60*1000/portTICK_PERIOD_MS);
         }
     }
     
-    Logger::instance().log("BigBro test log: normal");
-    Logger::instance().log_verbose("BigBro test log: verbose");
+    Mqtt::instance().log("BigBro test log: normal");
     Logger::instance().log_backend(42, "BigBro test log: backend");
     Logger::instance().log_unknown_card(0x12345678);
 
@@ -488,17 +483,6 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_acs_credentials_cmd));
 
-    set_gw_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Gateway token");
-    set_gw_credentials_args.end = arg_end(2);
-    const esp_console_cmd_t set_gw_credentials_cmd = {
-        .command = "gw",
-        .help = "Set gateway credentials",
-        .hint = nullptr,
-        .func = &set_gw_credentials,
-        .argtable = &set_gw_credentials_args
-    };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&set_gw_credentials_cmd));
-
     set_slack_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Slack token");
     set_slack_credentials_args.end = arg_end(2);
     const esp_console_cmd_t set_slack_credentials_cmd = {
@@ -509,6 +493,17 @@ void run_console(Display& display_arg)
         .argtable = &set_slack_credentials_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_slack_credentials_cmd));
+
+    set_mqtt_params_args.address = arg_str1(NULL, NULL, "<address>", "MQTT address");
+    set_mqtt_params_args.end = arg_end(2);
+    const esp_console_cmd_t set_mqtt_params_cmd = {
+        .command = "mqtt",
+        .help = "Set MQTT host",
+        .hint = nullptr,
+        .func = &set_mqtt_params,
+        .argtable = &set_mqtt_params_args
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_mqtt_params_cmd));
 
     const esp_console_cmd_t reboot_cmd = {
         .command = "reboot",

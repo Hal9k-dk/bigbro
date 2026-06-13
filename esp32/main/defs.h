@@ -9,7 +9,6 @@
 constexpr const char* IDENTIFIER_KEY = "id";
 constexpr const char* WIFI_KEY = "wifi";
 constexpr const char* ACS_TOKEN_KEY = "acs";
-constexpr const char* GATEWAY_TOKEN_KEY = "gwt";
 constexpr const char* SLACK_TOKEN_KEY = "slt";
 constexpr const char* CUR_SENSE_KEY = "cse";
 constexpr const char* MQTT_ADDRESS_KEY = "mqa";
@@ -30,8 +29,6 @@ constexpr const auto POWER_OFF_TIME_S = 60;
 
 extern char config_acs_token[];
 extern char config_instance;
-
-constexpr const char* TAG = "BIGBRO";
 
 #define CARD_ID_FORMAT "%010llX"
 

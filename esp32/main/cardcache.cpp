@@ -4,6 +4,7 @@
 #include "format.h"
 #include "http.h"
 #include "logger.h"
+#include "mqtt.h"
 #include "util.h"
 
 #include <memory>
@@ -11,6 +12,8 @@
 #include "cJSON.h"
 
 #include "esp_log.h"
+
+static constexpr const char* TAG = "cache";
 
 constexpr util::duration MAX_CACHE_AGE = std::chrono::minutes(15);
 
@@ -42,7 +45,7 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
     {
         if (util::now() - ui.last_update < MAX_CACHE_AGE)
         {
-            Logger::instance().log(format(CARD_ID_FORMAT " cached", id));
+            Mqtt::instance().log(format(CARD_ID_FORMAT " cached", id));
             if (ui.allowed)
             {
                 Logger::instance().log_backend(ui.user_id, "Granted access");
@@ -53,7 +56,7 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
         }
         const auto last_update_s = std::chrono::time_point_cast<std::chrono::seconds>(ui.last_update);
         const auto last_update_v = std::chrono::duration_cast<std::chrono::seconds>(last_update_s.time_since_epoch());
-        Logger::instance().log(format(CARD_ID_FORMAT ": stale %ld", id, (long) last_update_v.count()));
+        Mqtt::instance().log(format(CARD_ID_FORMAT ": stale %ld", id, (long) last_update_v.count()));
         // Cache entry is outdated
         return Result(Access::Error, 0, "");
     }
@@ -124,7 +127,7 @@ void Card_cache::thread_body()
             if (code != 200)
             {
                 ESP_LOGE(TAG, "Error: Unexpected response from /v3/permissions: %d", code);
-                Logger::instance().log(format("Error: Unexpected response from /v3/permissions: %d", code));
+                Mqtt::instance().log(format("Error: Unexpected response from /v3/permissions: %d", code));
                 continue;
             }
             auto root = cJSON_Parse(buffer.get());
@@ -132,13 +135,13 @@ void Card_cache::thread_body()
             if (!root)
             {
                 ESP_LOGE(TAG, "Error: Bad JSON from /v3/permissions: %s", buffer.get());
-                Logger::instance().log(format("Error: Bad JSON from /v3/permissions"));
+                Mqtt::instance().log(format("Error: Bad JSON from /v3/permissions"));
                 continue;
             }
             if (!cJSON_IsArray(root))
             {
                 ESP_LOGE(TAG, "Error: Response from /v3/permissions is not an array");
-                Logger::instance().log("Error: Response from /v3/permissions is not an array");
+                Mqtt::instance().log("Error: Response from /v3/permissions is not an array");
                 continue;
             }
             // Create new cache
@@ -149,42 +152,42 @@ void Card_cache::thread_body()
                 if (!cJSON_IsObject(it))
                 {
                     ESP_LOGE(TAG, "Error: Item from /v3/permissions is not an object");
-                    Logger::instance().log("Error: Item from /v3/permissions is not an object");
+                    Mqtt::instance().log("Error: Item from /v3/permissions is not an object");
                     continue;
                 }
                 auto card_id_node = cJSON_GetObjectItem(it, "card_id");
                 if (!cJSON_IsString(card_id_node))
                 {
                     ESP_LOGE(TAG, "Error: Item from /v3/permissions has no card_id");
-                    Logger::instance().log("Error: Item from /v3/permissions has no card_id");
+                    Mqtt::instance().log("Error: Item from /v3/permissions has no card_id");
                     continue;
                 }
                 auto id_node = cJSON_GetObjectItem(it, "id");
                 if (!cJSON_IsNumber(id_node))
                 {
                     ESP_LOGE(TAG, "Error: Item from /v3/permissions has no id");
-                    Logger::instance().log("Error: Item from /v3/permissions has no id");
+                    Mqtt::instance().log("Error: Item from /v3/permissions has no id");
                     continue;
                 }
                 auto int_id_node = cJSON_GetObjectItem(it, "int_id");
                 if (!cJSON_IsNumber(int_id_node))
                 {
                     ESP_LOGE(TAG, "Error: Item from /v3/permissions has no int_id");
-                    Logger::instance().log("Error: Item from /v3/permissions has no int_id");
+                    Mqtt::instance().log("Error: Item from /v3/permissions has no int_id");
                     continue;
                 }
                 auto name_node = cJSON_GetObjectItem(it, "name");
                 if (!cJSON_IsString(name_node))
                 {
                     ESP_LOGE(TAG, "Error: Item from /v3/permissions has no name");
-                    Logger::instance().log("Error: Item from /v3/permissions has no name");
+                    Mqtt::instance().log("Error: Item from /v3/permissions has no name");
                     continue;
                 }
                 auto allowed_node = cJSON_GetObjectItem(it, "allowed");
                 if (!cJSON_IsBool(allowed_node))
                 {
                     ESP_LOGE(TAG, "Error: Item from /v3/permissions has no allowed");
-                    Logger::instance().log("Error: Item from /v3/permissions has no allowed");
+                    Mqtt::instance().log("Error: Item from /v3/permissions has no allowed");
                     continue;
                 }
                 const auto card_id = get_id_from_string(card_id_node->valuestring);
@@ -203,7 +206,7 @@ void Card_cache::thread_body()
             }
             ESP_LOGI(TAG, "cardcache update end");
         }
-        Logger::instance().log(format("Card cache updated: %d cards", static_cast<int>(size)));
+        Mqtt::instance().log(format("Card cache updated: %d cards", static_cast<int>(size)));
 
         vTaskDelay(5*60*1000 / portTICK_PERIOD_MS);
     }

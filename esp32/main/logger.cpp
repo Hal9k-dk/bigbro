@@ -15,6 +15,8 @@
 
 #include <string.h>
 
+static constexpr const char* TAG = "log";
+
 Logger& Logger::instance()
 {
     static Logger the_instance;
@@ -24,11 +26,6 @@ Logger& Logger::instance()
 void Logger::set_api_token(const std::string& token)
 {
     api_token = token;
-}
-
-void Logger::set_gateway_token(const std::string& token)
-{
-    gw_token = token;
 }
 
 time_t Logger::make_timestamp(char* stamp, bool include_date)
@@ -46,30 +43,6 @@ void Logger::make_timestamp(time_t t, char* stamp, bool include_date)
     strftime(stamp, TIMESTAMP_SIZE,
              include_date ? "%Y-%m-%d %H:%M:%S" : "%H:%M:%S",
              &timeinfo);
-}
-
-void Logger::log(const std::string& s)
-{
-    char stamp[Logger::TIMESTAMP_SIZE];
-    make_timestamp(stamp);
-
-    Item item{ Item::Type::Debug };
-    strncpy(item.stamp, stamp, std::min<size_t>(Item::STAMP_SIZE, strlen(stamp)));
-    strncpy(item.text, s.c_str(), std::min<size_t>(Item::MAX_SIZE, s.size()));
-    std::lock_guard<std::mutex> g(mutex);
-    if (q.size() > 100)
-    {
-        ESP_LOGE(TAG, "Logger: Queue overflow");
-        return;
-    }
-    //ESP_LOGI(TAG, "Push log item");
-    q.push_front(item);
-}
-
-void Logger::log_verbose(const std::string& s)
-{
-    if (verbose)
-        log(s);
 }
 
 void Logger::log_backend(int user_id, const std::string& s)
@@ -102,51 +75,6 @@ void Logger::log_unknown_card(Card_id card_id)
     q.push_front(item);
 }
 
-void Logger::log_sync(const char* stamp, const char* text)
-{
-    //ESP_LOGI(TAG, "log_sync begin");
-    esp_http_client_config_t config {
-        .host = "acsgateway.hal9k.dk",
-        .path = "/acslog",
-        .event_handler = http_event_handler,
-        .transport_type = HTTP_TRANSPORT_OVER_SSL,
-        .crt_bundle_attach = esp_crt_bundle_attach,
-    };
-    std::lock_guard<std::mutex> g(http_mutex);
-    esp_http_client_handle_t client = esp_http_client_init(&config);
-    Http_client_wrapper w(client);
-
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    auto payload = cJSON_CreateObject();
-    cJSON_wrapper jw(payload);
-    auto jtoken = cJSON_CreateString(gw_token.c_str());
-    cJSON_AddItemToObject(payload, "token", jtoken);
-    auto jstamp = cJSON_CreateString(stamp);
-    cJSON_AddItemToObject(payload, "timestamp", jstamp);
-    auto jtext = cJSON_CreateString(text);
-    cJSON_AddItemToObject(payload, "text", jtext);
-    auto jidentifier = cJSON_CreateString(get_identifier().c_str());
-    cJSON_AddItemToObject(payload, "device", jidentifier);
-
-    char* data = cJSON_Print(payload);
-    if (!data)
-    {
-        ESP_LOGE(TAG, "Logger: cJSON_Print() returned nullptr");
-        return;
-    }
-    cJSON_Print_wrapper pw(data);
-    esp_http_client_set_post_field(client, data, strlen(data));
-
-    const char* content_type = "application/json";
-    esp_http_client_set_header(client, "Content-Type", content_type);
-    esp_err_t err = esp_http_client_perform(client);
-
-    if (err == ESP_OK)
-        ESP_LOGI(TAG, "acslog: HTTP %d", esp_http_client_get_status_code(client));
-    else
-        ESP_LOGE(TAG, "acslog: error %s", esp_err_to_name(err));
-}
-
 void Logger::thread_body()
 {
     ESP_LOGI(TAG, "Logger thread started");
@@ -171,12 +99,6 @@ void Logger::thread_body()
 
         switch (item.type)
         {
-        case Item::Type::Debug:
-            if (gw_token.empty())
-                break;
-            log_sync(item.stamp, item.text);
-            break;
-
         case Item::Type::Backend:
             {
                 if (api_token.empty())

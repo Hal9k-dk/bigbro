@@ -3,79 +3,100 @@
 
 #include <string>
 
-#include "esp_log.h"
-#include "mqtt_client.h"
-
+#include "cJSON.h"
 #include "defs.h"
 #include "format.h"
+#include "mqtt.h"
 #include "nvs.h"
 
-static bool connected = false;
-static esp_mqtt_client_handle_t client = 0;
+static constexpr const char* TAG = "mqtt";
 
-
-static void mqtt_event_handler(void* handler_args,
-                               esp_event_base_t base,
-                               int32_t event_id,
-                               void* event_data)
+Mqtt& Mqtt::instance()
 {
+    static Mqtt the_instance;
+    return the_instance;
+}
+
+void Mqtt::event_handler(void* handler_args,
+                         esp_event_base_t base,
+                         int32_t event_id,
+                         void* event_data)
+{
+    Mqtt* self = reinterpret_cast<Mqtt*>(handler_args);
     ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%" PRIi32 "", base, event_id);
     auto event = reinterpret_cast<esp_mqtt_event_handle_t>(event_data);
-    switch ((esp_mqtt_event_id_t) event_id) {
+    switch ((esp_mqtt_event_id_t) event_id)
+    {
     case MQTT_EVENT_CONNECTED:
-        ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
-        connected = true;
+        ESP_LOGI(TAG, "Connected");
+        self->connected = true;
+        esp_mqtt_client_subscribe(event->client, "hal9k/acs/status/#", 1);
         break;
 
     case MQTT_EVENT_DISCONNECTED:
-        ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
-        connected = false;
+        ESP_LOGI(TAG, "Disconnected");
+        self->connected = false;
         break;
 
     case MQTT_EVENT_PUBLISHED:
-        ESP_LOGI(TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
+        ESP_LOGI(TAG, "Pub %d", event->msg_id);
         break;
 
+    case MQTT_EVENT_SUBSCRIBED:
+        ESP_LOGI(TAG, "Sub %d", event->msg_id);
+        break;
+
+    case MQTT_EVENT_DATA:
+        ESP_LOGI(TAG, "Got data");
+        self->handle_data(std::string(event->topic, event->topic_len),
+                          std::string(event->data, event->data_len));
+        break;
+        
     case MQTT_EVENT_ERROR:
-        ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
+        ESP_LOGI(TAG, "Error %d", event->msg_id);
         break;
 
     default:
-        ESP_LOGI(TAG, "Other event id:%d", event->event_id);
+        ESP_LOGI(TAG, "Other event: %d", event->event_id);
         break;
     }
 }
 
-void log_mqtt(const std::string& msg)
+void Mqtt::handle_data(const std::string& topic,
+                       const std::string& data)
+{
+    // NOP for now
+}
+
+void Mqtt::log(const std::string& msg)
 {
     const auto topic = format("hal9k/acs/log/%s", get_identifier().c_str());
     const auto msg_id = esp_mqtt_client_enqueue(client, topic.c_str(),
                                                 msg.c_str(), 0, 1, 0, true);
-    ESP_LOGI(TAG, "enqueued, msg_id=%d", msg_id);
+    ESP_LOGI(TAG, "Q %d", msg_id);
 }
 
-void set_mqtt_status(const std::string& subtopic,
-                     const std::string& msg)
+void Mqtt::set_status(const char* data)
 {
-    const auto topic = format("hal9k/acs/status/%s/%s",
-                              get_identifier().c_str(),
-                              subtopic.c_str());
+    const auto topic = format("hal9k/acs/status/%s",
+                              get_identifier().c_str());
     const auto msg_id = esp_mqtt_client_enqueue(client, topic.c_str(),
-                                                msg.c_str(), 0, 1, 1, true);
-    ESP_LOGI(TAG, "status enqueued, msg_id=%d", msg_id);
+                                                data,
+                                                0, 1, 1, true);
+    ESP_LOGI(TAG, "Q %d", msg_id);
 }
 
-void start_mqtt(const std::string& mqtt_address)
+void Mqtt::start(const std::string& mqtt_address)
 {
     std::string mqtt_url = std::string("mqtt://") + mqtt_address;
     esp_mqtt_client_config_t mqtt_cfg = {
     };
-    ESP_LOGI(TAG, "MQTT URL %s", mqtt_url.c_str());
+    ESP_LOGI(TAG, "URL %s", mqtt_url.c_str());
     mqtt_cfg.broker.address.uri = mqtt_url.c_str();
     client = esp_mqtt_client_init(&mqtt_cfg);
     esp_mqtt_client_register_event(client,
                                    static_cast<esp_mqtt_event_id_t>(ESP_EVENT_ANY_ID),
-                                   mqtt_event_handler, NULL);
+                                   &Mqtt::event_handler, this);
     esp_mqtt_client_start(client);
 }
 
