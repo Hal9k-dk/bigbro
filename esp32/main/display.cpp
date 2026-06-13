@@ -2,7 +2,9 @@
 #include "defs.h"
 #include "display.h"
 #include "format.h"
+#include "hw.h"
 #include "logger.h"
+#include "nvs.h"
 
 #include <esp_heap_caps.h>
 
@@ -15,7 +17,6 @@ static constexpr const auto MESSAGE_DURATION = std::chrono::seconds(10);
 static constexpr const int TIME_HEIGHT = 16;
 
 // Top part of screen
-
 static constexpr const int STATUS_HEIGHT = CONFIG_WIDTH - TIME_HEIGHT;
 
 const char* Display::SMALL_FONT_ESC = "\001";
@@ -195,6 +196,7 @@ void Display::update()
     {
         const auto w = text_width(small_font, stamp);
         clock_x = CONFIG_WIDTH/2 - w/2;
+        cur_sense_x = text_width(small_font, "W") + 3;
     }
     lcdDrawString(tft, small_font, 0, clock_x,
                   reinterpret_cast<const uint8_t*>(stamp), CYAN);

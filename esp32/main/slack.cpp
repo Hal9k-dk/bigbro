@@ -13,6 +13,8 @@
 #include "esp_netif.h"
 #include "esp_tls.h"
 
+static constexpr const char* TAG = "slack";
+
 Slack_writer& Slack_writer::instance()
 {
     static Slack_writer the_instance;

@@ -9,22 +9,25 @@
 constexpr const char* IDENTIFIER_KEY = "id";
 constexpr const char* WIFI_KEY = "wifi";
 constexpr const char* ACS_TOKEN_KEY = "acs";
-constexpr const char* GATEWAY_TOKEN_KEY = "gwt";
 constexpr const char* SLACK_TOKEN_KEY = "slt";
+constexpr const char* CUR_SENSE_KEY = "cse";
+constexpr const char* MQTT_ADDRESS_KEY = "mqa";
 
 constexpr const auto UART_PORT_NUM = (uart_port_t) 1;
 constexpr const auto PIN_CARD_SW = (gpio_num_t) 25;
-constexpr const auto PIN_CURR_SENSE = (gpio_num_t) 39;
 constexpr const auto PIN_RELAY = (gpio_num_t) 16;
 
 constexpr const auto PIN_RFID_RXD = (gpio_num_t) 17;
 
 constexpr const auto PIN_BACKLIGHT = (gpio_num_t) 14;
 
+constexpr const auto PIN_EXT_1 = (gpio_num_t) 13;
+constexpr const auto PIN_EXT_2 = (gpio_num_t) 26;
+
+constexpr const auto POWER_OFF_TIME_S = 60;
+
 extern char config_acs_token[];
 extern char config_instance;
-
-constexpr const char* TAG = "BIGBRO";
 
 #define CARD_ID_FORMAT "%010llX"
 

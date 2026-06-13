@@ -11,11 +11,13 @@
 #include <esp_vfs.h>
 #include <nvs_flash.h>
 
+static constexpr const char* TAG = "nvs";
+
 static char identifier[20];
 static char acs_token[80];
-static char gateway_token[80];
 static char slack_token[80];
 static wifi_creds_t wifi_creds;
+static char mqtt_address[80];
 
 void clear_wifi_credentials()
 {
@@ -61,21 +63,32 @@ void set_acs_token(const char* token)
     nvs_close(my_handle);
 }
 
-void set_gateway_token(const char* token)
-{
-    nvs_handle my_handle;
-    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
-    ESP_ERROR_CHECK(nvs_set_str(my_handle, GATEWAY_TOKEN_KEY, token));
-    ESP_ERROR_CHECK(nvs_commit(my_handle));
-    nvs_close(my_handle);
-}
-
 void set_slack_token(const char* token)
 {
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, SLACK_TOKEN_KEY, token));
     ESP_ERROR_CHECK(nvs_commit(my_handle));
+    nvs_close(my_handle);
+}
+
+void set_current_sense_enabled(bool enabled)
+{
+    nvs_handle my_handle;
+    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
+    ESP_ERROR_CHECK(nvs_set_u8(my_handle, CUR_SENSE_KEY, static_cast<uint8_t>(enabled)));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
+    nvs_close(my_handle);
+}
+
+void set_mqtt_address(const char* address)
+{
+    nvs_handle my_handle;
+    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
+    ESP_ERROR_CHECK(nvs_set_str(my_handle, MQTT_ADDRESS_KEY, address));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
+    strncpy(mqtt_address, address, sizeof(mqtt_address) - 1);
+    mqtt_address[sizeof(mqtt_address) - 1] = '\0';
     nvs_close(my_handle);
 }
 
@@ -121,11 +134,6 @@ std::string get_acs_token()
     return acs_token;
 }
 
-std::string get_gateway_token()
-{
-    return gateway_token;
-}
-
 std::string get_identifier()
 {
     if (identifier[0])
@@ -141,6 +149,11 @@ std::string get_slack_token()
 wifi_creds_t get_wifi_creds()
 {
     return wifi_creds;
+}
+
+std::string get_mqtt_address()
+{
+    return mqtt_address;
 }
 
 void init_nvs()
@@ -162,10 +175,10 @@ void init_nvs()
         wifi_creds = parse_wifi_credentials(buf);
     if (!get_nvs_string(my_handle, ACS_TOKEN_KEY, acs_token, sizeof(acs_token)))
         acs_token[0] = 0;
-    if (!get_nvs_string(my_handle, GATEWAY_TOKEN_KEY, gateway_token, sizeof(gateway_token)))
-        gateway_token[0] = 0;
     if (!get_nvs_string(my_handle, SLACK_TOKEN_KEY, slack_token, sizeof(slack_token)))
         slack_token[0] = 0;
+    if (!get_nvs_string(my_handle, MQTT_ADDRESS_KEY, mqtt_address, sizeof(mqtt_address)))
+        strcpy(mqtt_address, "imqtt.hal9k.dk");
     nvs_close(my_handle);
 }
 
@@ -184,22 +197,6 @@ void mount_spiffs(const char* path, const char* label, size_t max_files)
     ESP_ERROR_CHECK(esp_spiffs_info(conf.partition_label, &total, &used));
     ESP_LOGI(TAG, "Mounted %s to %s", path, label);
     ESP_LOGI(TAG, "Partition size: total: %d, used: %d", total, used);
-}
-
-void list_spiffs(const char* path)
-{
-    DIR* dir = opendir(path);
-    assert(dir != NULL);
-    while (true)
-    {
-        struct dirent*pe = readdir(dir);
-        if (!pe)
-            break;
-        ESP_LOGI(__FUNCTION__,
-                 "d_name=%s d_ino=%d d_type=%x", pe->d_name,
-                 pe->d_ino, pe->d_type);
-    }
-    closedir(dir);
 }
 
 // Local Variables:

@@ -9,6 +9,7 @@ idf_component_register(SRCS
                        http.cpp
                        hw.cpp
                        logger.cpp
+                       mqtt.cpp
                        nvs.cpp
                        otafwu.cpp
                        reader.cpp

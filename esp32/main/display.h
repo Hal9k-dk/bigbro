@@ -55,4 +55,5 @@ private:
     util::time_point last_message = util::invalid_time_point();
     time_t last_clock = 0;
     int clock_x = 0;
+    int cur_sense_x = 0;
 };

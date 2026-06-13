@@ -37,6 +37,13 @@ constexpr bool is_valid(const duration& dur)
 
 std::string strip_np(const std::string& s);
 
+static constexpr int TIMESTAMP_SIZE = 26;
+    
+/// Make a timestamp string. Buffer must be TIMESTAMP_SIZE bytes.
+time_t make_timestamp(char* stamp);
+
+void make_timestamp(time_t t, char* stamp);
+
 } // end namespace
 
 struct cJSON;

@@ -13,4 +13,6 @@ void set_backlight(int backlight);
 void fade_backlight(int backlight, int ms);
 void fade_backlight(int backlight, util::duration dur);
 
-float read_current_sensor();
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:

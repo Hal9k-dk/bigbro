@@ -20,19 +20,6 @@ public:
 
     void set_api_token(const std::string& token);
     
-    void set_gateway_token(const std::string& token);
-    
-    void set_verbose(bool on)
-    {
-        verbose = on;
-    }
-
-    /// Log to console and gateway.
-    void log(const std::string&);
-
-    /// If 'verbose' is set, log to console and gateway.
-    void log_verbose(const std::string&);
-
     /// Log to console and panopticon.
     void log_backend(int user_id, const std::string&);
     
@@ -46,9 +33,6 @@ public:
                                char* stamp,
                                bool include_date = true);
 
-    /// Log synchronously to gateway.
-    void log_sync(const char* stamp, const char* text);
-
 private:
     Logger() = default;
 
@@ -58,20 +42,18 @@ private:
     
     struct Item {
         enum class Type {
-            Debug,
             Backend,
             Unknown_card
         };
         static const int MAX_SIZE = 200; // Max length of debug messages
         static const int STAMP_SIZE = 19; // YYYY-mm-dd HH:MM:SS
-        Type type = Type::Debug;
+        Type type = Type::Backend;
         int user_id = 0;
         char stamp[STAMP_SIZE+1];
         char text[MAX_SIZE+1];
     };
     std::deque<Item> q;
     std::mutex mutex;
-    std::string gw_token;
     std::string api_token;
     bool verbose = false;
 

@@ -5,6 +5,7 @@
 #include "format.h"
 #include "hw.h"
 #include "logger.h"
+#include "mqtt.h"
 #include "nvs.h"
 #include "reader.h"
 #include "slack.h"
@@ -144,31 +145,6 @@ struct
 {
     struct arg_str* token;
     struct arg_end* end;
-} set_gw_credentials_args;
-
-int set_gw_credentials(int argc, char** argv)
-{
-    int nerrors = arg_parse(argc, argv, (void**) &set_gw_credentials_args);
-    if (nerrors != 0)
-    {
-        arg_print_errors(stderr, set_gw_credentials_args.end, argv[0]);
-        return 1;
-    }
-    const auto token = set_gw_credentials_args.token->sval[0];
-    if (strlen(token) < 32)
-    {
-        printf("ERROR: Invalid token\n");
-        return 1;
-    }
-    set_gateway_token(token);
-    printf("OK: Gateway token set to %s\n", token);
-    return 0;
-}
-
-struct
-{
-    struct arg_str* token;
-    struct arg_end* end;
 } set_slack_credentials_args;
 
 int set_slack_credentials(int argc, char** argv)
@@ -190,12 +166,34 @@ int set_slack_credentials(int argc, char** argv)
     return 0;
 }
 
+struct
+{
+    struct arg_str* address;
+    struct arg_end* end;
+} set_mqtt_params_args;
+
+int set_mqtt_params(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_mqtt_params_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_mqtt_params_args.end, argv[0]);
+        return 1;
+    }
+    const auto address = set_mqtt_params_args.address->sval[0];
+    set_mqtt_address(address);
+    printf("OK: MQTT address set to %s\n", address);
+    return 0;
+}
+
 static int reboot(int, char**)
 {
     printf("Reboot...\n");
     esp_restart();
     return 0;
 }
+
+#ifdef HW_TEST
 
 static int read_switch(int, char**)
 {
@@ -221,10 +219,10 @@ static int read_rfid(int, char**)
 
 static int read_current(int, char**)
 {
-    for (int n = 0; n < 100; ++n)
+    for (int n = 0; n < 10; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
-        printf("Current %f\n", read_current_sensor());
+        printf("Current %d\n", read_current_sensor());
     }
     return 0;
 }
@@ -284,41 +282,7 @@ static int test_display(int, char**)
     return 0;
 }
 
-static int test_logger(int argc, char**)
-{
-    printf("Running logger test\n");
-
-    if (argc > 1)
-    {
-        int count = 0;
-        while (1)
-        {
-            Logger::instance().log(format("BigBro test log: %d", count));
-            ++count;
-            vTaskDelay(60*1000/portTICK_PERIOD_MS);
-        }
-    }
-    
-    Logger::instance().log("BigBro test log: normal");
-    Logger::instance().log_verbose("BigBro test log: verbose");
-    Logger::instance().log_backend(42, "BigBro test log: backend");
-    Logger::instance().log_unknown_card(0x12345678);
-
-    return 0;
-}
-
-static int test_slack(int, char**)
-{
-    printf("Running Slack test\n");
-
-    Slack_writer::instance().send_message(format("BigBro (%s) says hi",
-                                                 get_identifier().c_str()));
-
-    return 0;
-}
-
-// static
-int test_backlight(int, char**)
+static int test_backlight(int, char**)
 {
     printf("Running backlight test\n");
 
@@ -344,19 +308,53 @@ int test_backlight(int, char**)
     return 0;
 }
 
+#endif
+
+static int test_logger(int argc, char**)
+{
+    printf("Running logger test\n");
+
+    if (argc > 1)
+    {
+        int count = 0;
+        while (1)
+        {
+            Mqtt::instance().log(format("BigBro test log: %d", count));
+            ++count;
+            vTaskDelay(60*1000/portTICK_PERIOD_MS);
+        }
+    }
+    
+    Mqtt::instance().log("BigBro test log: normal");
+    Logger::instance().log_backend(42, "BigBro test log: backend");
+    Logger::instance().log_unknown_card(0x12345678);
+
+    return 0;
+}
+
+static int test_slack(int, char**)
+{
+    printf("Running Slack test\n");
+
+    Slack_writer::instance().send_message(format("BigBro (%s) says hi",
+                                                 get_identifier().c_str()));
+
+    return 0;
+}
+
 void initialize_console()
 {
-    /* Disable buffering on stdin */
+    // Disable buffering on stdin
     setvbuf(stdin, NULL, _IONBF, 0);
 
-    /* Minicom, screen, idf_monitor send CR when ENTER key is pressed */
+    // Minicom, screen, idf_monitor send CR when ENTER key is pressed
     uart_vfs_dev_port_set_rx_line_endings(0, ESP_LINE_ENDINGS_CR);
-    /* Move the caret to the beginning of the next line on '\n' */
+    // Move the caret to the beginning of the next line on '\n'
     uart_vfs_dev_port_set_tx_line_endings(0, ESP_LINE_ENDINGS_CRLF);
 
-    /* Configure UART. Note that REF_TICK is used so that the baud rate remains
-     * correct while APB frequency is changing in light sleep mode.
-     */
+    // Configure UART. Note that REF_TICK is used so that the baud rate remains
+    // correct while APB frequency is changing in light sleep mode.
+    
     uart_config_t uart_config;
     memset(&uart_config, 0, sizeof(uart_config));
     uart_config.baud_rate = CONFIG_ESP_CONSOLE_UART_BAUDRATE;
@@ -366,14 +364,14 @@ void initialize_console()
     uart_config.source_clk = UART_SCLK_REF_TICK;
     ESP_ERROR_CHECK(uart_param_config((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM, &uart_config));
 
-    /* Install UART driver for interrupt-driven reads and writes */
+    // Install UART driver for interrupt-driven reads and writes
     ESP_ERROR_CHECK(uart_driver_install((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM,
                                          256, 0, 0, NULL, 0));
 
-    /* Tell VFS to use UART driver */
+    // Tell VFS to use UART driver
     uart_vfs_dev_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
 
-    /* Initialize the console */
+    // Initialize the console
     esp_console_config_t console_config;
     memset(&console_config, 0, sizeof(console_config));
     console_config.max_cmdline_args = 8;
@@ -383,17 +381,14 @@ void initialize_console()
 #endif
     ESP_ERROR_CHECK(esp_console_init(&console_config));
 
-    /* Configure linenoise line completion library */
-    /* Enable multiline editing. If not set, long commands will scroll within
-     * single line.
-     */
+    // Enable multiline editing    
     linenoiseSetMultiLine(1);
 
-    /* Tell linenoise where to get command completions and hints */
+    // Tell linenoise where to get command completions and hints
     linenoiseSetCompletionCallback(&esp_console_get_completion);
     linenoiseSetHintsCallback((linenoiseHintsCallback*) &esp_console_get_hint);
 
-    /* Set command history size */
+    // Set command history size
     linenoiseHistorySetMaxLen(100);
 }
 
@@ -466,17 +461,6 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_acs_credentials_cmd));
 
-    set_gw_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Gateway token");
-    set_gw_credentials_args.end = arg_end(2);
-    const esp_console_cmd_t set_gw_credentials_cmd = {
-        .command = "gw",
-        .help = "Set gateway credentials",
-        .hint = nullptr,
-        .func = &set_gw_credentials,
-        .argtable = &set_gw_credentials_args
-    };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&set_gw_credentials_cmd));
-
     set_slack_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Slack token");
     set_slack_credentials_args.end = arg_end(2);
     const esp_console_cmd_t set_slack_credentials_cmd = {
@@ -487,6 +471,17 @@ void run_console(Display& display_arg)
         .argtable = &set_slack_credentials_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_slack_credentials_cmd));
+
+    set_mqtt_params_args.address = arg_str1(NULL, NULL, "<address>", "MQTT address");
+    set_mqtt_params_args.end = arg_end(2);
+    const esp_console_cmd_t set_mqtt_params_cmd = {
+        .command = "mqtt",
+        .help = "Set MQTT host",
+        .hint = nullptr,
+        .func = &set_mqtt_params,
+        .argtable = &set_mqtt_params_args
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_mqtt_params_cmd));
 
     const esp_console_cmd_t reboot_cmd = {
         .command = "reboot",
@@ -524,6 +519,8 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_slack_cmd));
 
+#ifdef HW_TEST
+    
     const esp_console_cmd_t read_switch_cmd = {
         .command = "switch",
         .help = "Read switch",
@@ -543,7 +540,7 @@ void run_console(Display& display_arg)
     ESP_ERROR_CHECK(esp_console_cmd_register(&read_rfid_cmd));
 
     const esp_console_cmd_t read_current_cmd = {
-        .command = "current",
+        .command = "test_current",
         .help = "Read current sensor",
         .hint = nullptr,
         .func = &read_current,
@@ -578,6 +575,8 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_backlight_cmd));
 
+#endif
+    
     const char* prompt = LOG_COLOR_I "bigbro> " LOG_RESET_COLOR;
     int probe_status = linenoiseProbe();
     if (probe_status)
@@ -588,9 +587,6 @@ void run_console(Display& display_arg)
                "On Windows, try using Putty instead.\n");
         linenoiseSetDumbMode(1);
 #if CONFIG_LOG_COLORS
-        /* Since the terminal doesn't support escape sequences,
-         * don't use color codes in the prompt.
-         */
         prompt = "bigbro> ";
 #endif //CONFIG_LOG_COLORS
     }

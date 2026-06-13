@@ -35,12 +35,15 @@ private:
         unknown,
         /// Valid card present
         allowed,
+        /// No card, load is off (only used in current sense mode)
+        powering_off,
     };
 
     void handle_initial();
     void handle_idle();
     void handle_not_allowed_unknown();
     void handle_allowed();
+    void handle_powering_off();
 
     void check_card();
 
@@ -50,6 +53,7 @@ private:
     Card_id card_id = 0;
     bool switch_closed = false;
     std::string user_name;
+    util::time_point last_load_on_time;
 };
 
 // Local Variables:

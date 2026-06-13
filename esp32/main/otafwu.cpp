@@ -15,18 +15,10 @@
 #include "nvs_flash.h"
 #include "errno.h"
 
+static constexpr const char* TAG = "ota";
+
 static const constexpr int HASH_LEN = 32; // SHA-256 digest length
 static const constexpr int BUFFSIZE = 1024;
-
-static void print_sha256 (const uint8_t *image_hash, const char *label)
-{
-    char hash_print[HASH_LEN * 2 + 1];
-    hash_print[HASH_LEN * 2] = 0;
-    for (int i = 0; i < HASH_LEN; ++i) {
-        sprintf(&hash_print[i * 2], "%02x", image_hash[i]);
-    }
-    ESP_LOGI(TAG, "%s: %s", label, hash_print);
-}
 
 bool check_ota_update(class Display& display)
 {
@@ -37,18 +29,15 @@ bool check_ota_update(class Display& display)
     partition.type      = ESP_PARTITION_TYPE_DATA;
     uint8_t sha_256[HASH_LEN] = { 0 };
     esp_partition_get_sha256(&partition, sha_256);
-    print_sha256(sha_256, "SHA-256 for the partition table: ");
 
     // Get SHA256 digest for bootloader
     partition.address   = ESP_BOOTLOADER_OFFSET;
     partition.size      = ESP_PARTITION_TABLE_OFFSET;
     partition.type      = ESP_PARTITION_TYPE_APP;
     esp_partition_get_sha256(&partition, sha_256);
-    print_sha256(sha_256, "SHA-256 for bootloader: ");
 
     // Get SHA256 digest for running partition
     esp_partition_get_sha256(esp_ota_get_running_partition(), sha_256);
-    print_sha256(sha_256, "SHA-256 for current firmware: ");
 
     const esp_partition_t* running = esp_ota_get_running_partition();
     esp_ota_img_states_t ota_state;
@@ -84,11 +73,9 @@ bool check_ota_update(class Display& display)
     ESP_LOGI(TAG, "Running partition type %d subtype %d (offset 0x%08" PRIx32 ")",
              running->type, running->subtype, running->address);
 
-    char path[40];
-    strcpy(path, "/firmware/bigbro");
     esp_http_client_config_t config = {
         .host = "acsgateway.hal9k.dk",
-        .path = path,
+        .path = "/firmware/bigbro",
         .timeout_ms = 3000,
         .event_handler = http_event_handler,
         .transport_type = HTTP_TRANSPORT_OVER_SSL,
@@ -174,9 +161,16 @@ bool check_ota_update(class Display& display)
                     }
                     if (memcmp(new_app_info.version, running_app_info.version, sizeof(new_app_info.version)) == 0)
                     {
-                        ESP_LOGW(TAG, "Current running version is the same as a new. We will not continue the update.");
-                        display.add_progress("No new version");
-                        return true;
+                        if (gpio_get_level((gpio_num_t) 0))
+                        {
+                            ESP_LOGW(TAG, "Current running version is the same as a new. We will not continue the update.");
+                            display.add_progress("No new version");
+                            return true;
+                        }
+                        else
+                        {
+                            ESP_LOGI(TAG, "Forcing update");
+                        }
                     }
 
                     image_header_was_checked = true;
