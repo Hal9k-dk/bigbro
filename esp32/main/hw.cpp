@@ -5,6 +5,8 @@
 #include <driver/ledc.h>
 #include <esp_log.h>
 
+static constexpr const char* TAG = "hw";
+
 int edge_count = 0;
 
 static void IRAM_ATTR gpio_isr_handler(void*)
@@ -20,7 +22,7 @@ void init_hardware()
     io_conf.mode = GPIO_MODE_INPUT;
     // bit mask of the pins that you want to set
     io_conf.pin_bit_mask = 1ULL << PIN_CARD_SW;
-    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
@@ -128,3 +130,7 @@ void cursense_task(void*)
         }
     }
 }
+
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:
