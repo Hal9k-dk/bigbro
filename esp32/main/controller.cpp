@@ -128,7 +128,7 @@ void Controller::run()
             cJSON_AddItemToObject(payload, "timestamp", jtimestamp);
 
             auto status = cJSON_CreateObject();
-            auto on = cJSON_CreateString(state == State::allowed ? "on" : "off");
+            auto on = cJSON_CreateString(state == State::allowed ? "true" : "false");
             cJSON_AddItemToObject(status, "on", on);
             auto version = cJSON_CreateString(esp_app_get_description()->version);
             cJSON_AddItemToObject(status, "version", version);

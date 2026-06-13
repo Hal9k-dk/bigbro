@@ -22,11 +22,17 @@ void init_hardware()
     io_conf.mode = GPIO_MODE_INPUT;
     // bit mask of the pins that you want to set
     io_conf.pin_bit_mask = 1ULL << PIN_CARD_SW;
-    io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
+    io_conf.pin_bit_mask = 1ULL << PIN_EXT_1;
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
+    ESP_ERROR_CHECK(gpio_config(&io_conf));
+    
     io_conf.pin_bit_mask = 1ULL << PIN_CURR_SENSE;
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     io_conf.intr_type = GPIO_INTR_NEGEDGE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 

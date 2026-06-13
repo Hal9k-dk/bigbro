@@ -49,6 +49,7 @@ void app_main()
 
     display.add_progress(get_identifier());
 
+    bool connected = false;
     const auto wifi_creds = get_wifi_creds();
     if (!wifi_creds.empty())
     {
@@ -58,7 +59,6 @@ void app_main()
         display.add_progress("Connect to WiFi");
 
         int attempts_left = 5;
-        bool connected = false;
         while (!connected && attempts_left)
         {
             connected = connect(wifi_creds);
@@ -84,24 +84,6 @@ void app_main()
             Slack_writer::instance().set_token(get_slack_token());
             Slack_writer::instance().set_params(false); // testing
             Card_cache::instance().set_api_token(get_acs_token());
-            bool do_ota_check = gpio_get_level(PIN_EXT_1);
-            printf("EXT1: %d\n", do_ota_check);
-            if (!do_ota_check)
-            {
-                display.add_progress("OTA disabled");
-                printf("OTA firmware update disabled by EXT1\n");
-            }
-            else
-            {
-                display.add_progress("OTA check");
-                if (!check_ota_update(display))
-                    display.add_progress("FAILED!");
-            }
-            xTaskCreate(logger_task, "logger_task", 4*1024, NULL, 1, NULL);
-            xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
-            xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
-            xTaskCreate(cursense_task, "cursense_task", 2*1024, NULL, 1, NULL);
-            Mqtt::instance().start(get_mqtt_address());
         }
     }
     
@@ -125,13 +107,35 @@ void app_main()
         }
         vTaskDelay(100/portTICK_PERIOD_MS);
     }
+
+    bool do_ota_check = gpio_get_level(PIN_EXT_1);
+    if (!do_ota_check)
+    {
+        display.add_progress("OTA disabled");
+        printf("OTA firmware update disabled by EXT1\n");
+    }
+    else if (!debug)
+    {
+        display.add_progress("OTA check");
+        if (!check_ota_update(display))
+            display.add_progress("FAILED!");
+    }
+    if (connected)
+    {
+        xTaskCreate(logger_task, "logger_task", 4*1024, NULL, 1, NULL);
+        xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
+        xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
+        Mqtt::instance().start(get_mqtt_address());
+    }
+    xTaskCreate(cursense_task, "cursense_task", 2*1024, NULL, 1, NULL);
+
     if (debug)
         run_console(display);        // never returns
 
     Slack_writer::instance().send_message(format(":panopticon: BigBro %s (%s)",
                                                  app_desc->version,
                                                  get_identifier().c_str()));
-
+    
     display.add_progress("Connect to WiFi");
     esp_log_level_set("esp_wifi", ESP_LOG_ERROR);
     esp_log_level_set("wifi", ESP_LOG_ERROR);

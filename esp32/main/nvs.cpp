@@ -87,8 +87,10 @@ void set_mqtt_address(const char* address)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, MQTT_ADDRESS_KEY, address));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
+    strncpy(mqtt_address, address, sizeof(mqtt_address) - 1);
+    mqtt_address[sizeof(mqtt_address) - 1] = '\0';
     nvs_close(my_handle);
-    printf("Wrote to %s\n", MQTT_ADDRESS_KEY);
 }
 
 bool get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf_size)
@@ -97,7 +99,6 @@ bool get_nvs_string(nvs_handle my_handle, const char* key, char* buf, size_t buf
     switch (err)
     {
     case ESP_OK:
-        printf("%s: found\n", key);
         return true;
     case ESP_ERR_NVS_NOT_FOUND:
         printf("%s: not found\n", key);
@@ -191,14 +192,8 @@ void init_nvs()
     else
         current_sense_enabled = value;
     ESP_LOGI(TAG, "Current sense: %d", current_sense_enabled);
-    printf("Read from %s\n", MQTT_ADDRESS_KEY);
-    if (get_nvs_string(my_handle, MQTT_ADDRESS_KEY, mqtt_address, sizeof(mqtt_address)))
-        printf("MQTT: %s\n", mqtt_address);
-    else
-    {
-        printf("MQTT: not set\n");
+    if (!get_nvs_string(my_handle, MQTT_ADDRESS_KEY, mqtt_address, sizeof(mqtt_address)))
         strcpy(mqtt_address, "imqtt.hal9k.dk");
-    }
     nvs_close(my_handle);
 }
 
