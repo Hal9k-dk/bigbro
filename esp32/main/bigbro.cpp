@@ -107,11 +107,15 @@ void app_main()
         vTaskDelay(100/portTICK_PERIOD_MS);
     }
 
-    bool do_ota_check = gpio_get_level(PIN_EXT_1);
-    if (!do_ota_check)
+    bool ext1_state = gpio_get_level(PIN_EXT_1);
+    bool switch_state = read_switch();
+    if (!ext1_state || switch_state)
     {
         display.add_progress("OTA disabled");
-        printf("OTA firmware update disabled by EXT1\n");
+        if (!ext1_state)
+            printf("OTA firmware update disabled by EXT1\n");
+        if (switch_state)
+            printf("OTA firmware update disabled by card\n");
     }
     else if (!debug)
     {

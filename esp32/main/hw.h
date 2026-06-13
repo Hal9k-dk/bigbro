@@ -16,3 +16,7 @@ void fade_backlight(int backlight, util::duration dur);
 bool read_current_sensor();
 
 extern "C" void cursense_task(void*);
+
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:

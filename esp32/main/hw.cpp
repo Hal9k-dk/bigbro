@@ -27,7 +27,6 @@ void init_hardware()
     ESP_ERROR_CHECK(gpio_config(&io_conf));
 
     io_conf.pin_bit_mask = 1ULL << PIN_EXT_1;
-    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
     ESP_ERROR_CHECK(gpio_config(&io_conf));
     
