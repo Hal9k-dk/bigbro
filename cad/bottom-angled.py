@@ -89,6 +89,9 @@ standoff4 = (res
 
 res = res.union(standoff1).union(standoff2).union(standoff3).union(standoff4)
 
+# PG16 gland
+gland_r = 23/2
+gland_z += 5
 res = (res
         .workplaneFromTagged("o")
         .transformed(offset=(0, 0, gland_z),
