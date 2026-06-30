@@ -104,6 +104,8 @@ bool check_ota_update(class Display& display)
         return false;
     }
 
+    ESP_LOGI(TAG, "Reading from %s%s", config.host, config.path);
+
     const esp_partition_t* update_partition = esp_ota_get_next_update_partition(NULL);
     assert(update_partition != NULL);
     ESP_LOGI(TAG, "Writing to partition subtype %d at offset 0x%" PRIx32,

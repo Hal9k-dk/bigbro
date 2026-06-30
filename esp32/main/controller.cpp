@@ -130,6 +130,8 @@ void Controller::run()
             auto status = cJSON_CreateObject();
             auto on = cJSON_CreateString(state == State::allowed ? "true" : "false");
             cJSON_AddItemToObject(status, "on", on);
+            auto card_present = cJSON_CreateString(switch_closed ? "true" : "false");
+            cJSON_AddItemToObject(status, "card_present", card_present);
             auto version = cJSON_CreateString(esp_app_get_description()->version);
             cJSON_AddItemToObject(status, "version", version);
             cJSON_AddItemToObject(payload, "data", status);
