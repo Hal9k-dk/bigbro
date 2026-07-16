@@ -29,6 +29,7 @@ static heap_trace_record_t trace_record[NUM_RECORDS]; // This buffer must be in 
 const auto constexpr BACKLIGHT_FADE_PERIOD = std::chrono::milliseconds(2500);
 const auto constexpr BACKLIGHT_FADE_MIN = 32;
 const auto constexpr BACKLIGHT_FADE_MAX = 255;
+const auto constexpr STATUS_UPDATE_PERIOD = std::chrono::seconds(60);
 
 Controller* Controller::the_instance = nullptr;
 
@@ -72,6 +73,7 @@ void Controller::run()
     auto last_fade_update = util::now();
     int fade_to = BACKLIGHT_FADE_MIN;
     fade_backlight(fade_to, BACKLIGHT_FADE_PERIOD);
+    auto last_status_update = util::now();
     while (1)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
@@ -117,8 +119,10 @@ void Controller::run()
         const auto old_state = state;
         it->second(this);
 
-        if (state != old_state)
+        if ((state != old_state) ||
+            (now - last_status_update >= STATUS_UPDATE_PERIOD))
         {
+            last_status_update = now;
             printf("STATE: %d\n", static_cast<int>(state));
             char timestamp[util::TIMESTAMP_SIZE];
             util::make_timestamp(timestamp);
