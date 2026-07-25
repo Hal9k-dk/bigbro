@@ -1,4 +1,5 @@
 import cadquery as cq
+from ocp_vscode import *
 
 from defs import *
 
@@ -114,5 +115,5 @@ res = (res
         .circle(gland_r).cutBlind(o_height)
        )
 
-show_object(res)
-
+show(res)
+cq.exporters.export(res, 'bottom.step')
