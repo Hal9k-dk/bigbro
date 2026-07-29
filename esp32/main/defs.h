@@ -9,9 +9,12 @@
 constexpr const char* IDENTIFIER_KEY = "id";
 constexpr const char* WIFI_KEY = "wifi";
 constexpr const char* ACS_TOKEN_KEY = "acs";
-constexpr const char* SLACK_TOKEN_KEY = "slt";
 constexpr const char* CUR_SENSE_KEY = "cse";
 constexpr const char* MQTT_ADDRESS_KEY = "mqa";
+constexpr const char* PRIVKEY_KEY = "pk";
+
+// 256 bits
+constexpr const int SIGNING_KEY_SIZE = 32;
 
 constexpr const auto UART_PORT_NUM = (uart_port_t) 1;
 constexpr const auto PIN_CARD_SW = (gpio_num_t) 25;

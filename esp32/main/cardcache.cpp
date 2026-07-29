@@ -3,7 +3,6 @@
 #include "defs.h"
 #include "format.h"
 #include "http.h"
-#include "logger.h"
 #include "mqtt.h"
 #include "util.h"
 
@@ -53,7 +52,7 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
                 if ((id != last_logged_id) &&
                     (now - last_log_time > MIN_LOG_INTERVAL))
                 {
-                    Logger::instance().log_backend(ui.user_id, "Granted access");
+                    Mqtt::instance().log_backend(ui.user_id, "Granted access");
                     last_logged_id = id;
                     last_log_time = now;
                 }
@@ -62,7 +61,7 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
             if ((id != last_logged_id) &&
                 (now - last_log_time > MIN_LOG_INTERVAL))
             {
-                Logger::instance().log_backend(ui.user_id, "Denied access");
+                Mqtt::instance().log_backend(ui.user_id, "Denied access");
                 last_logged_id = id;
                 last_log_time = now;
             }

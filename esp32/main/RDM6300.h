@@ -85,7 +85,7 @@ public:
                 break;
 
             case 3:
-                // Store 1st digit of checksum
+                // Store checksum
                 m_checksum = input - '0';
                 if (m_checksum > 9)
                     m_checksum -= 7;
@@ -103,7 +103,7 @@ public:
                 m_checksum = (m_checksum << 4) | input;
                 m_state = 5;
 #ifdef PROTOCOL_DEBUG
-                printf("State 4: %d\n", m_state);
+                printf("State 4: %d\n", m_checksum);
 #endif
             }
         }

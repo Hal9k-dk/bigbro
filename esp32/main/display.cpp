@@ -3,7 +3,6 @@
 #include "display.h"
 #include "format.h"
 #include "hw.h"
-#include "logger.h"
 #include "nvs.h"
 
 #include <esp_heap_caps.h>
@@ -188,8 +187,8 @@ void Display::update()
         return;
 
     // Update time
-    char stamp[Logger::TIMESTAMP_SIZE];
-    last_clock = Logger::make_timestamp(stamp, false);
+    char stamp[util::TIMESTAMP_SIZE];
+    last_clock = util::make_timestamp(stamp, false);
     lcdDrawFillRect(tft, 0, 0,
                     TIME_HEIGHT, CONFIG_HEIGHT, BLACK);
     if (clock_x == 0)

@@ -4,11 +4,9 @@
 #include "display.h"
 #include "format.h"
 #include "hw.h"
-#include "logger.h"
 #include "mqtt.h"
 #include "nvs.h"
 #include "reader.h"
-#include "slack.h"
 
 #include <string>
 
@@ -143,31 +141,6 @@ int set_acs_credentials(int argc, char** argv)
 
 struct
 {
-    struct arg_str* token;
-    struct arg_end* end;
-} set_slack_credentials_args;
-
-int set_slack_credentials(int argc, char** argv)
-{
-    int nerrors = arg_parse(argc, argv, (void**) &set_slack_credentials_args);
-    if (nerrors != 0)
-    {
-        arg_print_errors(stderr, set_slack_credentials_args.end, argv[0]);
-        return 1;
-    }
-    const auto token = set_slack_credentials_args.token->sval[0];
-    if (strlen(token) < 32)
-    {
-        printf("ERROR: Invalid token\n");
-        return 1;
-    }
-    set_slack_token(token);
-    printf("OK: Slack token set to %s\n", token);
-    return 0;
-}
-
-struct
-{
     struct arg_str* address;
     struct arg_end* end;
 } set_mqtt_params_args;
@@ -183,6 +156,66 @@ int set_mqtt_params(int argc, char** argv)
     const auto address = set_mqtt_params_args.address->sval[0];
     set_mqtt_address(address);
     printf("OK: MQTT address set to %s\n", address);
+    return 0;
+}
+
+struct
+{
+    struct arg_str* key;
+    struct arg_end* end;
+} set_private_key_args;
+
+int hex_string_to_bytes(const char* hex_str, uint8_t* bytes, size_t max_len)
+{
+    size_t len = strlen(hex_str);
+    if (len % 2 != 0)
+    {
+        printf("ERROR: Hex string must have even number of characters\n");
+        return -1;
+    }
+    
+    size_t byte_len = len / 2;
+    if (byte_len > max_len)
+    {
+        printf("ERROR: Hex string too long (max %zu bytes)\n", max_len);
+        return -1;
+    }
+    
+    for (size_t i = 0; i < byte_len; ++i)
+    {
+        int result = sscanf(hex_str + 2 * i, "%2hhx", &bytes[i]);
+        if (result != 1)
+        {
+            printf("ERROR: Invalid hex format\n");
+            return -1;
+        }
+    }
+    
+    return byte_len;
+}
+
+int set_private_key_cmd(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_private_key_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_private_key_args.end, argv[0]);
+        return 1;
+    }
+    const auto key_str = set_private_key_args.key->sval[0];
+    if (strlen(key_str) != 2*SIGNING_KEY_SIZE)
+    {
+        printf("ERROR: Invalid private key\n");
+        return 1;
+    }
+    
+    uint8_t key_bytes[SIGNING_KEY_SIZE];
+    int key_len = hex_string_to_bytes(key_str, key_bytes, sizeof(key_bytes));
+    if (key_len < 0)
+        return 1;
+    
+    set_private_key(key_bytes);
+    printf("OK: Private key set (%d bytes)\n", key_len);
     return 0;
 }
 
@@ -310,38 +343,6 @@ static int test_backlight(int, char**)
 
 #endif
 
-static int test_logger(int argc, char**)
-{
-    printf("Running logger test\n");
-
-    if (argc > 1)
-    {
-        int count = 0;
-        while (1)
-        {
-            Mqtt::instance().log(format("BigBro test log: %d", count));
-            ++count;
-            vTaskDelay(60*1000/portTICK_PERIOD_MS);
-        }
-    }
-    
-    Mqtt::instance().log("BigBro test log: normal");
-    Logger::instance().log_backend(42, "BigBro test log: backend");
-    Logger::instance().log_unknown_card(0x12345678);
-
-    return 0;
-}
-
-static int test_slack(int, char**)
-{
-    printf("Running Slack test\n");
-
-    Slack_writer::instance().send_message(format("BigBro (%s) says hi",
-                                                 get_identifier().c_str()));
-
-    return 0;
-}
-
 void initialize_console()
 {
     // Disable buffering on stdin
@@ -461,17 +462,6 @@ void run_console(Display& display_arg)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_acs_credentials_cmd));
 
-    set_slack_credentials_args.token = arg_str1(NULL, NULL, "<token>", "Slack token");
-    set_slack_credentials_args.end = arg_end(2);
-    const esp_console_cmd_t set_slack_credentials_cmd = {
-        .command = "slack",
-        .help = "Set Slack credentials",
-        .hint = nullptr,
-        .func = &set_slack_credentials,
-        .argtable = &set_slack_credentials_args
-    };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&set_slack_credentials_cmd));
-
     set_mqtt_params_args.address = arg_str1(NULL, NULL, "<address>", "MQTT address");
     set_mqtt_params_args.end = arg_end(2);
     const esp_console_cmd_t set_mqtt_params_cmd = {
@@ -482,6 +472,17 @@ void run_console(Display& display_arg)
         .argtable = &set_mqtt_params_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_mqtt_params_cmd));
+
+    set_private_key_args.key = arg_str1(NULL, NULL, "<key>", "Private key");
+    set_private_key_args.end = arg_end(2);
+    const esp_console_cmd_t set_private_key_cmd_reg = {
+        .command = "set_private_key",
+        .help = "Set private key",
+        .hint = nullptr,
+        .func = &set_private_key_cmd,
+        .argtable = &set_private_key_args
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_private_key_cmd_reg));
 
     const esp_console_cmd_t reboot_cmd = {
         .command = "reboot",
@@ -500,24 +501,6 @@ void run_console(Display& display_arg)
         .argtable = nullptr
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_card_cache_cmd));
-
-    const esp_console_cmd_t test_logger_cmd = {
-        .command = "test_logger",
-        .help = "Test logger",
-        .hint = nullptr,
-        .func = &test_logger,
-        .argtable = nullptr
-    };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&test_logger_cmd));
-
-    const esp_console_cmd_t test_slack_cmd = {
-        .command = "test_slack",
-        .help = "Test Slack",
-        .hint = nullptr,
-        .func = &test_slack,
-        .argtable = nullptr
-    };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&test_slack_cmd));
 
 #ifdef HW_TEST
     
