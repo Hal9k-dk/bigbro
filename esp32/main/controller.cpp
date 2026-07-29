@@ -7,11 +7,9 @@
 #include "display.h"
 #include "format.h"
 #include "hw.h"
-#include "logger.h"
 #include "mqtt.h"
 #include "nvs.h"
 #include "reader.h"
-#include "slack.h"
 
 #include <thread>
 
@@ -125,7 +123,7 @@ void Controller::run()
             last_status_update = now;
             printf("STATE: %d\n", static_cast<int>(state));
             char timestamp[util::TIMESTAMP_SIZE];
-            util::make_timestamp(timestamp);
+            util::make_timestamp(timestamp, true);
             auto payload = cJSON_CreateObject();
             cJSON_wrapper jw(payload);
             auto jtimestamp = cJSON_CreateString(timestamp);
@@ -265,8 +263,8 @@ void Controller::check_card()
     switch (result.access)
     {
     case Card_cache::Access::Allowed:
-        Slack_writer::instance().send_message(format(":key: (%s) Valid card " CARD_ID_FORMAT " present, access allowed",
-                                                     get_identifier().c_str(), card_id));
+        Mqtt::instance().write_slack(format(":key: Valid card " CARD_ID_FORMAT " present, access allowed",
+                                            card_id));
         Mqtt::instance().log(format("Valid card " CARD_ID_FORMAT " present", card_id));
         state = State::allowed;
         user_name = result.user_name;
@@ -276,9 +274,8 @@ void Controller::check_card()
     case Card_cache::Access::Forbidden:
         if (state != State::not_allowed)
         {
-            Slack_writer::instance().send_message(format(":bandit: (%s) Unauthorized card " CARD_ID_FORMAT " inserted",
-                                                         get_identifier().c_str(),
-                                                         card_id));
+            Mqtt::instance().write_slack(format(":bandit: Unauthorized card " CARD_ID_FORMAT " inserted",
+                                                card_id));
             Mqtt::instance().log(format("Unauthorized card " CARD_ID_FORMAT " inserted", card_id));
         }
         state = State::not_allowed;
@@ -288,17 +285,16 @@ void Controller::check_card()
     case Card_cache::Access::Unknown:
         if (state != State::unknown)
         {
-            Slack_writer::instance().send_message(format(":broken_key: (%s) Unknown card " CARD_ID_FORMAT " inserted",
-                                                         get_identifier().c_str(), card_id));
-            Logger::instance().log_unknown_card(card_id);
+            Mqtt::instance().write_slack(format(":broken_key: Unknown card " CARD_ID_FORMAT " inserted",
+                                                card_id));
+            Mqtt::instance().log_unknown_card(card_id);
         }
         state = State::unknown;
         user_name.clear();
         break;
                
     case Card_cache::Access::Error:
-        Slack_writer::instance().send_message(format(":computer_rage: (%s) Internal error checking card",
-                                                     get_identifier().c_str()));
+        Mqtt::instance().write_slack(":computer_rage: Internal error checking card");
         state = State::not_allowed;
         user_name = "[error]";
         break;

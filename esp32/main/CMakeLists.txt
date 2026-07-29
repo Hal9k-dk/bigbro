@@ -8,12 +8,10 @@ idf_component_register(SRCS
                        format.cpp
                        http.cpp
                        hw.cpp
-                       logger.cpp
                        mqtt.cpp
                        nvs.cpp
                        otafwu.cpp
                        reader.cpp
-                       slack.cpp
                        sntp.cpp
                        util.cpp
                        INCLUDE_DIRS ".")

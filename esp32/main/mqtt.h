@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "RDM6300.h"
 #include "util.h"
 
 #include "mqtt_client.h"
@@ -10,6 +11,8 @@
 class Mqtt
 {
 public:
+    using Card_id = RDM6300::Card_id;
+
     static Mqtt& instance();
 
     void start(const std::string& mqtt_address);
@@ -17,6 +20,15 @@ public:
     void log(const std::string& msg);
 
     void set_status(const char* data);
+
+    /// Write to panopticon log via gateway
+    void log_backend(int user_id, const std::string&);
+
+    /// Add unknown card to panopticon via gateway
+    void log_unknown_card(Card_id card_id);
+
+    /// Send a message to Slack via gateway
+    void write_slack(const std::string& msg);
 
 private:
     Mqtt() = default;
@@ -27,6 +39,8 @@ private:
                               esp_event_base_t base,
                               int32_t event_id,
                               void* event_data);
+
+    static bool sign(cJSON* payload, const std::string& message);
 
     void handle_data(const std::string& topic,
                      const std::string& data);

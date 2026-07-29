@@ -16,12 +16,10 @@
 #include "display.h"
 #include "format.h"
 #include "hw.h"
-#include "logger.h"
 #include "mqtt.h"
 #include "nvs.h"
 #include "otafwu.h"
 #include "reader.h"
-#include "slack.h"
 #include "sntp.h"
 
 static constexpr const char* TAG = "bigbro";
@@ -79,9 +77,6 @@ void app_main()
 
             initialize_sntp();
             
-            Logger::instance().set_api_token(get_acs_token());
-            Slack_writer::instance().set_token(get_slack_token());
-            Slack_writer::instance().set_params(false); // testing
             Card_cache::instance().set_api_token(get_acs_token());
         }
     }
@@ -125,9 +120,7 @@ void app_main()
     }
     if (connected)
     {
-        xTaskCreate(logger_task, "logger_task", 4*1024, NULL, 1, NULL);
         xTaskCreate(card_cache_task, "cache_task", 4*1024, NULL, 1, NULL);
-        xTaskCreate(slack_task, "slack_task", 4*1024, NULL, 1, NULL);
         Mqtt::instance().start(get_mqtt_address());
     }
     xTaskCreate(cursense_task, "cursense_task", 2*1024, NULL, 1, NULL);
@@ -135,9 +128,7 @@ void app_main()
     if (debug)
         run_console(display);        // never returns
 
-    Slack_writer::instance().send_message(format(":panopticon: BigBro %s (%s)",
-                                                 app_desc->version,
-                                                 get_identifier().c_str()));
+    Mqtt::instance().write_slack(format(":panopticon: BigBro %s", app_desc->version));
     
     display.add_progress("Connect to WiFi");
     esp_log_level_set("esp_wifi", ESP_LOG_ERROR);

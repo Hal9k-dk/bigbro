@@ -60,6 +60,8 @@ private:
     Cache cache;
     std::mutex cache_mutex;
     std::string api_token;
+    Card_id last_logged_id = 0;
+    util::time_point last_log_time = util::invalid_time_point();
 
     friend void card_cache_task(void*);
 };

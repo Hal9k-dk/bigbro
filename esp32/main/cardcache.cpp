@@ -3,7 +3,6 @@
 #include "defs.h"
 #include "format.h"
 #include "http.h"
-#include "logger.h"
 #include "mqtt.h"
 #include "util.h"
 
@@ -16,6 +15,7 @@
 static constexpr const char* TAG = "cache";
 
 constexpr util::duration MAX_CACHE_AGE = std::chrono::minutes(15);
+constexpr util::duration MIN_LOG_INTERVAL = std::chrono::minutes(1);
 
 Card_cache& Card_cache::instance()
 {
@@ -43,15 +43,28 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
     }
     if (found)
     {
-        if (util::now() - ui.last_update < MAX_CACHE_AGE)
+        const auto now = util::now();
+        if (now - ui.last_update < MAX_CACHE_AGE)
         {
             Mqtt::instance().log(format(CARD_ID_FORMAT " cached", id));
             if (ui.allowed)
             {
-                Logger::instance().log_backend(ui.user_id, "Granted access");
+                if ((id != last_logged_id) &&
+                    (now - last_log_time > MIN_LOG_INTERVAL))
+                {
+                    Mqtt::instance().log_backend(ui.user_id, "Granted access");
+                    last_logged_id = id;
+                    last_log_time = now;
+                }
                 return Result(Access::Allowed, ui.user_int_id, ui.user_name);
             }
-            Logger::instance().log_backend(ui.user_id, "Denied access");
+            if ((id != last_logged_id) &&
+                (now - last_log_time > MIN_LOG_INTERVAL))
+            {
+                Mqtt::instance().log_backend(ui.user_id, "Denied access");
+                last_logged_id = id;
+                last_log_time = now;
+            }
             return Result(Access::Forbidden, ui.user_int_id, ui.user_name);
         }
         const auto last_update_s = std::chrono::time_point_cast<std::chrono::seconds>(ui.last_update);
@@ -135,7 +148,7 @@ void Card_cache::thread_body()
             if (!root)
             {
                 ESP_LOGE(TAG, "Error: Bad JSON from /v3/permissions: %s", buffer.get());
-                Mqtt::instance().log(format("Error: Bad JSON from /v3/permissions"));
+                Mqtt::instance().log(format("Error: Bad JSON from /v3/permissions: %s", buffer.get()));
                 continue;
             }
             if (!cJSON_IsArray(root))
