@@ -187,8 +187,11 @@ void Display::update()
         return;
 
     // Update time
+    last_clock = current;
     char stamp[util::TIMESTAMP_SIZE];
-    last_clock = util::make_timestamp(stamp, false);
+    struct tm timeinfo;
+    gmtime_r(&current, &timeinfo);
+    strftime(stamp, util::TIMESTAMP_SIZE, "%H:%M:%S", &timeinfo);
     lcdDrawFillRect(tft, 0, 0,
                     TIME_HEIGHT, CONFIG_HEIGHT, BLACK);
     if (clock_x == 0)
