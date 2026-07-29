@@ -1,4 +1,5 @@
 import cadquery as cq
+from ocp_vscode import *
 
 from defs import *
 
@@ -85,13 +86,10 @@ standoff = round_standoff(standoff_d, standoff_h)
 pcb_x = -o_width/2 - 56 + 5
 pcb_y = -o_height/2 - 66 + 23
 for c in pcb_holes:
-    s = res
-    .workplaneFromTagged("o")
-    .transformed(offset=(pcb_x + c[0], pcb_y + c[1],
-                         sh_th+standoff_h/2))
-    .eachpoint(lambda loc: standoff.val().moved(loc), True)))
-    
-    res = res.union(s)
+    res += (res
+         .workplaneFromTagged("o")
+         .transformed(offset=(pcb_x + c[0], pcb_y + c[1], sh_th+standoff_h/2))
+         .eachpoint(lambda loc: standoff.val().moved(loc), True))
 
 res = (res
         .workplaneFromTagged("o")
@@ -101,5 +99,5 @@ res = (res
         .circle(gland_r).cutBlind(o_height)
        )
 
-show_object(res)
-
+show(res)
+cq.exporters.export(res, 'bottom.step')
