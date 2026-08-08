@@ -2,6 +2,7 @@
 
 #include "cJSON.h"
 #include "esp_app_desc.h"
+#include "esp_wifi.h"
 
 #include "defs.h"
 #include "display.h"
@@ -146,6 +147,13 @@ void Controller::run()
             cJSON_Print_wrapper pw(data);
 
             Mqtt::instance().set_status(data);
+
+            int rssi = 0;
+            const auto err = esp_wifi_sta_get_rssi(&rssi);
+            if (err == ESP_OK)
+                Mqtt::instance().log(format("AP RSSI %d", rssi));
+            else
+                Mqtt::instance().log(format("RSSI error: %d", err));
         }
         
         std::string status_msg;
