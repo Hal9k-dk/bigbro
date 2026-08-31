@@ -149,11 +149,19 @@ void Controller::run()
             Mqtt::instance().set_status(data);
 
             int rssi = 0;
-            const auto err = esp_wifi_sta_get_rssi(&rssi);
+            auto err = esp_wifi_sta_get_rssi(&rssi);
             if (err == ESP_OK)
                 Mqtt::instance().log(format("AP RSSI %d", rssi));
             else
                 Mqtt::instance().log(format("RSSI error: %d", err));
+            wifi_ap_record_t info;
+            err = esp_wifi_sta_get_ap_info(&info);
+            if (err == ESP_OK)
+                Mqtt::instance().log(format("AP MAC %02X%02X%02X%02X%02X%02X",
+                                            info.bssid[0], info.bssid[1], info.bssid[2],
+                                            info.bssid[3], info.bssid[4], info.bssid[5]));
+            else
+                Mqtt::instance().log(format("AP info error: %d", err));
         }
         
         std::string status_msg;
