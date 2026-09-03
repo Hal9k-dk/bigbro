@@ -51,17 +51,6 @@ bool Controller::exists()
     return the_instance != nullptr;
 }
 
-static uint8_t hash_string(const std::string& data)
-{
-    uint32_t hash = 2166136261u; // FNV offset basis
-    for (auto ch : data)
-    {
-        hash ^= ch;
-        hash *= 16777619u; // FNV prime
-    }
-    return (uint8_t) (hash & 0xFFu);
-}
-
 void Controller::run()
 {
     std::map<State, std::function<void(Controller*)>> state_map;
@@ -74,9 +63,6 @@ void Controller::run()
     display.clear();
 
     const auto start_time = util::now();
-
-    const int reboot_minute = hash_string(get_identifier()) % 60;
-    ESP_LOGI(TAG, "Reboot minute %d", reboot_minute);
 
 #ifdef DEBUG_HEAP
     ESP_ERROR_CHECK(heap_trace_start(HEAP_TRACE_LEAKS));
