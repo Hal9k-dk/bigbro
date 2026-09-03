@@ -100,6 +100,7 @@ void Controller::run()
                     display.set_status("Rebooting", RED);
                     display.update();
                     vTaskDelay(60000 / portTICK_PERIOD_MS);
+                    esp_restart();
                 }
             }
         }
