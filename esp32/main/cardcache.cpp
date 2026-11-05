@@ -49,13 +49,22 @@ Card_cache::Result Card_cache::has_access(Card_cache::Card_id id)
             Mqtt::instance().log(format(CARD_ID_FORMAT " cached", id));
             if (ui.allowed)
             {
-                if ((id != last_logged_id) &&
-                    (now - last_log_time > MIN_LOG_INTERVAL))
+                Mqtt::instance().log("Allowed");
+                if (id != last_logged_id)
                 {
-                    Mqtt::instance().log_backend(ui.user_id, "Granted access");
-                    last_logged_id = id;
-                    last_log_time = now;
+                    Mqtt::instance().log("New ID");
+                    if (now - last_log_time > MIN_LOG_INTERVAL)
+                    {
+                        Mqtt::instance().log("Old enough");
+                        Mqtt::instance().log_backend(ui.user_id, "Granted access");
+                        last_logged_id = id;
+                        last_log_time = now;
+                    }
+                    else
+                        Mqtt::instance().log("Not old enough");
                 }
+                else
+                    Mqtt::instance().log("Same ID");
                 return Result(Access::Allowed, ui.user_int_id, ui.user_name);
             }
             if ((id != last_logged_id) &&
