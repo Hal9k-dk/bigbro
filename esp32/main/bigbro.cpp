@@ -129,7 +129,7 @@ void app_main()
     esp_log_level_set("wifi", ESP_LOG_ERROR);
 
     display.add_progress("Starting");
-    Mqtt::instance().log(format("ACS frontend %s (%s)",
+    Mqtt::instance().log(format("BigBro %s (%s)",
                                 app_desc->version,
                                 get_identifier().c_str()));
 
